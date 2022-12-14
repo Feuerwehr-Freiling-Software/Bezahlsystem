@@ -1,0 +1,7 @@
+msgpack==1.0.2
+requests>=2.22.0
+websocket-client==1.0.0
+dataclasses
+RPi.GPIO
+mfrc522
+signalrcore
