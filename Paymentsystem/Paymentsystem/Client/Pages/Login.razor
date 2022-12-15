@@ -1,0 +1,31 @@
+﻿@page "/login"
+
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager _nav
+@inject AuthenticationStateProvider provider
+
+<h3>Login</h3>
+
+<EditForm Model="User" OnSubmit="HandleLogin">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <InputText id="username" @bind-Value="User.Username" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <InputText id="password" @bind-Value="User.Password" class="form-control" />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    private User User = new User();
+
+    async void HandleLogin()
+    {
+        await LocalStorage.SetItemAsync<string>("username", User.Username);
+        _nav.NavigateTo("~/");
+    }
+}
