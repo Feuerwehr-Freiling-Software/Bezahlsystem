@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Paymentsystem.Shared.Models;
+using Paymentsystem.Server.Models;
 using Paymentsystem.Shared.ViewModels;
 using System.Data.SqlTypes;
 using System.IdentityModel.Tokens.Jwt;

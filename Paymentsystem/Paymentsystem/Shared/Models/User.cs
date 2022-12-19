@@ -1,16 +1,30 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Paymentsystem.Shared.Models
 {
-    public class User
+    public partial class User : IdentityUser
     {
-        public int Id { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public User()
+        {
+            PaymentExecutors = new HashSet<Payment>();
+            PaymentPeople = new HashSet<Payment>();
+            TopUpExecutors = new HashSet<TopUp>();
+            TopUpPeople = new HashSet<TopUp>();
+        }
+
+        public string Discriminator { get; set; } = null!;
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public double? Balance { get; set; }
+        public string? Comment { get; set; }
+        public DateTime? OpenCheckoutDate { get; set; }
+        public double? OpenCheckoutValue { get; set; }
+
+        public virtual ICollection<Payment> PaymentExecutors { get; set; }
+        public virtual ICollection<Payment> PaymentPeople { get; set; }
+        public virtual ICollection<TopUp> TopUpExecutors { get; set; }
+        public virtual ICollection<TopUp> TopUpPeople { get; set; }
     }
 }
