@@ -4,9 +4,9 @@
 
 <AuthorizeView>
     <Authorized>
-        <button @onclick="Logout" class="btn btn-primary">Logout</button>
+        <MudButton @OnClick="Logout" Color="Color.Error">Logout</MudButton>
     </Authorized>
     <NotAuthorized>
-        <button @onclick="Login" class="btn btn-danger">Login</button>
+        <MudButton @OnClick="Login" Color="Color.Primary">Login</MudButton>
     </NotAuthorized>
 </AuthorizeView>
