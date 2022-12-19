@@ -1,0 +1,12 @@
+﻿@inject NavigationManager _nav
+@inject ILocalStorageService _localStorage
+@inject AuthenticationStateProvider authProvider
+
+<AuthorizeView>
+    <Authorized>
+        <button @onclick="Logout" class="btn btn-primary">Logout</button>
+    </Authorized>
+    <NotAuthorized>
+        <button @onclick="Login" class="btn btn-danger">Login</button>
+    </NotAuthorized>
+</AuthorizeView>

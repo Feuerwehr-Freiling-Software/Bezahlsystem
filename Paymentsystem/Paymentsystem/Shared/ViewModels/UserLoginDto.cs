@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Paymentsystem.Shared.Models
+namespace Paymentsystem.Shared.ViewModels
 {
-    public class User
+    // duas wirkli ned
+    public class UserLoginDto
     {
-        public int Id { get; set; }
         public string Username { get; set; } = string.Empty;
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }
