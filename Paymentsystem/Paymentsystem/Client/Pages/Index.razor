@@ -2,8 +2,13 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<AuthorizeView>
+    <Authorized>
+        <MudText Align="Align.Center" Typo="Typo.h2">Hallo @(context.User.Identity.Name)!</MudText>
+        <MudText Align="Align.Center" Typo="Typo.body1">Was darf es heute sein?</MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText Align="Align.Center" Typo="Typo.h2">Hallo Benutzer!</MudText>
+        <MudText Align="Align.Center" Typo="Typo.body1">Willkommen zum Bezahlsystem der Feuerwehr Freiling.</MudText>        
+    </NotAuthorized>
+</AuthorizeView>

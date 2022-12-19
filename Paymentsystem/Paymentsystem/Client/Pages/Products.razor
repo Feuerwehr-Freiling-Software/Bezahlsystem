@@ -1,0 +1,20 @@
+﻿@page "/products"
+
+@inject HttpClient http
+
+<MudGrid Justify="Justify.Center">
+    @foreach (var item in Articles)
+    {
+        <MudPaper Elevation="2">
+            <MudItem xs="4" @onclick="(() => AddToCart(item))">
+                <MudCardMedia Image="FM.png"/>
+                <MudCardContent>
+                    <MudDivider Class="my-3"/>
+                    <MudText Typo="Typo.h5">@item.Name</MudText>
+                    <MudText Typo="Typo.body2">Preis: @item.Price.Amount €</MudText>
+                    <MudText Typo="Typo.body2">Übrig: @item.Amount</MudText>
+                </MudCardContent>
+            </MudItem>
+        </MudPaper>
+    }
+</MudGrid>
