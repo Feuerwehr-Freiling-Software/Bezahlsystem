@@ -22,7 +22,8 @@ namespace Paymentsystem.Client
                 var identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, username )
-                }, "Test authentication type");
+                }, 
+                "Test authentication type");
 
                 state = new AuthenticationState(new ClaimsPrincipal(identity));
             }
