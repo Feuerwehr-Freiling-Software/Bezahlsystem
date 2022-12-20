@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Paymentsystem.Server.Models;
@@ -39,8 +40,11 @@ namespace Paymentsystem.Server.Controllers
         public async Task<IActionResult> Login(UserDto req)
         {
             // check if user exists
-            if (user.Username != req.Username) return BadRequest("Username or Password is wrong.");
-            if (!VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt)) return BadRequest("Username or Password wrong.");
+            if (user.Username != req.Username
+                || !VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                return BadRequest("Username or Password is wrong.");
+            }
 
             string oldToken = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVG9ueSBTdGFyayIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Iklyb24gTWFuIiwiZXhwIjozMTY4NTQwMDAwfQ.IbVQa1lNYYOzwso69xYfsMOHnQfO3VLvVqV2SOXS7sTtyyZ8DEf5jmmwz2FGLJJvZnQKZuieHnmHkg7CGkDbvA";
             string token = CreateToken(user);
@@ -66,6 +70,18 @@ namespace Paymentsystem.Server.Controllers
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             
             return jwt;
+        }
+
+        [HttpGet]
+        public IActionResult TestNoAuth()
+        {
+            return Ok("dei mamer");
+        }
+
+        [HttpGet, Authorize]
+        public IActionResult TestAuth()
+        {
+            return Ok("ok, dei mamer");
         }
 
         private void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
