@@ -20,6 +20,10 @@ namespace Paymentsystem.Client.Pages
         {
             base.OnInitialized();
             Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price =  new() { Amount = 1.2} });
+            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price = new() { Amount = 1.2 } });
+            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price = new() { Amount = 1.2 } });
+            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price = new() { Amount = 1.2 } });
+
         }
 
         public List<Article> Articles { get; set; } = new List<Article>();

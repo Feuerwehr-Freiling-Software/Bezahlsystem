@@ -2,19 +2,19 @@
 
 @inject HttpClient http
 
-<MudGrid Justify="Justify.Center">
+<MudGrid Justify="Justify.FlexStart">
     @foreach (var item in Articles)
     {
-        <MudPaper Elevation="2">
-            <MudItem xs="4" @onclick="(() => AddToCart(item))">
+        <MudItem Class="d-flex align-center justify-center mud-width-full py-8" Width="300px" xs="4" @onclick="(() => AddToCart(item))">
+            <MudCard sm="4">
                 <MudCardMedia Image="FM.png"/>
                 <MudCardContent>
-                    <MudDivider Class="my-3"/>
+                <MudDivider Class="my-3"/>
                     <MudText Typo="Typo.h5">@item.Name</MudText>
                     <MudText Typo="Typo.body2">Preis: @item.Price.Amount €</MudText>
                     <MudText Typo="Typo.body2">Übrig: @item.Amount</MudText>
                 </MudCardContent>
-            </MudItem>
-        </MudPaper>
+            </MudCard>
+        </MudItem>
     }
 </MudGrid>
