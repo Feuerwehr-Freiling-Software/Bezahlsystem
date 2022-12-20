@@ -3,6 +3,7 @@
 <MudThemeProvider Theme="_themeManager.Theme"/>
 <MudDialogProvider />
 <MudSnackbarProvider />
+
 <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
 <MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />
 
