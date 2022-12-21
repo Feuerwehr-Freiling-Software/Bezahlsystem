@@ -2,19 +2,18 @@
 
 @inject HttpClient http
 
-<MudGrid Justify="Justify.FlexStart">
+<MudGrid Justify="Justify.FlexStart" >
     @foreach (var item in Articles)
     {
-        <MudItem Class="d-flex align-center justify-center mud-width-full py-8" Width="300px" xs="4" @onclick="(() => AddToCart(item))">
-            <MudCard sm="4">
-                <MudCardMedia Image="FM.png"/>
-                <MudCardContent>
-                <MudDivider Class="my-3"/>
-                    <MudText Typo="Typo.h5">@item.Name</MudText>
-                    <MudText Typo="Typo.body2">Preis: @item.Price.Amount €</MudText>
-                    <MudText Typo="Typo.body2">Übrig: @item.Amount</MudText>
-                </MudCardContent>
-            </MudCard>
+        <MudItem Style="margin: auto;" Class="d-flex align-center justify-center py-8" @onclick="(() => AddToCart(item))">
+            <ProductComponent Article="@item" Path="FM.png"/>
         </MudItem>
     }
 </MudGrid>
+
+@if(Cart.Count > 0)
+{
+    <MudBadge Color="Color.Primary" Style="position: fixed; bottom: 30px; right: 30px;" Content="Cart.Sum(x => x.Amount)" Overlap="true">
+        <CartIconComponent Cart="Cart" />
+    </MudBadge>
+}

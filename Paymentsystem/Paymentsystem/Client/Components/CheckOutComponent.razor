@@ -1,0 +1,32 @@
+﻿@inject ISnackbar SnackBar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.ShoppingCartCheckout"/>
+            Warenkorb
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudSimpleTable Style="overflow-x: auto;">
+            <tbody>
+                @foreach (var item in Cart)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Price.Amount</td>
+                        <td>@item.Amount</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Gesamtpreis:</td>
+                    <td>@Cart.Sum(x => x.Price.Amount)</td>
+                </tr>
+            </tbody>
+        </MudSimpleTable>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Abbrechen</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Pay">Bezahlen</MudButton>
+    </DialogActions>
+</MudDialog>

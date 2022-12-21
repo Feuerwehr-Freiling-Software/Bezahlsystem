@@ -20,9 +20,9 @@ namespace Paymentsystem.Client.Pages
         {
             base.OnInitialized();
             Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price =  new() { Amount = 1.2} });
-            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price = new() { Amount = 1.2 } });
-            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price = new() { Amount = 1.2 } });
-            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price = new() { Amount = 1.2 } });
+            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Ratsherrn", Price = new() { Amount = 1.2 } });
+            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter OktoberBier", Price = new() { Amount = 1.2 } });
+            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Bock", Price = new() { Amount = 1.2 } });
 
         }
 
@@ -31,9 +31,28 @@ namespace Paymentsystem.Client.Pages
 
         void AddToCart(Article article) 
         {
+            InvokeAsync(StateHasChanged);
             var fArt = Cart.FirstOrDefault(x =>  x.Name == article.Name);
             if (fArt != null) fArt.Amount++;
-            else Cart.Add(article);
+            else
+            {
+                var tmpArticle = new Article()
+                {
+                    Name = article.Name,
+                    Amount = 1,
+                    Active = article.Active,
+                    Id = article.Id,
+                    ImageData = article.ImageData,
+                    IsInVending = article.IsInVending,
+                    Price = article.Price,
+                    PriceId = article.PriceId,
+                    Type = article.Type,
+                    VendingMachineNumber = article.VendingMachineNumber,
+                    VendingSlot = article.VendingSlot
+                };
+
+                Cart.Add(tmpArticle);
+            }
         }
 
         void RemoveFromCart(Article article)
