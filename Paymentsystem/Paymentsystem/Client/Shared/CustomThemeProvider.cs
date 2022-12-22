@@ -49,6 +49,7 @@ namespace Paymentsystem.Client.Shared
                     TextDisabled = new MudColor("#ababab"),
                     LinesInputs = new MudColor("#576573"),
                     ActionDefault = new MudColor("#647687")
+                                        
                 }
             };
         }

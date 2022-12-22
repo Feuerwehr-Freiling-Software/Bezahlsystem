@@ -13,9 +13,11 @@
     <AuthorizeView>
         <Authorized>
             <MudNavLink Href="/myProfile" Icon="@Icons.Filled.Person" IconColor="Color.Primary">@(context.User.Identity.Name)'s Profil</MudNavLink>
+            <MudNavLink Href="/logout" Icon="@Icons.Filled.Logout" IconColor="Color.Primary">Logout</MudNavLink>
         </Authorized>
         <NotAuthorized>
             <MudNavLink Href="/login" Icon="@Icons.Filled.Login" IconColor="Color.Primary">Login</MudNavLink>
+            <MudNavLink Href="/register" Icon="@Icons.Filled.PersonAdd" IconColor="Color.Primary">Register</MudNavLink>
         </NotAuthorized>
     </AuthorizeView>
 </MudNavMenu>

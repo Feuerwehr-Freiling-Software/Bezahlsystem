@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Paymentsystem.Client.Pages
+namespace Paymentsystem.Client.Pages.User
 {
-    public partial class User
+    public partial class Register
     {
-        public User()
+        public Register()
         {
 
         }
