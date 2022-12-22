@@ -4,15 +4,15 @@
     <AuthorizeView Roles="Admin">
         <Authorized>
             <MudNavGroup Title="Administration" Icon="@Icons.Filled.AdminPanelSettings" IconColor="Color.Primary">
-                <MudNavLink Href="/User" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.ManageAccounts" IconColor="Color.Primary">Benutzerverwaltung</MudNavLink>
-                <MudNavLink Href="/Articles" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Brightness5" IconColor="Color.Primary">Artikelverwaltung</MudNavLink>
+                <MudNavLink Href="/user" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.ManageAccounts" IconColor="Color.Primary">Benutzerverwaltung</MudNavLink>
+                <MudNavLink Href="/articles" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Brightness5" IconColor="Color.Primary">Artikelverwaltung</MudNavLink>
             </MudNavGroup>
         </Authorized>
     </AuthorizeView>
     <MudDivider Class="my-2"/>
     <AuthorizeView>
         <Authorized>
-            <MudNavLink Href="/account" Icon="@Icons.Filled.Person" IconColor="Color.Primary">@(context.User.Identity.Name)'s Profil</MudNavLink>
+            <MudNavLink Href="/myProfile" Icon="@Icons.Filled.Person" IconColor="Color.Primary">@(context.User.Identity.Name)'s Profil</MudNavLink>
         </Authorized>
         <NotAuthorized>
             <MudNavLink Href="/login" Icon="@Icons.Filled.Login" IconColor="Color.Primary">Login</MudNavLink>

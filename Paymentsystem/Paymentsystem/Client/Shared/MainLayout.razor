@@ -1,18 +1,21 @@
 ﻿@inherits LayoutComponentBase
+@inject ILocalStorageService localStorage
 
-<MudThemeProvider Theme="_themeManager.Theme"/>
+<CustomThemeProvider @ref="_mudThemeProvider" @bind-IsDarkMode="DarkMode"/>
 <MudDialogProvider />
 <MudSnackbarProvider />
-
-@*<MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
-<MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager" ThemeChanged="UpdateTheme" />*@
 
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         Bezahlsystem
+
+        <MudSpacer />
+        <MudToggleIconButton Style="right: 0" Toggled="DarkMode" ToggledChanged="OnToggledChanged"
+                             Icon="@Icons.Material.Filled.LightMode" Color="Color.Inherit" Title="DarkMode aktivieren"
+                             ToggledIcon="@Icons.Material.Filled.DarkMode" ToggledColor="Color.Inherit" ToggledTitle="Lightmode aktivieren" />
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen">
+    <MudDrawer @bind-Open="@_drawerOpen" Variant="DrawerVariant.Temporary" Elevation="1">
         <NavMenu/>
     </MudDrawer>
     <MudMainContent>
@@ -23,27 +26,40 @@
 @code {
     bool _drawerOpen = true;
 
+    public bool DarkMode { get; set; }
+
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
 
-    private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
-    public bool _themeManagerOpen = false;
-
-    void OpenThemeManager(bool value)
+    public async void OnToggledChanged(bool toggled)
     {
-        _themeManagerOpen = value;
+        DarkMode = toggled;
+        await localStorage.SetItemAsync("darkMode", toggled);
     }
 
-    void UpdateTheme(ThemeManagerTheme value)
-    {
-        _themeManager = value;
-        StateHasChanged();
-    }
+    private CustomThemeProvider? _mudThemeProvider;
 
     protected override void OnInitialized()
     {
         StateHasChanged();
+    }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        bool? darkMode = await localStorage.GetItemAsync<bool>("darkMode");
+
+        if (darkMode != null)
+        {
+            DarkMode = (bool)darkMode;
+        }
+
+        if (firstRender && _mudThemeProvider != null && darkMode == null)
+        {
+            DarkMode = await _mudThemeProvider.GetSystemPreference();            
+            StateHasChanged();
+        }
+
     }
 }

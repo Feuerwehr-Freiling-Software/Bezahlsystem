@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using MudBlazor;
+using Paymentsystem.Client.Components;
 using Paymentsystem.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 
@@ -16,22 +19,44 @@ namespace Paymentsystem.Client.Pages
 
         }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
-            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price =  new() { Amount = 1.2} });
+            Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Märzen", Price = new() { Amount = 1.2 } });
             Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Ratsherrn", Price = new() { Amount = 1.2 } });
             Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter OktoberBier", Price = new() { Amount = 1.2 } });
             Articles.Add(new() { Active = true, Amount = 12, Id = 1, IsInVending = false, Name = "Freistädter Bock", Price = new() { Amount = 1.2 } });
 
+            //Articles = await GetArticles();
+
+            Cart = await localStorage.GetItemAsync<List<Article>>("Cart") ?? new List<Article>();
         }
 
-        public List<Article> Articles { get; set; } = new List<Article>();
+        private async Task<List<Article>> GetArticles()
+        {
+            return await http.GetFromJsonAsync<List<Article>>("https://localhost:7237/api/Articles/GetAllArticles") ?? new List<Article>();
+        }
+
+        public List<Article> Articles { get; set; } = new ();
         public List<Article> Cart { get; set; } = new();
 
-        void AddToCart(Article article) 
+        private async void Checkout()
         {
-            InvokeAsync(StateHasChanged);
+            var parameters = new DialogParameters { ["Cart"] = Cart };
+
+            var dialog = await DialogService.ShowAsync<CheckOutComponent>("Checkout", parameters);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                // Post zum Server
+
+
+            }
+
+            await InvokeAsync(StateHasChanged);
+        }
+
+        async void AddToCart(Article article) 
+        {
             var fArt = Cart.FirstOrDefault(x =>  x.Name == article.Name);
             if (fArt != null) fArt.Amount++;
             else
@@ -52,14 +77,10 @@ namespace Paymentsystem.Client.Pages
                 };
 
                 Cart.Add(tmpArticle);
-            }
-        }
 
-        void RemoveFromCart(Article article)
-        {
-            var fArt =  Cart.FirstOrDefault(x => x.Name ==article.Name);
-            if(fArt != null) fArt.Amount--;
-            else Cart.Remove(article);
+                await InvokeAsync(StateHasChanged);
+                await localStorage.SetItemAsync("Cart", Cart);
+            }
         }
     }
 }

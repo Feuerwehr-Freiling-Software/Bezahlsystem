@@ -1,6 +1,8 @@
 ﻿@page "/products"
 
+@inject ILocalStorageService localStorage
 @inject HttpClient http
+@inject IDialogService DialogService
 
 <MudGrid Justify="Justify.FlexStart" >
     @foreach (var item in Articles)
@@ -14,6 +16,6 @@
 @if(Cart.Count > 0)
 {
     <MudBadge Color="Color.Primary" Style="position: fixed; bottom: 30px; right: 30px;" Content="Cart.Sum(x => x.Amount)" Overlap="true">
-        <CartIconComponent Cart="Cart" />
+        <MudFab OnClick="Checkout" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ShoppingCart" />
     </MudBadge>
 }
