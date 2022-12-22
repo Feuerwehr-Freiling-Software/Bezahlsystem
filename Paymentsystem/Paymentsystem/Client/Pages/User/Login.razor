@@ -9,7 +9,14 @@
 
 <EditForm Model="@User" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator />
+    
     <MudGrid Justify="Justify.Center" Style="margin-top: 100px">
+        <MudItem xs="12" sm="7">
+            @if (showErrorAlert)
+            {
+                <MudAlert ShowCloseIcon="true" CloseIconClicked="CloseAlert" Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Center">@errorText</MudAlert>
+            }
+        </MudItem>
         <MudItem xs="12" sm="7">
             <MudCard>
                 <MudCardContent>
@@ -32,6 +39,9 @@
 
 @code {
     private LoginDto User = new ();
+    private string errorText = string.Empty;
+    private bool showErrorAlert = false;
+
 
     class LoginDto
     {
@@ -44,9 +54,22 @@
         public string Password { get; set; }
     }
 
+    private void CloseAlert()
+    {
+        errorText = string.Empty;
+        showErrorAlert = false;
+    }
+
     async void HandleLogin()
     {        
         var res = await http.PostAsJsonAsync("api/auth/login", User);
+        if (!res.IsSuccessStatusCode)
+        {
+            errorText = await res.Content.ReadAsStringAsync();
+            showErrorAlert = true;
+            InvokeAsync(StateHasChanged);
+            return;
+        }
         var token = await res.Content.ReadAsStringAsync();
         await LocalStorage.SetItemAsync<string>("token", token);
         await provider.GetAuthenticationStateAsync();
