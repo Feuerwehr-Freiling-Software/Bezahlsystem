@@ -10,14 +10,14 @@
 <EditForm Model="@User" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator />
     
-    <MudGrid Justify="Justify.Center" Style="margin-top: 100px">
-        <MudItem xs="12" sm="7">
+    <MudGrid Justify="Justify.Center" Style="width: 100%; margin-top: 10%">
+        <MudItem xs="11" sm="7">
             @if (showErrorAlert)
             {
                 <MudAlert ShowCloseIcon="true" CloseIconClicked="CloseAlert" Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Center">@errorText</MudAlert>
             }
         </MudItem>
-        <MudItem xs="12" sm="7">
+        <MudItem xs="11" sm="7">
             <MudCard>
                 <MudCardContent>
                     <MudTextField Style="background: var(--mud-palette-background); color: var(--mud-palette-TextPrimary); border-radius: 3px;"

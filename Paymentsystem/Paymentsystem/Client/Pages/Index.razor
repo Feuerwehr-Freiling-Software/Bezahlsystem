@@ -12,3 +12,26 @@
         <MudText Align="Align.Center" Typo="Typo.body1">Willkommen zum Bezahlsystem der Feuerwehr Freiling.</MudText>        
     </NotAuthorized>
 </AuthorizeView>
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        var connection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:7237/VendingHub")
+            .Build();
+
+        await connection.StartAsync();
+
+        connection.On("TestConnection", () =>
+        {
+            Console.WriteLine(connection.ConnectionId);
+        });
+
+        // a5VqbCXUTltyK-hsUfbKRA
+
+        for (int i = 0; i < 5; i++)
+        {
+            await connection.InvokeAsync("TestConnection");
+        }
+    }
+}

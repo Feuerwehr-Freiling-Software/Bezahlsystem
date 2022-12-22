@@ -4,9 +4,18 @@
 @using System.ComponentModel.DataAnnotations
 @using Paymentsystem.Shared.ViewModels;
 
+@inject HttpClient http
+@inject NavigationManager nav
+
 <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
-    <MudGrid Justify="Justify.Center" Style="margin-top: 100px">
+    <MudGrid Justify="Justify.Center" Style="width:100%; margin-top: 100px">
+        <MudItem xs="11" sm="7">
+            @if (showErrorAlert)
+            {
+                <MudAlert ShowCloseIcon="true" CloseIconClicked="CloseAlert" Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Center">@errorText</MudAlert>
+            }
+        </MudItem>
         <MudItem xs="12" sm="7">
             <MudCard>
                 <MudCardContent>
@@ -15,7 +24,7 @@
                                   @bind-Value="model.Username" For="@(() => model.Username)" RequiredError="Benutzername ist notwendig."/>
                     <MudTextField Style="background: var(--mud-palette-background); color: var(--mud-palette-TextPrimary); border-radius: 3px;"
                             Label="Email" Class="mt-3"
-                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "The Emailadresse ist ungültig"})"  @bind-Value="model.Email" For="@(() => model.Email)" RequiredError="Emailadresse ist notwendig." />
+                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "Emailadresse ist ungültig"})"  @bind-Value="model.Email" For="@(() => model.Email)" RequiredError="Emailadresse ist notwendig." />
                     <MudTextField Style="background: var(--mud-palette-background); color: var(--mud-palette-TextPrimary); border-radius: 3px;" 
                             Label="Passwort" HelperText="Passwort eingeben" Class="mt-3"
                                   Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"  @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password" RequiredError="Passwort ist notwendig." />
@@ -35,7 +44,9 @@
 
 @code {
     RegisterAccountForm model = new RegisterAccountForm();
-    bool success;
+
+    private string errorText = string.Empty;
+    private bool showErrorAlert = false;
 
     public class RegisterAccountForm
     {
@@ -56,10 +67,30 @@
 
     }
 
-    private void OnValidSubmit(EditContext context)
+    private void CloseAlert()
     {
-        success = true;
-        StateHasChanged();
+        errorText = string.Empty;
+        showErrorAlert = false;
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        var userDto = new UserDto()
+        {
+            Password = model.Password,
+            Username = model.Username
+        };
+
+        var res = await http.PostAsJsonAsync<UserDto>("https://localhost:7237/api/Auth/Register", userDto);
+        if (!res.IsSuccessStatusCode)
+        {
+            errorText = await res.Content.ReadAsStringAsync();
+            showErrorAlert = true;
+            InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        nav.NavigateTo("/login");
     }
 
     private IEnumerable<string> PasswordStrength(string pw)

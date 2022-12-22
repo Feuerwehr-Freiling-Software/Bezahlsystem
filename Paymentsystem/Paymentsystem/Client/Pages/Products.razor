@@ -4,7 +4,7 @@
 @inject HttpClient http
 @inject IDialogService DialogService
 
-<MudGrid Justify="Justify.FlexStart" >
+<MudGrid Justify="Justify.FlexStart" Style="width:100%; margin-top: 100px">
     @foreach (var item in Articles)
     {
         <MudItem Style="margin: auto;" Class="d-flex align-center justify-center py-8" @onclick="(() => AddToCart(item))">
