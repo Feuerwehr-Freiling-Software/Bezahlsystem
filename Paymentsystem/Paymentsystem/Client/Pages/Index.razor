@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Paymentsystem.Shared.Models;
 
 <PageTitle>Index</PageTitle>
 
@@ -22,16 +23,25 @@
 
         await connection.StartAsync();
 
+        ErrorCode? code = null;
+
+        do
+        {
+            code = await connection.InvokeAsync<ErrorCode>("AddToGroup", 1);
+        } while (code == null || code.IsSuccessErrorCode == false);
+        
+        // implementation of EventListeners
+
         connection.On("TestConnection", () =>
         {
             Console.WriteLine(connection.ConnectionId);
         });
 
-        // a5VqbCXUTltyK-hsUfbKRA
-
         for (int i = 0; i < 5; i++)
         {
-            await connection.InvokeAsync("TestConnection");
+            await connection.InvokeAsync("TestConnection");            
         }
+
+
     }
 }

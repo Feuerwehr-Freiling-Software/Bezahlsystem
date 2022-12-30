@@ -45,11 +45,13 @@ namespace Paymentsystem.Client.Pages
 
             var dialog = await DialogService.ShowAsync<CheckOutComponent>("Checkout", parameters);
             var result = await dialog.Result;
+
             if (!result.Cancelled)
             {
-                // Post zum Server
+                // TODO: Add payment to Server
 
-
+                Cart.Clear();
+                await localStorage.RemoveItemAsync("Cart");
             }
 
             await InvokeAsync(StateHasChanged);
