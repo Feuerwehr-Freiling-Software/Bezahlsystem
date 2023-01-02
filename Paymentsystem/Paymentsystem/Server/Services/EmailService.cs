@@ -27,8 +27,12 @@ namespace Paymentsystem.Server.Services
             var msg = MailHelper.CreateSingleEmail(senderEmail, recieverMail, subject, body, htmlBody);
 
             var res = await client.SendEmailAsync(msg).ConfigureAwait(false);
+            if (res.IsSuccessStatusCode)
+            {
+                return 21;
+            }
 
-            return 0;
+            return 20;
         }
     }
 }

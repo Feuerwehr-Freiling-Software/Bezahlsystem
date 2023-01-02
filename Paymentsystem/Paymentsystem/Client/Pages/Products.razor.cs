@@ -49,7 +49,8 @@ namespace Paymentsystem.Client.Pages
             if (!result.Cancelled)
             {
                 // TODO: Add payment to Server
-
+                var res = await http.PutAsJsonAsync("https://localhost:7237/api/Purchase/Pay", Cart);
+                if (!res.IsSuccessStatusCode) return;
                 Cart.Clear();
                 await localStorage.RemoveItemAsync("Cart");
             }
