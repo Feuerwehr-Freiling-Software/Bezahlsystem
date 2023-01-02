@@ -27,14 +27,27 @@ namespace Paymentsystem.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(UserDto req)
         {
+            // TODO: Implement Db Check
+
+            // TODO: Send Confirmation Email to user
+
             CreatePasswordHash(req.Password, out byte[] hash, out byte[] salt);
 
             user.Username = req.Username;
             user.PasswordHash = hash;
             user.PasswordSalt = salt;
 
+            // Add User to db
+
             return Ok(user);
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmail(string code)
+        {
+            // TODO: Check for confirmation Code in Db and check if user is authenticated
+            return Ok();
         }
 
         [HttpPost]
@@ -55,7 +68,7 @@ namespace Paymentsystem.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RefreshToken()
+        public IActionResult RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
 
@@ -96,6 +109,7 @@ namespace Paymentsystem.Server.Controllers
                 Expires = token.Expires
             };
 
+            // TODO: Move to Db Service
             Response.Cookies.Append("refreshToken", token.Token, cookieOptions);
             user.RefreshToken = token.Token;
             user.TokenCreated = token.Created;
