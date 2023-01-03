@@ -12,8 +12,8 @@ using Paymentsystem.Shared.Data;
 namespace Paymentsystem.Shared.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230103091826_UpdatedRelations")]
-    partial class UpdatedRelations
+    [Migration("20230103134938_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -110,8 +110,8 @@ namespace Paymentsystem.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<short>("IsSuccessErrorCode")
-                        .HasColumnType("smallint");
+                    b.Property<bool>("IsSuccessErrorCode")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -183,12 +183,14 @@ namespace Paymentsystem.Shared.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("ValueAtStart")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Opencheckouts");
                 });
@@ -214,6 +216,8 @@ namespace Paymentsystem.Shared.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
 
                     b.ToTable("Prices");
                 });
@@ -384,8 +388,8 @@ namespace Paymentsystem.Shared.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<short>("ConfirmedEmail")
-                        .HasColumnType("smallint");
+                    b.Property<bool>("ConfirmedEmail")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -398,20 +402,20 @@ namespace Paymentsystem.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<short>("IsConfirmedUser")
-                        .HasColumnType("smallint");
+                    b.Property<bool>("IsConfirmedUser")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Lastname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("PasswordSalt")
+                    b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<int>("RefreshtokenId")
                         .HasColumnType("int");
@@ -518,6 +522,28 @@ namespace Paymentsystem.Shared.Migrations
                     b.Navigation("ErrorCode");
                 });
 
+            modelBuilder.Entity("Paymentsystem.Shared.Models.Opencheckout", b =>
+                {
+                    b.HasOne("Paymentsystem.Shared.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Paymentsystem.Shared.Models.Price", b =>
+                {
+                    b.HasOne("Paymentsystem.Shared.Models.Article", "Article")
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+                });
+
             modelBuilder.Entity("Paymentsystem.Shared.Models.Slot", b =>
                 {
                     b.HasOne("Paymentsystem.Shared.Models.Storage", "Storage")
@@ -581,7 +607,7 @@ namespace Paymentsystem.Shared.Migrations
             modelBuilder.Entity("Paymentsystem.Shared.Models.User", b =>
                 {
                     b.HasOne("Paymentsystem.Shared.Models.Emailconfirmationcode", "EmailConfirmationCode")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("EmailConfirmationCodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -638,11 +664,6 @@ namespace Paymentsystem.Shared.Migrations
             modelBuilder.Entity("Paymentsystem.Shared.Models.Articlecategory", b =>
                 {
                     b.Navigation("Articles");
-                });
-
-            modelBuilder.Entity("Paymentsystem.Shared.Models.Emailconfirmationcode", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Paymentsystem.Shared.Models.Errorcode", b =>

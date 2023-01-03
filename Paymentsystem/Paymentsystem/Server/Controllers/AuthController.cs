@@ -1,4 +1,5 @@
-﻿using Paymentsystem.Shared.Interfaces;
+﻿using Paymentsystem.Shared.Extensions;
+using Paymentsystem.Shared.Interfaces;
 
 namespace Paymentsystem.Server.Controllers
 {
@@ -24,6 +25,7 @@ namespace Paymentsystem.Server.Controllers
             // TODO: Implement Db Check
             var user = new User()
             {
+                Id = req.Username.ToSha256(),
                 Balance = 0,
                 Email = req.Email,
                 Firstname = req.FirstName,
@@ -33,6 +35,12 @@ namespace Paymentsystem.Server.Controllers
                 Username = req.Username,
                 Comment = "",
                 ConfirmedEmail = false,
+                Refreshtoken = new()
+                {
+                    Created = DateTime.UtcNow,
+                    Expires = DateTime.UtcNow,
+                    Token = ""
+                },
                 EmailConfirmationCode = new()
                 {
                     ConfirmationCode = GenerateConfirmationCode(),
@@ -49,6 +57,7 @@ namespace Paymentsystem.Server.Controllers
             user.PasswordSalt = salt;
 
             // Add User to db
+            _userService.AddUser(user);
 
             return Ok(user);
 

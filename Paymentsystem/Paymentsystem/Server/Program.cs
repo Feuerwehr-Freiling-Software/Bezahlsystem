@@ -22,7 +22,7 @@ builder.Services.AddCors(opt =>
 {
     opt.AddPolicy(name: "default", policy =>
     {
-        policy.AllowAnyHeader().AllowCredentials().AllowAnyOrigin();
+        policy.AllowAnyHeader().AllowAnyOrigin();
     });
 });
 
@@ -92,6 +92,8 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("default");
 
 app.UseAuthentication();
 app.UseAuthorization();
