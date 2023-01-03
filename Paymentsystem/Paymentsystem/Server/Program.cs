@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Paymentsystem.Server.Hubs;
+using Paymentsystem.Shared.Data;
+using Paymentsystem.Shared.Interfaces;
+using Paymentsystem.Shared.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
@@ -13,6 +17,26 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy(name: "default", policy =>
+    {
+        policy.AllowAnyHeader().AllowCredentials().AllowAnyOrigin();
+    });
+});
+
+var connstring = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Add Scoped Services
+builder.Services.AddDbContext<ApplicationDbContext>(opt =>
+{
+    opt.UseSqlServer(connstring);
+});
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 
 builder.Services.AddSwaggerGen(options =>
 {

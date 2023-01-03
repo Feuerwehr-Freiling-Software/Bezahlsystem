@@ -12,13 +12,13 @@ namespace Paymentsystem.Shared.Models
         public double Balance { get; set; }
         public string? Comment { get; set; }
         public string Email { get; set; } = null!;
-        public sbyte ConfirmedEmail { get; set; }
+        public bool ConfirmedEmail { get; set; }
         public string Role { get; set; } = null!;
-        public string PasswordHash { get; set; } = null!;
-        public string PasswordSalt { get; set; } = null!;
+        public byte[] PasswordHash { get; set; } = null!;
+        public byte[] PasswordSalt { get; set; } = null!;
         public int RefreshtokenId { get; set; }
         public int EmailConfirmationCodeId { get; set; }
-        public sbyte IsConfirmedUser { get; set; }
+        public bool IsConfirmedUser { get; set; }
 
         public virtual Emailconfirmationcode EmailConfirmationCode { get; set; } = null!;
         public virtual Refreshtoken Refreshtoken { get; set; } = null!;

@@ -12,7 +12,7 @@ namespace Paymentsystem.Shared.Models
 
         public int Id { get; set; }
         public int Code { get; set; }
-        public sbyte IsSuccessErrorCode { get; set; }
+        public bool IsSuccessErrorCode { get; set; }
         public string ErrorText { get; set; } = null!;
 
         public virtual ICollection<Log> Logs { get; set; }

@@ -1,14 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Paymentsystem.Server.Models;
-using Paymentsystem.Shared.ViewModels;
-using System.Data.SqlTypes;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
+﻿using Paymentsystem.Shared.Interfaces;
 
 namespace Paymentsystem.Server.Controllers
 {
@@ -16,24 +6,45 @@ namespace Paymentsystem.Server.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
         private readonly IConfiguration _config;
+        private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(IConfiguration config)
+        public AuthController(IConfiguration config, IUserService userService, ITokenService tokenService)
         {
             _config = config;
+            _userService = userService;
+            _tokenService = tokenService;
         }
+
         // Role authentication https://www.youtube.com/watch?v=TDY_DtTEkes
         [HttpPost]
         public async Task<IActionResult> Register(UserDto req)
         {
             // TODO: Implement Db Check
+            var user = new User()
+            {
+                Balance = 0,
+                Email = req.Email,
+                Firstname = req.FirstName,
+                Lastname = req.LastName,
+                IsConfirmedUser = false,
+                Role = "User",
+                Username = req.Username,
+                Comment = "",
+                ConfirmedEmail = false,
+                EmailConfirmationCode = new()
+                {
+                    ConfirmationCode = GenerateConfirmationCode(),
+                    Created = DateTime.Now,
+                    Expires = DateTime.Now.AddHours(1)
+                }
+            };
 
             // TODO: Send Confirmation Email to user
-
+            
             CreatePasswordHash(req.Password, out byte[] hash, out byte[] salt);
 
-            user.Username = req.Username;
             user.PasswordHash = hash;
             user.PasswordSalt = salt;
 
@@ -41,6 +52,12 @@ namespace Paymentsystem.Server.Controllers
 
             return Ok(user);
 
+        }
+
+        private string GenerateConfirmationCode()
+        {
+            var random = new Random();
+            return random.Next(0, 1000000).ToString("D6");
         }
 
         [HttpPost]
@@ -51,17 +68,18 @@ namespace Paymentsystem.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(UserDto req)
+        public async Task<IActionResult> Login(UserLoginDto req)
         {
             // check if user exists
-            if (user.Username != req.Username
-                || !VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt))
+            var user = _userService.GetByUsername(req.Username);
+            if (user == null) return BadRequest("Benutzername oder Passwort ist falsch");
+            if (!VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return BadRequest("Benutzername oder Passwort ist falsch.");
             }
 
             var refreshToken = GenerateRefreshToken();
-            SetRefreshToken(refreshToken);
+            SetRefreshToken(refreshToken, user.Username);
 
             string token = CreateToken(user);
             return Ok(token);
@@ -71,20 +89,20 @@ namespace Paymentsystem.Server.Controllers
         public IActionResult RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
-
+            var user = _userService.GetByUsername(User.Identity.Name);
             // TODO: Change to DB
-            if (!user.RefreshToken.Equals(refreshToken))
+            if (!user.Refreshtoken.Equals(refreshToken))
             {
                 return Unauthorized("Invalid Refresh Token");
             }
-            else if (user.TokenExpires < DateTime.Now)
+            else if (user.Refreshtoken.Expires < DateTime.Now)
             {
                 return Unauthorized("Token expired.");
             }
 
             string token = CreateToken(user);
             var newRefreshToken = GenerateRefreshToken();
-            SetRefreshToken(newRefreshToken);
+            SetRefreshToken(newRefreshToken, user.Username);
 
             return Ok(token);
         }
@@ -101,7 +119,7 @@ namespace Paymentsystem.Server.Controllers
             return refreshToken;
         }
 
-        private void SetRefreshToken(RefreshToken token)
+        private void SetRefreshToken(RefreshToken token, string username)
         {
             var cookieOptions = new CookieOptions
             {
@@ -111,9 +129,7 @@ namespace Paymentsystem.Server.Controllers
 
             // TODO: Move to Db Service
             Response.Cookies.Append("refreshToken", token.Token, cookieOptions);
-            user.RefreshToken = token.Token;
-            user.TokenCreated = token.Created;
-            user.TokenExpires = token.Expires;
+            _tokenService.UpdateTokenFromUserByName(username, token.Token, token.Created, token.Expires);
         }
 
         private string CreateToken(User user)
@@ -121,7 +137,8 @@ namespace Paymentsystem.Server.Controllers
             List<Claim> claims = new()
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:TokenKey").Value));
@@ -130,7 +147,7 @@ namespace Paymentsystem.Server.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddHours(1),
                 signingCredentials: cred);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

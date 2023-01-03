@@ -25,6 +25,10 @@
                     <MudTextField Style="background: var(--mud-palette-background); color: var(--mud-palette-TextPrimary); border-radius: 3px;"
                             Label="Email" Class="mt-3"
                                   Validation="@(new EmailAddressAttribute() {ErrorMessage = "Emailadresse ist ungültig"})"  @bind-Value="model.Email" For="@(() => model.Email)" RequiredError="Emailadresse ist notwendig." />
+                    <MudTextField Style="background: var(--mud-palette-background); color: var(--mud-palette-TextPrimary); border-radius: 3px;"
+                            Label="Vorname" Class="mt-3" @bind-Value="model.FirstName"/>
+                    <MudTextField Style="background: var(--mud-palette-background); color: var(--mud-palette-TextPrimary); border-radius: 3px;"
+                                  Label="Nachname" Class="mt-3" @bind-Value="model.LastName" />
                     <MudTextField Style="background: var(--mud-palette-background); color: var(--mud-palette-TextPrimary); border-radius: 3px;" 
                             Label="Passwort" HelperText="Passwort eingeben" Class="mt-3"
                                   Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"  @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password" RequiredError="Passwort ist notwendig." />
@@ -58,6 +62,12 @@
         [EmailAddress(ErrorMessage = "Der eingegebene Wert is keine gültige Email.")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Vorname fehlt.")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Nachname fehlt.")]
+        public string LastName { get; set; }
+
         [Required(ErrorMessage = "Passwort fehlt")]
         [StringLength(30, ErrorMessage = "Das Passwort muss mindestens 8 Zeichen lang sein.", MinimumLength = 8)]
         public string Password { get; set; }
@@ -78,7 +88,10 @@
         var userDto = new UserDto()
         {
             Password = model.Password,
-            Username = model.Username
+            Username = model.Username,
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName
         };
 
         var res = await http.PostAsJsonAsync<UserDto>("https://localhost:7237/api/Auth/Register", userDto);
