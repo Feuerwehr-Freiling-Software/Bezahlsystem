@@ -1,5 +1,4 @@
-﻿using Paymentsystem.Shared.Models;
-using Paymentsystem.Shared.ViewModels;
+﻿using Paymentsystem.Shared.ViewModels;
 
 namespace Paymentsystem.Server.Hubs
 {

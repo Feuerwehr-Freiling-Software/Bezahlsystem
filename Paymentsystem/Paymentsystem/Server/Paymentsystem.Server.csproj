@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\Paymentsystem.Client.csproj" />
     <ProjectReference Include="..\Shared\Paymentsystem.Shared.csproj" />
   </ItemGroup>
 

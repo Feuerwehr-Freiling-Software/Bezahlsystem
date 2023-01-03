@@ -1,12 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 using MudBlazor;
-using Paymentsystem.Shared.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 
 namespace Paymentsystem.Client.Components
 {
@@ -21,7 +14,7 @@ namespace Paymentsystem.Client.Components
         MudDialogInstance MudDialog { get; set; } 
 
         [Parameter]
-        public List<Article> Cart { get; set; } = new List<Article>();
+        public List<ArticleDto> Cart { get; set; } = new();
 
         public double TotalSum { get; set; } = 0;
 
@@ -42,25 +35,17 @@ namespace Paymentsystem.Client.Components
             base.OnInitialized();
         }
 
-        async void AddArticle(Article article)
+        async void AddArticle(ArticleDto article)
         {
             var fArt = Cart.FirstOrDefault(x => x.Name == article.Name);
             if (fArt != null) fArt.Amount++;
             else
             {
-                var tmpArticle = new Article()
+                var tmpArticle = new ArticleDto()
                 {
                     Name = article.Name,
                     Amount = 1,
-                    Active = article.Active,
-                    Id = article.Id,
-                    ImageData = article.ImageData,
-                    IsInVending = article.IsInVending,
-                    Price = article.Price,
-                    PriceId = article.PriceId,
-                    Type = article.Type,
-                    VendingMachineNumber = article.VendingMachineNumber,
-                    VendingSlot = article.VendingSlot
+                    PriceAmount = article.PriceAmount
                 };
 
                 Cart.Add(tmpArticle);
@@ -77,13 +62,13 @@ namespace Paymentsystem.Client.Components
 
             foreach (var item in Cart)
             {
-                totalAmount += item.Amount * item.Price.Amount;
+                totalAmount += item.Amount * item.PriceAmount;
             }
 
             TotalSum = Math.Round(totalAmount, 1);
         }
 
-        async void RemoveArticle(Article article)
+        async void RemoveArticle(ArticleDto article)
         {
             var fArt = Cart.FirstOrDefault(x => x.Name == article.Name);
             if (fArt != null) 

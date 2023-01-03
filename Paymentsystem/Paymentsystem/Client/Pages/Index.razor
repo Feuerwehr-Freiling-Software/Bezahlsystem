@@ -22,13 +22,6 @@
             .Build();
 
         await connection.StartAsync();
-
-        ErrorCode? code = null;
-
-        do
-        {
-            code = await connection.InvokeAsync<ErrorCode>("AddToGroup", 1);
-        } while (code == null || code.IsSuccessErrorCode == false);
         
         // implementation of EventListeners
 

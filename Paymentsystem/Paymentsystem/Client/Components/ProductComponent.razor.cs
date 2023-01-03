@@ -17,7 +17,7 @@ namespace Paymentsystem.Client.Components
         }
 
         [Parameter]
-        public Article Article { get; set; }
+        public ArticleDto Article { get; set; }
         [Parameter]
         public string Path { get; set; }
     }

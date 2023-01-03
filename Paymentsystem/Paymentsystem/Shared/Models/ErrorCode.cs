@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Paymentsystem.Shared.Models
 {
-    public class ErrorCode
+    public partial class Errorcode
     {
+        public Errorcode()
+        {
+            Logs = new HashSet<Log>();
+        }
+
         public int Id { get; set; }
         public int Code { get; set; }
-        public bool IsSuccessErrorCode { get; set; }
-        public string ErrorText { get; set; } = string.Empty;
+        public sbyte IsSuccessErrorCode { get; set; }
+        public string ErrorText { get; set; } = null!;
+
+        public virtual ICollection<Log> Logs { get; set; }
     }
 }
