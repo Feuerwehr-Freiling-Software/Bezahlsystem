@@ -11,10 +11,12 @@ namespace Paymentsystem.Shared.Services
     public class ErrorCodeService : IErrorCodeService
     {
         private readonly ApplicationDbContext _db;
+        private readonly ILogService logService;
 
-        public ErrorCodeService(ApplicationDbContext db)
+        public ErrorCodeService(ApplicationDbContext db, ILogService logService)
         {
             _db = db;
+            this.logService = logService;
         }
 
         public int AddError(Errorcode errorcode)
@@ -58,9 +60,21 @@ namespace Paymentsystem.Shared.Services
             return _db.Errorcodes.ToList();
         }
 
-        public Errorcode? GetErrorcodeByCode(int code)
+        public Errorcode? GetErrorcode(int code, string sender)
         {
-            return _db.Errorcodes.FirstOrDefault(x => x.Code == code);
+            var res = _db.Errorcodes.FirstOrDefault(x => x.Code == code);
+            if (res == null) return null;
+            if (!res.IsSuccessErrorCode)
+            {
+                logService.AddLog(ViewModels.Enums.LogSeverity.Error, res.ErrorText, sender, res.Id);
+            }
+
+            return res;
+        }
+
+        public Errorcode? GetErrorcode(int Code)
+        {
+            return _db.Errorcodes.FirstOrDefault(x => x.Code == Code);
         }
 
         public int UpdateError(Errorcode errorcode)

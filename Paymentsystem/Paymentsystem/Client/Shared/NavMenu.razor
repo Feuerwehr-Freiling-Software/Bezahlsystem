@@ -1,4 +1,7 @@
-﻿<MudNavMenu>
+﻿@using System.Timers;
+@inject HttpClient http
+
+<MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Index</MudNavLink>
     <MudNavLink Href="/products" Match="NavLinkMatch.Prefix">Produkte</MudNavLink>
     <AuthorizeView Roles="Admin">
@@ -11,6 +14,8 @@
                 <MudNavLink Href="/articles" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Brightness5" IconColor="Color.Primary">Artikelverwaltung</MudNavLink>
                 <MudNavLink Href="/vendingMachine" Match="NavLinkMatch.Prefix" IconColor="Color.Primary" Icon="fa-solid fa-cash-register">Automatenverwaltung</MudNavLink>
                 <MudNavLink Href="/accessToken" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.GeneratingTokens" IconColor="Color.Primary">Zugriffsverwaltung</MudNavLink>
+                <MudNavLink Href="/errors" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ErrorOutline" IconColor="Color.Primary">ErrorCodes</MudNavLink>
+                <MudNavLink Href="/logs" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Description" IconColor="Color.Primary">Logs</MudNavLink>
             </MudNavGroup>
         </Authorized>
     </AuthorizeView>
@@ -26,3 +31,23 @@
         </NotAuthorized>
     </AuthorizeView>
 </MudNavMenu>
+
+@code{
+    System.Timers.Timer timer = new(2 * 60 * 1000);
+
+    void TimerTick()
+    {
+
+    }
+
+    public NavMenu()
+    {
+        timer.Elapsed += RefreshToken;
+        timer.Start();
+    }
+
+    void RefreshToken(object sender, ElapsedEventArgs e)
+    {
+        http.PostAsync("api/auth/refreshtoken", new StringContent(""));
+    }
+}

@@ -98,15 +98,16 @@ namespace Paymentsystem.Server.Controllers
         public IActionResult RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
-            var user = _userService.GetByUsername(User.Identity.Name);
+            //var user = _userService.GetByUsername(User.Identity.Name);
+            var user = _userService.GetByRefreshToken(refreshToken);
             // TODO: Change to DB
-            if (!user.Refreshtoken.Equals(refreshToken))
+            if (user == null)
             {
-                return Unauthorized("Invalid Refresh Token");
+                return BadRequest("Invalid Refresh Token");
             }
             else if (user.Refreshtoken.Expires < DateTime.Now)
             {
-                return Unauthorized("Token expired.");
+                return BadRequest("Token expired.");
             }
 
             string token = CreateToken(user);

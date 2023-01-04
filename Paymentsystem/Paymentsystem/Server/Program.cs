@@ -36,6 +36,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<IErrorCodeService, ErrorCodeService>();
 
 
 builder.Services.AddSwaggerGen(options =>

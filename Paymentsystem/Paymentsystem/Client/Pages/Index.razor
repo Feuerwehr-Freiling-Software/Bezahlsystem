@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using Paymentsystem.Shared.Models;
+@using System.Timers;
+@inject HttpClient http
 
 <PageTitle>Index</PageTitle>
 
@@ -15,6 +17,7 @@
 </AuthorizeView>
 
 @code{
+    
     protected override async Task OnInitializedAsync()
     {
         var connection = new HubConnectionBuilder()

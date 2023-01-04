@@ -9,5 +9,6 @@
         public int AddUser(User user);
         public int UpdateUser(User user);
         public int DeleteUser(string id);
+        public User? GetByRefreshToken(string refreshtoken);
     }
 }

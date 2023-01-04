@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static Paymentsystem.Shared.ViewModels.Enums;
 
 namespace Paymentsystem.Shared.Models
 {
@@ -7,7 +8,7 @@ namespace Paymentsystem.Shared.Models
     {
         public int Id { get; set; }
         public string Text { get; set; } = null!;
-        public int Severity { get; set; }
+        public LogSeverity Severity { get; set; }
         public string Sender { get; set; } = null!;
         public int ErrorCodeId { get; set; }
         public DateTime DateTime { get; set; }

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Paymentsystem.Client.Pages.User
+namespace Paymentsystem.Client.Pages.Admin
 {
-    public partial class AccessTokens
+    public partial class Users
     {
-        public AccessTokens()
+        public Users()
         {
 
         }

@@ -1,4 +1,5 @@
-﻿using Paymentsystem.Shared.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Paymentsystem.Shared.Data;
 using Paymentsystem.Shared.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -69,9 +70,14 @@ namespace Paymentsystem.Shared.Services
             return _db.Users.FirstOrDefault(x => x.Id == id);
         }
 
+        public User? GetByRefreshToken(string refreshtoken)
+        {
+            return _db.Users.Include(x => x.Refreshtoken).FirstOrDefault(x => x.Refreshtoken.Token == refreshtoken);
+        }
+
         public User? GetByUsername(string username)
         {
-            return _db.Users.FirstOrDefault(x =>x.Username == username);
+            return _db.Users.Include(x => x.Refreshtoken).FirstOrDefault(x => x.Username == username);
         }
 
         public int UpdateUser(User user)

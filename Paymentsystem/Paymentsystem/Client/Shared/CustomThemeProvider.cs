@@ -32,7 +32,7 @@ namespace Paymentsystem.Client.Shared
                     Primary = new MudColor("#647687"),
                     TextPrimary = new MudColor("#000000FF"),
                     Secondary = new MudColor("#3A4147"),
-                    TextSecondary = new MudColor("#000000")
+                    TextSecondary = new MudColor("#000000")                    
                 },
                 PaletteDark = new Palette()
                 {
@@ -49,7 +49,6 @@ namespace Paymentsystem.Client.Shared
                     TextDisabled = new MudColor("#ababab"),
                     LinesInputs = new MudColor("#576573"),
                     ActionDefault = new MudColor("#647687")
-                                        
                 }
             };
         }

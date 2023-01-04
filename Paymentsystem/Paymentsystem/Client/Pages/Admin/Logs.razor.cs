@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Paymentsystem.Client.Pages
+namespace Paymentsystem.Client.Pages.Admin
 {
-    public partial class Articles
+    public partial class Logs
     {
-        public Articles()
+        public Logs()
         {
 
         }
