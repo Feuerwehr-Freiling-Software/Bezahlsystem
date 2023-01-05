@@ -31,23 +31,3 @@
         </NotAuthorized>
     </AuthorizeView>
 </MudNavMenu>
-
-@code{
-    System.Timers.Timer timer = new(2 * 60 * 1000);
-
-    void TimerTick()
-    {
-
-    }
-
-    public NavMenu()
-    {
-        timer.Elapsed += RefreshToken;
-        timer.Start();
-    }
-
-    void RefreshToken(object sender, ElapsedEventArgs e)
-    {
-        http.PostAsync("api/auth/refreshtoken", new StringContent(""));
-    }
-}

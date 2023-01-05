@@ -12,7 +12,9 @@ namespace Paymentsystem.Client.Pages.Admin
     {
         public AccessTokens()
         {
-
+            Interceptor.RegisterEvent();
         }
+
+        public void Dispose() => Interceptor.DisposeEvent();
     }
 }

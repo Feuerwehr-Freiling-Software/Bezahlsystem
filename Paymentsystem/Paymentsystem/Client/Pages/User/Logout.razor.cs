@@ -19,6 +19,7 @@ namespace Paymentsystem.Client.Pages.User
         {
             snackBar.Add("Erfolgreich ausgeloggt.", MudBlazor.Severity.Success);
             await localStorage.RemoveItemAsync("token");
+            await localStorage.RemoveItemAsync("refreshToken");
             await provider.GetAuthenticationStateAsync();
             _nav.NavigateTo("");
         }
