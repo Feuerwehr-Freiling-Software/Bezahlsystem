@@ -1,13 +1,16 @@
 ﻿@page "/errors"
 @attribute [Authorize(Roles = "Admin")]
+@inject HttpInterceptorService Interceptor
 
 @using System.Net.Http.Json
 @inject HttpClient httpClient
 @inject ISnackbar snackbar
+@inject IDialogService DialogService
 
+<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddErrorCode" >Errorcode hinzufügen</MudButton>
 <MudDataGrid T="Errorcode" Items="@ErrorList" ReadOnly="false" EditMode="@DataGridEditMode.Form"
-             StartedEditingItem="@StartedEditingItem" CancelledEditingItem="CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
-             Bordered="true" Dense="true" EditTrigger="@DataGridEditTrigger.Manual">
+                 StartedEditingItem="@StartedEditingItem" CancelledEditingItem="CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+                 Bordered="true" Dense="true" EditTrigger="@DataGridEditTrigger.Manual">
     <Columns>
         <Column T="Errorcode" Field="Id" Title="ID" IsEditable="false" />
         <Column T="Errorcode" Field="Code" />
@@ -19,10 +22,11 @@
                 </MudSelect>
             </EditTemplate>
         </Column>
-        <Column T="Errorcode" Field="ErrorText"/>            
+        <Column T="Errorcode" Field="ErrorText" />
         <Column T="Errorcode" CellClass="d-flex justify-end">
             <CellTemplate>
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItem" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteErrorCode(context.Item))" />
             </CellTemplate>
         </Column>
     </Columns>

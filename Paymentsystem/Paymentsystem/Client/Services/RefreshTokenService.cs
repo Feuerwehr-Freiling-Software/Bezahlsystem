@@ -1,11 +1,13 @@
-﻿namespace Paymentsystem.Client.Services
+﻿using Microsoft.AspNetCore.Components.Authorization;
+
+namespace Paymentsystem.Client.Services
 {
     public class RefreshTokenService
     {
-        private readonly AuthStateProvider authProvider;
+        private readonly AuthenticationStateProvider authProvider;
         private readonly IAuthenticationService authService;
 
-        public RefreshTokenService(AuthStateProvider authProvider, IAuthenticationService authService)
+        public RefreshTokenService(AuthenticationStateProvider authProvider, IAuthenticationService authService)
         {
             this.authProvider = authProvider;
             this.authService = authService;

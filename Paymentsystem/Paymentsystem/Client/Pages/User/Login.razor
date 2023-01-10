@@ -70,7 +70,9 @@
             InvokeAsync(StateHasChanged);
             return;
         }
+
         var token = await res.Content.ReadAsStringAsync();
+        await LocalStorage.SetItemAsStringAsync("username", User.Username);
         await LocalStorage.SetItemAsync<string>("token", token);
         await provider.GetAuthenticationStateAsync();
         _nav.NavigateTo("");

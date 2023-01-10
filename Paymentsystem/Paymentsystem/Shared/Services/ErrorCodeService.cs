@@ -79,8 +79,9 @@ namespace Paymentsystem.Shared.Services
 
         public int UpdateError(Errorcode errorcode)
         {
-            if (!_db.Errorcodes.Any(x => x.Code == errorcode.Code)) return 46;
-
+            if (!_db.Errorcodes.Any(x => x.Id == errorcode.Id)) return 46;
+            if (_db.Errorcodes.Any(x => x.Code == errorcode.Code)) return 47;
+            
             _db.Errorcodes.Update(errorcode);
             var res = _db.SaveChanges();
 

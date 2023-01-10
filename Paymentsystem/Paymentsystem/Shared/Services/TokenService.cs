@@ -27,7 +27,7 @@ namespace Paymentsystem.Shared.Services
         public int UpdateTokenFromUserByName(string username, string refreshtoken, DateTime created, DateTime expires)
         {
             var user = _db.Users.Include(x => x.Refreshtoken).FirstOrDefault(x => x.Username == username);
-
+            if (user == null) return 51;
             user.Refreshtoken.Expires = expires;
             user.Refreshtoken.Created = created;
             user.Refreshtoken.Token = refreshtoken;

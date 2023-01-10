@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Paymentsystem.Client.Components.AddComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,20 @@ namespace Paymentsystem.Client.Pages.Admin
 
         protected override async Task OnInitializedAsync()
         {
-            ErrorList = await httpClient.GetFromJsonAsync<List<Errorcode>>("https://localhost:7237/api/ErrorCode/GetAllErrorCodes") ?? new();
+            UpdateErrorList();
+
+        }
+
+        async void UpdateErrorList() 
+        {
+            var res = await httpClient.GetAsync("https://localhost:7237/api/ErrorCode/GetAllErrorCodes");
+            if (!res.IsSuccessStatusCode)
+            {
+                snackbar.Add("Not allowed ", Severity.Error);
+            }
+
+            ErrorList = await res.Content.ReadFromJsonAsync<List<Errorcode>>();
+            InvokeAsync(StateHasChanged);
         }
 
         // events
@@ -35,14 +49,35 @@ namespace Paymentsystem.Client.Pages.Admin
 
         }
 
+        async void AddErrorCode()
+        {
+            // Show Dialog
+            var dialog = await DialogService.ShowAsync<AddErrorCodeComponent>("Errocode Hinzufügen");
+            var result = await dialog.Result;
+            UpdateErrorList();
+        }
+
+        async void DeleteErrorCode(Errorcode item)
+        {
+            var res = await httpClient.DeleteAsync($"https://localhost:7237/api/ErrorCode/DeleteError/{item.Id}");
+            var error = await res.Content.ReadFromJsonAsync<Errorcode>();
+
+            var text = error?.ErrorText ?? "Wos wüsdn du oida?";
+
+            snackbar.Add(text, !res.IsSuccessStatusCode ? Severity.Error : Severity.Success);
+
+            UpdateErrorList();
+        }
+
         async void CommittedItemChanges(Errorcode item)
         {
             var res = await httpClient.PutAsJsonAsync("https://localhost:7237/api/ErrorCode/UpdateError", item);
             var error = await res.Content.ReadFromJsonAsync<Errorcode>();
 
-            var text = error.ErrorText ?? "Haha gibts nu ned lol";
+            var text = error?.ErrorText ?? "Haha gibts nu ned lol";
 
             snackbar.Add(error.ErrorText, !res.IsSuccessStatusCode ? Severity.Error : Severity.Success);
+            UpdateErrorList();
         }
     }
 }

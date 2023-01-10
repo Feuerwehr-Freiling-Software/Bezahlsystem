@@ -102,6 +102,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
+app.MapDefaultControllerRoute();
 app.MapFallbackToFile("index.html");
 
 app.MapHub<VendingHub>("/VendingHub");

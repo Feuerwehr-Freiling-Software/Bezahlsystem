@@ -1,5 +1,6 @@
 ﻿using Paymentsystem.Shared.Extensions;
 using Paymentsystem.Shared.Interfaces;
+using Paymentsystem.Shared.Services;
 
 namespace Paymentsystem.Server.Controllers
 {
@@ -10,12 +11,35 @@ namespace Paymentsystem.Server.Controllers
         private readonly IConfiguration _config;
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
+        private readonly IErrorCodeService errorCodeService;
+        private readonly Errorcode EmptyErrorcode;
 
-        public AuthController(IConfiguration config, IUserService userService, ITokenService tokenService)
+        public AuthController(IConfiguration config, IUserService userService, ITokenService tokenService, IErrorCodeService errorCodeService)
         {
             _config = config;
             _userService = userService;
             _tokenService = tokenService;
+            this.errorCodeService = errorCodeService;
+
+            this.EmptyErrorcode = new Errorcode()
+            {
+                Code = -1,
+                ErrorText = "Error couldn't be found",
+                IsSuccessErrorCode = true
+            };
+        }
+                
+        [HttpGet("logout/{username}")]
+        public async Task<IActionResult> Logout(string username)
+        {
+            var res = _tokenService.UpdateTokenFromUserByName(username, "", DateTime.Now, DateTime.Now);
+            var method = System.Reflection.MethodBase.GetCurrentMethod();
+            var fullName = method.Name + "." + method.ReflectedType.Name;
+
+            var error = errorCodeService.GetErrorcode(res, fullName) ?? EmptyErrorcode;
+
+            if (!error.IsSuccessErrorCode) return BadRequest(error);
+            return Ok(error);
         }
 
         // Role authentication https://www.youtube.com/watch?v=TDY_DtTEkes
@@ -122,7 +146,7 @@ namespace Paymentsystem.Server.Controllers
             var refreshToken = new RefreshToken
             {
                 Created = DateTime.Now,
-                Expires = DateTime.Now.AddMinutes(5),
+                Expires = DateTime.Now.AddMonths(1),
                 Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64))
             };
 

@@ -4,7 +4,7 @@ using Paymentsystem.Shared.Interfaces;
 
 namespace Paymentsystem.Server.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]/[action]/{id}")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class ErrorCodeController : ControllerBase
@@ -49,9 +49,9 @@ namespace Paymentsystem.Server.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteError(Errorcode errorcode)
+        public async Task<IActionResult> DeleteError(int id)
         {
-            var res = errorCodeService.DeleteError(errorcode.Code); 
+            var res = errorCodeService.DeleteError(id);
             
             var method = System.Reflection.MethodBase.GetCurrentMethod();
             var fullName = method.Name + "." + method.ReflectedType.Name;
@@ -63,8 +63,16 @@ namespace Paymentsystem.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddError(Errorcode errorcode)
+        public async Task<IActionResult> AddError(ErrorDto errordto)
         {
+
+            var errorcode = new Errorcode()
+            {
+                Code = errordto.Code,
+                ErrorText = errordto.ErrorText,
+                IsSuccessErrorCode = errordto.IsSuccessErrorcode
+            };
+
             var res = errorCodeService.AddError(errorcode);
 
             var method = System.Reflection.MethodBase.GetCurrentMethod();
