@@ -4,7 +4,7 @@ using Paymentsystem.Shared.Interfaces;
 
 namespace Paymentsystem.Server.Controllers
 {
-    [Route("api/[controller]/[action]/{id}")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class ErrorCodeController : ControllerBase

@@ -23,7 +23,6 @@ namespace Paymentsystem.Client.Pages.Admin
         protected override async Task OnInitializedAsync()
         {
             UpdateErrorList();
-
         }
 
         async void UpdateErrorList() 
@@ -32,9 +31,20 @@ namespace Paymentsystem.Client.Pages.Admin
             if (!res.IsSuccessStatusCode)
             {
                 snackbar.Add("Not allowed ", Severity.Error);
+                return;
             }
 
-            ErrorList = await res.Content.ReadFromJsonAsync<List<Errorcode>>();
+            try
+            {
+                ErrorList = await res.Content.ReadFromJsonAsync<List<Errorcode>>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                snackbar.Add($"Error code: {ex.Message}", Severity.Error);
+            }
+
             InvokeAsync(StateHasChanged);
         }
 

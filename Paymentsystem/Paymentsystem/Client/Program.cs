@@ -6,6 +6,7 @@ using MudBlazor;
 using MudBlazor.Services;
 using Paymentsystem.Client;
 using Paymentsystem.Client.Services;
+using System.Net;
 using Toolbelt.Blazor;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
@@ -37,7 +38,7 @@ builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped(sp =>
 {
-    return new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }.EnableIntercept(sp);
+    return new HttpClient() { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }.EnableIntercept(sp);
 });
 
 builder.Services.AddHttpClientInterceptor();
