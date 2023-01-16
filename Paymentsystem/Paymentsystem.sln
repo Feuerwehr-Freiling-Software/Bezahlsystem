@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paymentsystem.Client", "Pay
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paymentsystem.Shared", "Paymentsystem\Shared\Paymentsystem.Shared.csproj", "{66C5EBB7-69CE-492C-B682-8931CE79ADD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paymentsystem.Authentication", "Paymentsystem.Authentication\Paymentsystem.Authentication.csproj", "{226E3E22-397E-498B-98AD-A5B1AC4A58EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{66C5EBB7-69CE-492C-B682-8931CE79ADD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66C5EBB7-69CE-492C-B682-8931CE79ADD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66C5EBB7-69CE-492C-B682-8931CE79ADD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{226E3E22-397E-498B-98AD-A5B1AC4A58EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{226E3E22-397E-498B-98AD-A5B1AC4A58EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{226E3E22-397E-498B-98AD-A5B1AC4A58EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{226E3E22-397E-498B-98AD-A5B1AC4A58EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
