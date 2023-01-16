@@ -18,25 +18,25 @@ namespace Paymentsystem.Shared.Services
             _db = db;
         }
 
-        public int AddUser(User user)
-        {
-            if (_db.Users.Any(x => x.Username == user.Username)) return 32;
-            if(_db.Users.Any(x => x.Email == user.Email)) return 33;
+        //public int AddUser(ApplicationUser user)
+        //{
+        //    if (_db.Users.Any(x => x.UserName == user.UserName)) return 32;
+        //    if(_db.Users.Any(x => x.Email == user.Email)) return 33;
 
-            _db.Users.Add(user);
-            var res = _db.SaveChanges();
+        //    _db.Users.Add(user);
+        //    var res = _db.SaveChanges();
 
-            switch (res)
-            {
-                case <= 0:
-                    return 34;
-                case 1:
-                    return 30;
-                case > 1:
-                    return 35;
-            }
+        //    switch (res)
+        //    {
+        //        case <= 0:
+        //            return 34;
+        //        case 1:
+        //            return 30;
+        //        case > 1:
+        //            return 35;
+        //    }
 
-        }
+        //}
 
         public int DeleteUser(string id)
         {
@@ -55,47 +55,42 @@ namespace Paymentsystem.Shared.Services
             }
         }
 
-        public List<User> GetAllUsers()
-        {
-            return _db.Users.ToList();
-        }
+        //public List<ApplicationUser> GetAllUsers()
+        //{
+        //    return _db.Users.ToList();
+        //}
 
-        public User? GetByEmail(string email)
-        {
-            return _db.Users.FirstOrDefault(x => x.Email == email);
-        }
+        //public ApplicationUser? GetByEmail(string email)
+        //{
+        //    return _db.Users.FirstOrDefault(x => x.Email == email);
+        //}
 
-        public User? GetById(string id)
-        {
-            return _db.Users.FirstOrDefault(x => x.Id == id);
-        }
+        //public ApplicationUser? GetById(string id)
+        //{
+        //    return _db.Users.FirstOrDefault(x => x.Id == id);
+        //}
 
-        public User? GetByRefreshToken(string refreshtoken)
-        {
-            return _db.Users.Include(x => x.Refreshtoken).FirstOrDefault(x => x.Refreshtoken.Token == refreshtoken);
-        }
+        //public ApplicationUser? GetByUsername(string username)
+        //{
+        //    return _db.Users.FirstOrDefault(x => x.UserName == username);
+        //}
 
-        public User? GetByUsername(string username)
-        {
-            return _db.Users.Include(x => x.Refreshtoken).FirstOrDefault(x => x.Username == username);
-        }
+        //public int UpdateUser(ApplicationUser user)
+        //{
+        //    if (!_db.Users.Any(x => x.UserName == user.UserName)) return 36;
 
-        public int UpdateUser(User user)
-        {
-            if (!_db.Users.Any(x => x.Username == user.Username)) return 36;
+        //    _db.Users.Update(user);
+        //    var res = _db.SaveChanges();
 
-            _db.Users.Update(user);
-            var res = _db.SaveChanges();
-
-            switch (res)
-            {
-                case <= 0:
-                    return 34;
-                case 1:
-                    return 30;
-                case > 1:
-                    return 35;
-            }
-        }
+        //    switch (res)
+        //    {
+        //        case <= 0:
+        //            return 34;
+        //        case 1:
+        //            return 30;
+        //        case > 1:
+        //            return 35;
+        //    }
+        //}
     }
 }

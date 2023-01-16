@@ -7,7 +7,7 @@ namespace Paymentsystem.Shared.Models
     {
         public int Id { get; set; }
         public string UserId { get; set; } = null!;
-        public User User { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
         public DateTime TimeBought { get; set; }
         public int Quantity { get; set; }
         public int SlotInStorageHasArticleId { get; set; }

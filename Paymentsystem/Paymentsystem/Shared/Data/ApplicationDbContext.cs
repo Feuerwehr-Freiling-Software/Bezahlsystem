@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Paymentsystem.Shared.Models;
 
 namespace Paymentsystem.Shared.Data
 {
-    public partial class ApplicationDbContext : DbContext
+    public partial class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
-        {
-        }
-
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -31,7 +30,6 @@ namespace Paymentsystem.Shared.Data
         public virtual DbSet<Storage> Storages { get; set; } = null!;
         public virtual DbSet<Suggestion> Suggestions { get; set; } = null!;
         public virtual DbSet<Topup> Topups { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserBoughtArticleFromSlot> UserBoughtArticleFromSlots { get; set; } = null!;
         public virtual DbSet<UserHasNotification> UserHasNotifications { get; set; } = null!;
 
@@ -42,6 +40,40 @@ namespace Paymentsystem.Shared.Data
                 //optionsBuilder.UseMySql("server=localhost;database=paymenstystem;user=root;password=Test1234", ServerVersion.Parse("10.4.24-mariadb"));
                 optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=OAOPS;Trusted_Connection=True;");
             }
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.HasDefaultSchema("Identity");
+            builder.Entity<IdentityUser>(entity =>
+            {
+                entity.ToTable(name: "ApplicationUser");
+            });
+            builder.Entity<IdentityRole>(entity =>
+            {
+                entity.ToTable(name: "Role");
+            });
+            builder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.ToTable("UserRoles");
+            });
+            builder.Entity<IdentityUserClaim<string>>(entity =>
+            {
+                entity.ToTable("UserClaims");
+            });
+            builder.Entity<IdentityUserLogin<string>>(entity =>
+            {
+                entity.ToTable("UserLogins");
+            });
+            builder.Entity<IdentityRoleClaim<string>>(entity =>
+            {
+                entity.ToTable("RoleClaims");
+            });
+            builder.Entity<IdentityUserToken<string>>(entity =>
+            {
+                entity.ToTable("UserTokens");
+            });
         }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -334,7 +366,7 @@ namespace Paymentsystem.Shared.Data
         //        entity.Property(e => e.Date).HasColumnType("datetime");
         //    });
 
-        //    modelBuilder.Entity<User>(entity =>
+        //    modelBuilder.Entity<ApplicationUser>(entity =>
         //    {
         //        entity.HasKey(e => new { e.Id, e.RefreshtokenId, e.EmailConfirmationCodeId })
         //            .HasName("PRIMARY")
@@ -376,7 +408,7 @@ namespace Paymentsystem.Shared.Data
 
         //        entity.Property(e => e.Role).HasMaxLength(45);
 
-        //        entity.Property(e => e.Username).HasMaxLength(45);
+        //        entity.Property(e => e.UserName).HasMaxLength(45);
 
         //        entity.HasOne(d => d.EmailConfirmationCode)
         //            .WithMany(p => p.Users)
@@ -455,5 +487,6 @@ namespace Paymentsystem.Shared.Data
         //}
 
         //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
     }
 }

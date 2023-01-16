@@ -9,6 +9,6 @@ namespace Paymentsystem.Shared.Models
         public string SuggestionText { get; set; } = null!;
         public int? Importance { get; set; }
         public string UserId { get; set; } = null!;
-        public User User { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
     }
 }

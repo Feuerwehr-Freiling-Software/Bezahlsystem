@@ -10,6 +10,6 @@ namespace Paymentsystem.Shared.Models
         public double ValueAtStart { get; set; }
         public double AcctualValue { get; set; }
         public string UserId { get; set; } = null!;
-        public User User { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
     }
 }

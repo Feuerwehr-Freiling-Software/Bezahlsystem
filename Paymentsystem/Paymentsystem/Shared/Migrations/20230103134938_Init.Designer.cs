@@ -377,7 +377,7 @@ namespace Paymentsystem.Shared.Migrations
                     b.ToTable("Topups");
                 });
 
-            modelBuilder.Entity("Paymentsystem.Shared.Models.User", b =>
+            modelBuilder.Entity("Paymentsystem.Shared.Models.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -424,7 +424,7 @@ namespace Paymentsystem.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -524,13 +524,13 @@ namespace Paymentsystem.Shared.Migrations
 
             modelBuilder.Entity("Paymentsystem.Shared.Models.Opencheckout", b =>
                 {
-                    b.HasOne("Paymentsystem.Shared.Models.User", "User")
+                    b.HasOne("Paymentsystem.Shared.Models.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("Paymentsystem.Shared.Models.Price", b =>
@@ -576,24 +576,24 @@ namespace Paymentsystem.Shared.Migrations
 
             modelBuilder.Entity("Paymentsystem.Shared.Models.Suggestion", b =>
                 {
-                    b.HasOne("Paymentsystem.Shared.Models.User", "User")
+                    b.HasOne("Paymentsystem.Shared.Models.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("Paymentsystem.Shared.Models.Topup", b =>
                 {
-                    b.HasOne("Paymentsystem.Shared.Models.User", "Executor")
+                    b.HasOne("Paymentsystem.Shared.Models.IdentityUser", "Executor")
                         .WithMany()
                         .HasForeignKey("ExecutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paymentsystem.Shared.Models.User", "User")
+                    b.HasOne("Paymentsystem.Shared.Models.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -601,10 +601,10 @@ namespace Paymentsystem.Shared.Migrations
 
                     b.Navigation("Executor");
 
-                    b.Navigation("User");
+                    b.Navigation("IdentityUser");
                 });
 
-            modelBuilder.Entity("Paymentsystem.Shared.Models.User", b =>
+            modelBuilder.Entity("Paymentsystem.Shared.Models.IdentityUser", b =>
                 {
                     b.HasOne("Paymentsystem.Shared.Models.Emailconfirmationcode", "EmailConfirmationCode")
                         .WithMany()
@@ -631,7 +631,7 @@ namespace Paymentsystem.Shared.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paymentsystem.Shared.Models.User", "User")
+                    b.HasOne("Paymentsystem.Shared.Models.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -639,7 +639,7 @@ namespace Paymentsystem.Shared.Migrations
 
                     b.Navigation("SlotInStorageHasArticle");
 
-                    b.Navigation("User");
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("Paymentsystem.Shared.Models.UserHasNotification", b =>
@@ -650,7 +650,7 @@ namespace Paymentsystem.Shared.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paymentsystem.Shared.Models.User", "User")
+                    b.HasOne("Paymentsystem.Shared.Models.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -658,7 +658,7 @@ namespace Paymentsystem.Shared.Migrations
 
                     b.Navigation("Notification");
 
-                    b.Navigation("User");
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("Paymentsystem.Shared.Models.Articlecategory", b =>
