@@ -29,165 +29,165 @@ namespace Paymentsystem.Server.Controllers
             };
         }
                 
-        [HttpGet("logout/{username}")]
-        public async Task<IActionResult> Logout(string username)
-        {
-            var res = _tokenService.UpdateTokenFromUserByName(username, "", DateTime.Now, DateTime.Now);
-            var method = System.Reflection.MethodBase.GetCurrentMethod();
-            var fullName = method.Name + "." + method.ReflectedType.Name;
+        //[HttpGet("logout/{username}")]
+        //public async Task<IActionResult> Logout(string username)
+        //{
+        //    var res = _tokenService.UpdateTokenFromUserByName(username, "", DateTime.Now, DateTime.Now);
+        //    var method = System.Reflection.MethodBase.GetCurrentMethod();
+        //    var fullName = method.Name + "." + method.ReflectedType.Name;
 
-            var error = errorCodeService.GetErrorcode(res, fullName) ?? EmptyErrorcode;
+        //    var error = errorCodeService.GetErrorcode(res, fullName) ?? EmptyErrorcode;
 
-            if (!error.IsSuccessErrorCode) return BadRequest(error);
-            return Ok(error);
-        }
+        //    if (!error.IsSuccessErrorCode) return BadRequest(error);
+        //    return Ok(error);
+        //}
 
-        // Role authentication https://www.youtube.com/watch?v=TDY_DtTEkes
-        [HttpPost]
-        public async Task<IActionResult> Register(UserDto req)
-        {
-            // TODO: Implement Db Check
-            var user = new User()
-            {
-                Id = req.Username.ToSha256(),
-                Balance = 0,
-                Email = req.Email,
-                Firstname = req.FirstName,
-                Lastname = req.LastName,
-                IsConfirmedUser = false,
-                Role = "User",
-                Username = req.Username,
-                Comment = "",
-                ConfirmedEmail = false,
-                Refreshtoken = new()
-                {
-                    Created = DateTime.UtcNow,
-                    Expires = DateTime.UtcNow,
-                    Token = ""
-                },
-                EmailConfirmationCode = new()
-                {
-                    ConfirmationCode = GenerateConfirmationCode(),
-                    Created = DateTime.Now,
-                    Expires = DateTime.Now.AddHours(1)
-                }
-            };
+        //// Role authentication https://www.youtube.com/watch?v=TDY_DtTEkes
+        //[HttpPost]
+        //public async Task<IActionResult> Register(UserDto req)
+        //{
+        //    // TODO: Implement Db Check
+        //    var user = new ApplicationUser()
+        //    {
+        //        Id = req.Username.ToSha256(),
+        //        Balance = 0,
+        //        Email = req.Email,
+        //        Firstname = req.FirstName,
+        //        Lastname = req.LastName,
+        //        IsConfirmedUser = false,
+        //        Role = "User",
+        //        Username = req.Username,
+        //        Comment = "",
+        //        ConfirmedEmail = false,
+        //        Refreshtoken = new()
+        //        {
+        //            Created = DateTime.UtcNow,
+        //            Expires = DateTime.UtcNow,
+        //            Token = ""
+        //        },
+        //        EmailConfirmationCode = new()
+        //        {
+        //            ConfirmationCode = GenerateConfirmationCode(),
+        //            Created = DateTime.Now,
+        //            Expires = DateTime.Now.AddHours(1)
+        //        }
+        //    };
 
-            // TODO: Send Confirmation Email to user
+        //    // TODO: Send Confirmation Email to user
             
-            CreatePasswordHash(req.Password, out byte[] hash, out byte[] salt);
+        //    CreatePasswordHash(req.Password, out byte[] hash, out byte[] salt);
 
-            user.PasswordHash = hash;
-            user.PasswordSalt = salt;
+        //    user.PasswordHash = hash;
+        //    user.PasswordSalt = salt;
 
-            // Add User to db
-            _userService.AddUser(user);
+        //    // Add User to db
+        //    _userService.AddUser(user);
 
-            return Ok(user);
+        //    return Ok(user);
 
-        }
+        //}
 
-        private string GenerateConfirmationCode()
-        {
-            var random = new Random();
-            return random.Next(0, 1000000).ToString("D6");
-        }
+        //private string GenerateConfirmationCode()
+        //{
+        //    var random = new Random();
+        //    return random.Next(0, 1000000).ToString("D6");
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> ConfirmEmail(string code)
-        {
-            // TODO: Check for confirmation Code in Db and check if user is authenticated
-            return Ok();
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> ConfirmEmail(string code)
+        //{
+        //    // TODO: Check for confirmation Code in Db and check if user is authenticated
+        //    return Ok();
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> Login(UserLoginDto req)
-        {
-            // check if user exists
-            var user = _userService.GetByUsername(req.Username);
-            if (user == null) return BadRequest("Benutzername oder Passwort ist falsch");
-            if (!VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                return BadRequest("Benutzername oder Passwort ist falsch.");
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> Login(UserLoginDto req)
+        //{
+        //    // check if user exists
+        //    var user = _userService.GetByUsername(req.Username);
+        //    if (user == null) return BadRequest("Benutzername oder Passwort ist falsch");
+        //    if (!VerifyPasswordHash(req.Password, user.PasswordHash, user.PasswordSalt))
+        //    {
+        //        return BadRequest("Benutzername oder Passwort ist falsch.");
+        //    }
 
-            var refreshToken = GenerateRefreshToken();
-            SetRefreshToken(refreshToken, user.Username);
+        //    var refreshToken = GenerateRefreshToken();
+        //    SetRefreshToken(refreshToken, user.Username);
 
-            string token = CreateToken(user);
-            return Ok(token);
-        }
+        //    string token = CreateToken(user);
+        //    return Ok(token);
+        //}
 
-        [HttpPost]
-        public IActionResult RefreshToken()
-        {
-            var refreshToken = Request.Cookies["refreshToken"];
-            //var user = _userService.GetByUsername(User.Identity.Name);
-            var user = _userService.GetByRefreshToken(refreshToken);
-            // TODO: Change to DB
-            if (user == null)
-            {
-                return BadRequest("Invalid Refresh Token");
-            }
-            else if (user.Refreshtoken.Expires < DateTime.Now)
-            {
-                return BadRequest("Token expired.");
-            }
+        //[HttpPost]
+        //public IActionResult RefreshToken()
+        //{
+        //    var refreshToken = Request.Cookies["refreshToken"];
+        //    //var user = _userService.GetByUsername(User.Identity.Name);
+        //    var user = _userService.GetByRefreshToken(refreshToken);
+        //    // TODO: Change to DB
+        //    if (user == null)
+        //    {
+        //        return BadRequest("Invalid Refresh Token");
+        //    }
+        //    else if (user.Refreshtoken.Expires < DateTime.Now)
+        //    {
+        //        return BadRequest("Token expired.");
+        //    }
 
-            string token = CreateToken(user);
-            var newRefreshToken = GenerateRefreshToken();
-            SetRefreshToken(newRefreshToken, user.Username);
+        //    string token = CreateToken(user);
+        //    var newRefreshToken = GenerateRefreshToken();
+        //    SetRefreshToken(newRefreshToken, user.Username);
 
-            return Ok(token);
-        }
+        //    return Ok(token);
+        //}
 
-        private RefreshToken GenerateRefreshToken()
-        {
-            var refreshToken = new RefreshToken
-            {
-                Created = DateTime.Now,
-                Expires = DateTime.Now.AddMonths(1),
-                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64))
-            };
+        //private RefreshToken GenerateRefreshToken()
+        //{
+        //    var refreshToken = new RefreshToken
+        //    {
+        //        Created = DateTime.Now,
+        //        Expires = DateTime.Now.AddMonths(1),
+        //        Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64))
+        //    };
 
-            return refreshToken;
-        }
+        //    return refreshToken;
+        //}
 
-        private void SetRefreshToken(RefreshToken token, string username)
-        {
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = token.Expires
-            };
+        //private void SetRefreshToken(RefreshToken token, string username)
+        //{
+        //    var cookieOptions = new CookieOptions
+        //    {
+        //        HttpOnly = true,
+        //        Expires = token.Expires
+        //    };
 
-            // TODO: Move to Db Service
-            Response.Cookies.Append("refreshToken", token.Token, cookieOptions);
-            _tokenService.UpdateTokenFromUserByName(username, token.Token, token.Created, token.Expires);
-        }
+        //    // TODO: Move to Db Service
+        //    Response.Cookies.Append("refreshToken", token.Token, cookieOptions);
+        //    _tokenService.UpdateTokenFromUserByName(username, token.Token, token.Created, token.Expires);
+        //}
 
-        private string CreateToken(User user)
-        {
-            List<Claim> claims = new()
-            {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
+        //private string CreateToken(ApplicationUser user)
+        //{
+        //    List<Claim> claims = new()
+        //    {
+        //        new Claim(ClaimTypes.Name, user.Username),
+        //        new Claim(ClaimTypes.Role, user.Role),
+        //        new Claim(ClaimTypes.Email, user.Email)
+        //    };
 
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:TokenKey").Value));
+        //    var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:TokenKey").Value));
 
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+        //    var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: cred);
+        //    var token = new JwtSecurityToken(
+        //        claims: claims,
+        //        expires: DateTime.Now.AddHours(1),
+        //        signingCredentials: cred);
 
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        //    var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             
-            return jwt;
-        }
+        //    return jwt;
+        //}
 
         [HttpGet]
         public IActionResult TestNoAuth()
