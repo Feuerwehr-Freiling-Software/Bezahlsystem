@@ -1,5 +1,55 @@
-﻿<MudNavMenu>
+﻿@using System.Security.Claims;
+
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
-    <MudNavLink Href="fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Fetch data</MudNavLink>
+@*    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
+    <MudNavLink Href="fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Fetch data</MudNavLink>*@
+    <MudNavLink Icon="@Icons.Material.Filled.ShoppingCart" Href="Products" Match="NavLinkMatch.Prefix">Produkte</MudNavLink>
+    @if (isAuthenticated)
+    {
+        @if (isAdmin)
+        {
+            <MudNavGroup Icon="" Title="Admin Bereich">
+                <MudNavLink Href="manage/users">Benutzerverwaltung</MudNavLink>
+                <MudNavLink Href="manage/articles">Artikelverwaltung</MudNavLink>
+                <MudNavLink Href="manage/vendingMachines">Automatenverwaltung</MudNavLink>
+                <MudDivider/>
+                <MudNavLink Href="errorCodes">ErrorCodes</MudNavLink>
+                <MudNavLink Href="logs">Logs</MudNavLink>
+            </MudNavGroup>
+        }
+        <MudDivider/>
+        <MudNavLink Icon="@Icons.Material.Filled.Lightbulb" IconColor="Color.Primary" Href="suggestions">Vorschläge</MudNavLink>
+        <MudNavLink Icon="@Icons.Material.Filled.Person" IconColor="Color.Primary" Color="Color.Inherit" Href="authentication/profile">@user.Identity?.Name's Account</MudNavLink>
+        <MudNavLink Icon="@Icons.Material.Filled.Logout" IconColor="Color.Primary" Color="Color.Inherit" OnClick="BeginSignOut">Logout</MudNavLink>
+    }else
+    {
+        <MudDivider/>
+        <MudNavLink Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Primary" Href="authentication/register">Register</MudNavLink>
+        <MudNavLink Icon="@Icons.Material.Filled.Login" Color="Color.Primary" Href="authentication/login">Login</MudNavLink>
+    }
 </MudNavMenu>
+
+@code{
+    ClaimsPrincipal user;
+    bool isAdmin;
+    bool isAuthenticated;
+
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        isAuthenticated = user.Identity.IsAuthenticated;
+        isAdmin = user.IsInRole("Admin");
+    }
+}

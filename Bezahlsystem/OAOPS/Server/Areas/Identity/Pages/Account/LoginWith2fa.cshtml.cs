@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using OAOPS.Server.Models;
+using OAOPS.Shared.Models;
 
 namespace OAOPS.Server.Areas.Identity.Pages.Account
 {

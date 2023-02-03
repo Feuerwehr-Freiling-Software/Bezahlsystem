@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using OAOPS.Server.Models;
+using OAOPS.Shared.Models;
 
 namespace OAOPS.Server.Areas.Identity.Pages.Account.Manage
 {

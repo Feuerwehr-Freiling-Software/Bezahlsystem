@@ -2,16 +2,16 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using OAOPS.Server.Data;
-using OAOPS.Server.Models;
+using OAOPS.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using OAOPS.Server.Services;
 using Serilog;
 
-Log.Logger = new LoggerConfiguration()
+Serilog.Log.Logger = new LoggerConfiguration()
     .WriteTo
     .Console(outputTemplate:
-    "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    "[{Timestamp:HH:mm:ss} {Level:u3}] {NewLine}{Message:lj}{Exception}")
     .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
