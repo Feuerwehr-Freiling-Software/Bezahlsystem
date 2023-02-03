@@ -6,12 +6,13 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <MudLink Color="Color.Inherit" Href="authentication/profile">Hello, @context.User.Identity?.Name!  </MudLink>
+        <MudText Style="margin-left: 10px; margin-right: 10px" Color="Color.Inherit" Typo="Typo.body1"> | </MudText>
+        <MudLink Color="Color.Inherit" OnClick="BeginSignOut">Logout</MudLink>
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/register">Register</a>
-        <a href="authentication/login">Log in</a>
+        <MudLink Color="Color.Primary" Href="authentication/register">Register</MudLink>
+        <MudLink Color="Color.Primary" Href="authentication/login">Login</MudLink>
     </NotAuthorized>
 </AuthorizeView>
 
