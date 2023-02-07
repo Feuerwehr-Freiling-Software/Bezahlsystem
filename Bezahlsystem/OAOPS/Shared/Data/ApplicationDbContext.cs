@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OAOPS.Shared.Models;
 
-namespace OAOPS.Server.Data
+namespace OAOPS.Shared.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
@@ -13,7 +13,8 @@ namespace OAOPS.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
-            public DbSet<Suggestion> Suggestions { get; set; }
+        
+        public DbSet<Suggestion> Suggestions { get; set; }
         public DbSet<OpenCheckout> OpenCheckouts { get; set; }
         public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; }
         public DbSet<User_has_Notification> User_Has_Notifications { get; set; }
@@ -27,5 +28,6 @@ namespace OAOPS.Server.Data
         public DbSet<Price> Prices { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<ErrorCode> ErrorCodes { get; set; }
+
     }
 }

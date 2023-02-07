@@ -4,7 +4,7 @@ namespace OAOPS.Shared.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public List<Suggestion>? Suggestions{ get; set; }
+        public List<Suggestion> Suggestions{ get; set; } = new List<Suggestion>();
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public double Balance { get; set; }

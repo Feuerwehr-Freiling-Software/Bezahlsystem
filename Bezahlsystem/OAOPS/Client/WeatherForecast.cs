@@ -1,4 +1,4 @@
-namespace OAOPS.Shared
+namespace OAOPS.Client
 {
     public class WeatherForecast
     {

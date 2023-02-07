@@ -1,1 +1,14 @@
 ﻿global using OAOPS.Shared.Models;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+global using OAOPS.Shared.DTO;
+global using OAOPS.Shared.Interfaces;
+global using OAOPS.Shared.Services;
+global using Microsoft.EntityFrameworkCore;
+global using OAOPS.Server.Data;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Identity.UI.Services;
+global using OAOPS.Server.Services;
+global using Serilog;
+global using OAOPS.Shared.Data;

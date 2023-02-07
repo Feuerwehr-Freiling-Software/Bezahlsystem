@@ -1,12 +1,12 @@
-﻿using OAOPS.Shared.Helpers;
+﻿using OAOPS.Client.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static OAOPS.Shared.Helpers.Enums;
+using static OAOPS.Client.Helpers.Enums;
 
-namespace OAOPS.Shared.DTO
+namespace OAOPS.Client.DTO
 {
     public class SuggestionDTO
     {

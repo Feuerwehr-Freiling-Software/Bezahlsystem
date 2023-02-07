@@ -1,0 +1,33 @@
+﻿@page "/manageSuggestions"
+@using OAOPS.Client.Helpers;
+@attribute [Authorize(Roles = "Admin")]
+@inject HttpClient httpClient
+
+<MudContainer MaxWidth="MaxWidth.Medium" Style="margin-top: 50px">
+    <MudPaper>
+        
+        <MudDataGrid T="SuggestionDTO" Items="@Elements" ReadOnly="false" EditMode="@DataGridEditMode.Form"
+                     StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+                     Bordered="true" Dense="true" EditTrigger="@DataGridEditTrigger.Manual">
+            <Columns>
+                <Column T="SuggestionDTO" Field="Username" Title="Benutzername" IsEditable="false" />
+                <Column T="SuggestionDTO" Field="SuggestionText" Title="Text" />
+                <Column T="SuggestionDTO" Field="Importance" Title="Dringlichkeit">
+                    <EditTemplate>
+                        <MudSelect @bind-Value="context.Item.Importance" Required RequiredError="Hawara du muasd a Notwendigkeit setzn" Margin="@Margin.Dense">
+                            @foreach (var item in Enum.GetValues(typeof(Enums.Importance)))
+                            {
+                                <MudSelectItem Value="@item">@item</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </EditTemplate>
+                </Column>
+                <Column T="SuggestionDTO" CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItem" />
+                    </CellTemplate>
+                </Column>
+            </Columns>
+        </MudDataGrid>
+    </MudPaper>
+</MudContainer>

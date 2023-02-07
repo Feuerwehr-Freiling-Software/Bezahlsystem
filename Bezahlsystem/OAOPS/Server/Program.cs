@@ -1,12 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.EntityFrameworkCore;
-using OAOPS.Server.Data;
-using OAOPS.Shared.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using OAOPS.Server.Services;
-using Serilog;
+using System.IdentityModel.Tokens.Jwt;
 
 Serilog.Log.Logger = new LoggerConfiguration()
     .WriteTo
@@ -19,15 +12,23 @@ builder.Host.UseSerilog();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+                options.UseSqlServer(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(opt =>
+    {
+        opt.IdentityResources["openid"].UserClaims.Add("role");
+        opt.ApiResources.Single().UserClaims.Add("role");
+    });
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
@@ -46,6 +47,12 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(o =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+
+// add custom Services
+builder.Services.AddScoped<ILoggerService, LoggerService>();
+builder.Services.AddScoped<IErrorCodeService, ErrorCodeService>();
+builder.Services.AddScoped<ISuggestionService, SuggestionService>();
 
 var app = builder.Build();
 
@@ -76,6 +83,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
+app.MapDefaultControllerRoute();
 app.MapFallbackToFile("index.html");
 
 app.Run();
