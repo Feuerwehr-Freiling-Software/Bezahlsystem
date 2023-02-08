@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 Serilog.Log.Logger = new LoggerConfiguration()
     .WriteTo
     .Console(outputTemplate:
-    "[{Timestamp:HH:mm:ss} {Level:u3}] {NewLine}{Message:lj}{Exception}")
+    "[{Timestamp:HH:mm:ss} {Level:u3}] {NewLine}{Message:lj}{Exception}{NewLine}{NewLine}")
     .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
