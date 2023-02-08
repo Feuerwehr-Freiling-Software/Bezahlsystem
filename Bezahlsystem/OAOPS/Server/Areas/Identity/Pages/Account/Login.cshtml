@@ -4,6 +4,11 @@
 @{
     ViewData["Title"] = "Log in";
 }
+<style>
+    .mTop {
+        margin-top: 15px;
+    }
+</style>
 
 <h1>@ViewData["Title"]</h1>
 <div class="row">
@@ -12,19 +17,19 @@
             <form id="account" method="post">
                 <h2>Use a local account to log in.</h2>
                 <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-floating">
+                <div asp-validation-summary="ModelOnly" class="text-danger mTop"></div>
+                <div class="form-floating mTop">
                     <input asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" />
                     <label asp-for="Input.Username" class="form-label"></label>
                     <span asp-validation-for="Input.Username" class="text-danger"></span>
                 </div>
-                <div class="form-floating">
+                <div class="form-floating mTop">
                     <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
                     <label asp-for="Input.Password" class="form-label"></label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div>
-                    <div class="checkbox">
+                    <div class="checkbox mTop">
                         <label asp-for="Input.RememberMe" class="form-label">
                             <input class="form-check-input" asp-for="Input.RememberMe" />
                             @Html.DisplayNameFor(m => m.Input.RememberMe)
