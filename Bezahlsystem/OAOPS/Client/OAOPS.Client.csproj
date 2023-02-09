@@ -14,4 +14,8 @@
     <PackageReference Include="MudBlazor" Version="6.1.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\AdminArea\" />
+  </ItemGroup>
+
 </Project>
