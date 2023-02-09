@@ -18,31 +18,32 @@ namespace OAOPS.Client.Pages.BamstisArea
         }
 
         private IEnumerable<SuggestionDTO> Elements = new List<SuggestionDTO>();
-        private bool _readOnly;
-        private bool _isCellEditMode;
-        private List<string> _events = new();
-        private bool _editTriggerRowClick;
 
         protected override async Task OnInitializedAsync()
         {
             var res = await httpClient.GetFromJsonAsync<List<SuggestionDTO>>("api/suggestion/GetAllSuggestions");
             Elements = res;
+
+            foreach (var item in Enum.GetValues(typeof(Enums.Importance)))
+            {
+                Console.WriteLine(item);
+            }
         }
 
         // events
         void StartedEditingItem(SuggestionDTO item)
         {
-            _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
         }
 
         void CanceledEditingItem(SuggestionDTO item)
         {
-            _events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
         }
 
         void CommittedItemChanges(SuggestionDTO item)
         {
-            _events.Insert(0, $"Event = CommittedItemChanges, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+
         }
     }
 }

@@ -1,28 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using MudBlazor;
-using OAOPS.Client.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
-
-
-namespace OAOPS.Client.Pages
+﻿namespace OAOPS.Client.Pages
 {
     public partial class Suggestions
     {
-        public Suggestions()
-        {
-
-        }
-
         SuggestionDTO suggestion;
 
         protected override void OnInitialized()
         {
             suggestion = new SuggestionDTO();
+
         }
 
         async Task SubmitSuggestion()
