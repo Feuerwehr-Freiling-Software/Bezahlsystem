@@ -1,5 +1,4 @@
-﻿@inject ISnackbar Snackbar
-@inject HttpClient http
+﻿@inject HttpClient http
 
 <MudDialog>
     <TitleContent>
@@ -9,9 +8,9 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField T="int" @bind-Value="@Errorcode.Code" Label="Code" />
+        <MudNumericField Min="0" T="int" @bind-Value="@Errorcode.Code" Label="Code" />
         <MudTextField T="string" @bind-Value="@Errorcode.ErrorText" Label="Text" />
-        <MudTextField T="bool" @bind-Value="@Errorcode.IsSuccessErrorcode" Label="Is Successerrorcode" />
+        <MudSwitch T="bool" @bind-Value="@Errorcode.IsSuccessCode" Label="Is Successerrorcode" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>

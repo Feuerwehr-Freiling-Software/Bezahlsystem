@@ -2,7 +2,12 @@
 global using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 global using OAOPS.Client;
+global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.Components.Rendering;
 global using MudBlazor;
 global using OAOPS.Client.DTO;
-global using OAOPS.Client.Helpers;
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
 global using System.Net.Http.Json;
+global using System.Threading.Tasks;

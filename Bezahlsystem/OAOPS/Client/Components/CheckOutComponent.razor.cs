@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace Paymentsystem.Client.Components
@@ -10,8 +11,14 @@ namespace Paymentsystem.Client.Components
 
         }
 
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
+
+        [Inject] public ILocalStorageService localStorage { get; set; }
         [CascadingParameter]
-        MudDialogInstance MudDialog { get; set; } 
+        MudDialogInstance MudDialog { get; set; }
+
+        [Inject] 
 
         [Parameter]
         public List<ArticleDto> Cart { get; set; } = new();
@@ -25,14 +32,8 @@ namespace Paymentsystem.Client.Components
 
         private void Pay()
         {
-            SnackBar.Add("Bezahlt", Severity.Success);
+            Snackbar.Add("Bezahlt", Severity.Success);
             MudDialog.Close(DialogResult.Ok("success"));
-        }
-
-        protected override void OnInitialized()
-        {
-            SetTotalAmount();
-            base.OnInitialized();
         }
 
         async void AddArticle(ArticleDto article)

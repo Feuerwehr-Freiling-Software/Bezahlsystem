@@ -3,26 +3,25 @@ using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 
-namespace Paymentsystem.Client.Components.AddComponents
+namespace OAOPS.Client.Components.AddComponents
 {
-    public partial class AddErrorCodeComponent
+    public partial class AddErrorComponent
     {
-        public AddErrorCodeComponent()
+        public AddErrorComponent()
         {
 
         }
-
+        [Inject] ISnackbar Snackbar { get; set; }
         [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
         public ErrorDto Errorcode { get; set; } = new()
         {
             Code = 0,
             ErrorText = string.Empty,
-            IsSuccessErrorcode = false
+            IsSuccessCode = false
         };
 
         private void Cancel()
