@@ -2,9 +2,9 @@
 
 namespace Paymentsystem.Client.Components
 {
-    public partial class CheckOutComponent : ComponentBase
+    public partial class CheckOutElement : ComponentBase
     {
-        public CheckOutComponent()
+        public CheckOutElement()
         {
 
         }
@@ -17,7 +17,7 @@ namespace Paymentsystem.Client.Components
         [CascadingParameter]
         MudDialogInstance MudDialog { get; set; }
 
-        [Inject] 
+        [Inject]
 
         [Parameter]
         public List<ArticleDto> Cart { get; set; } = new();
@@ -71,10 +71,10 @@ namespace Paymentsystem.Client.Components
         async void RemoveArticle(ArticleDto article)
         {
             var fArt = Cart.FirstOrDefault(x => x.Name == article.Name);
-            if (fArt != null) 
+            if (fArt != null)
             {
                 if (fArt.Amount > 1) fArt.Amount--;
-                else if(fArt.Amount <= 1) Cart.Remove(fArt);
+                else if (fArt.Amount <= 1) Cart.Remove(fArt);
             }
 
             await localStorage.SetItemAsync("Cart", Cart);
