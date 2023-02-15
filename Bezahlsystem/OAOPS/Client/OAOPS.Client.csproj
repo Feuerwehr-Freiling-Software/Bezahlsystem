@@ -7,16 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\AdminArea\**" />
+    <Content Remove="Pages\AdminArea\**" />
+    <EmbeddedResource Remove="Pages\AdminArea\**" />
+    <None Remove="Pages\AdminArea\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.11" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.11" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="MudBlazor" Version="6.1.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\AdminArea\" />
   </ItemGroup>
 
 </Project>

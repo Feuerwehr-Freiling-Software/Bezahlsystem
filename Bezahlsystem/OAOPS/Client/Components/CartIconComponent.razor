@@ -1,4 +1,29 @@
 ﻿@inject IDialogService DialogService
+@inject NavigationManager nav
+
 <div>
     <MudFab OnClick="Checkout" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ShoppingCart" />
 </div>
+
+@code{
+    [Parameter]
+    public List<ArticleDto> Cart { get; set; } = new List<ArticleDto>();
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+    private async void Checkout()
+    {
+        var parameters = new DialogParameters { ["Cart"] = Cart };
+
+        var dialog = await DialogService.ShowAsync(typeof(CheckOutComponent), "Checkout", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+
+        }
+    }
+}
