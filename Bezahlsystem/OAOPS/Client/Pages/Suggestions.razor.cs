@@ -1,7 +1,12 @@
-﻿namespace OAOPS.Client.Pages
+﻿using OAOPS.Client.Services;
+
+namespace OAOPS.Client.Pages
 {
     public partial class Suggestions
     {
+        [Inject]
+        public DataService dataService { get; set; }
+
         SuggestionDTO suggestion;
 
         protected override void OnInitialized()
@@ -12,7 +17,7 @@
 
         async Task SubmitSuggestion()
         {
-            var res = await http.PostAsJsonAsync<SuggestionDTO>("api/Suggestion/AddSuggestion", suggestion);
+            var res = await dataService.AddSuggestion(suggestion);
 
             snackbar.Add(!res.IsSuccessStatusCode ? "Vorschlag konnte nicht versendet werden" + res.Content : "Vorschlag erfolgreich versendet", !res.IsSuccessStatusCode ? Severity.Error : Severity.Success);
             if (res.IsSuccessStatusCode)

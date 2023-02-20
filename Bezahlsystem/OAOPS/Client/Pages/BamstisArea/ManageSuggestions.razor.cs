@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using OAOPS.Client.DTO;
 using OAOPS.Client.Helpers;
+using OAOPS.Client.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace OAOPS.Client.Pages.BamstisArea
 {
     public partial class ManageSuggestions
     {
+        [Inject]
+        public DataService dataService { get; set; }
+
         public ManageSuggestions()
         {
 
@@ -21,9 +25,8 @@ namespace OAOPS.Client.Pages.BamstisArea
         private IEnumerable<SuggestionDTO> Elements = new List<SuggestionDTO>();
 
         protected override async Task OnInitializedAsync()
-        {
-            var res = await httpClient.GetFromJsonAsync<List<SuggestionDTO>>("api/suggestion/GetAllSuggestions");
-            Elements = res;
+        {            
+            Elements = await dataService.GetAllSuggestions() ?? new List<SuggestionDTO>();
 
             foreach (var item in Enum.GetValues(typeof(Enums.Importance)))
             {

@@ -1,11 +1,17 @@
 
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
+using OAOPS.Client.Configuration;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+builder.Services.Configure<ClientOptions>(builder.Configuration.GetSection("configuration"));
 // add services to builder
+
+var config = new ClientOptions();
+builder.Configuration.GetSection("configuration").Bind(config);
 
 builder.Services.AddMudServices();
 
