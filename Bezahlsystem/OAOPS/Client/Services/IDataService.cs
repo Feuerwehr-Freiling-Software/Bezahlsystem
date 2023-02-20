@@ -14,5 +14,12 @@ namespace OAOPS.Client.Services
         #region Errors
 
         #endregion
+
+        #region Products
+
+        public Task<List<ErrorDto>> Pay(List<ArticleDto> articles, string username);
+        public Task<List<ArticleDto>> GetArticles();
+
+        #endregion
     }
 }

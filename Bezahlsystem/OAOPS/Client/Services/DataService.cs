@@ -36,5 +36,23 @@ namespace OAOPS.Client.Services
 
 
         #endregion
+
+        #region Articles
+
+        public async Task<List<ArticleDto>?> GetArticles()
+        {
+            var res = await _http.GetFromJsonAsync<List<ArticleDto>>(configuration.ApiEndpoints.GetAllArticles);
+            return res;
+        }
+
+        public async Task<List<ErrorDto>> Pay(List<ArticleDto> articles, string username)
+        {
+            var purchase = new PaymentDto() { Articles = articles, Username = username};
+            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.Pay, purchase);
+            var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>>();
+            return result;
+        }
+
+        #endregion
     }
 }

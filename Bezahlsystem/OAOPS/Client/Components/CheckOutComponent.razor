@@ -1,4 +1,7 @@
 ﻿@using Blazored.LocalStorage;
+@using OAOPS.Client.Services;
+@attribute [Authorize]
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
@@ -43,6 +46,7 @@
     MudDialogInstance MudDialog { get; set; }
 
     [Inject]
+    public IDataService dataService { get; set; }
 
     [Parameter]
     public List<ArticleDto> Cart { get; set; } = new();
@@ -54,8 +58,17 @@
         MudDialog?.Cancel();
     }
 
-    private void Pay()
+    private async void Pay()
     {
+        var authState = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        var userName = authState.User.Identity.Name;
+        if (userName == null)
+        {
+            Snackbar.Add("Nicht angemeldet", Severity.Error);
+            return;
+        }
+        var res = dataService.Pay(Cart, userName);
+
         Snackbar.Add("Bezahlt", Severity.Success);
         MudDialog.Close(DialogResult.Ok("success"));
     }

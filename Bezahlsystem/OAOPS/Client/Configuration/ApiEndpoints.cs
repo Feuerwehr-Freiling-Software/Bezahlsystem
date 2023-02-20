@@ -13,5 +13,11 @@
         #region Logs
 
         #endregion
+        #region Articles
+
+        public string GetAllArticles { get; set; }
+        public string Pay { get; set; }
+
+        #endregion
     }
 }
