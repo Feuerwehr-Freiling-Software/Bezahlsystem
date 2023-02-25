@@ -19,14 +19,17 @@ namespace OAOPS.Client.Pages
         {
             var res = await dataService.AddSuggestion(suggestion);
 
-            snackbar.Add(!res.IsSuccessStatusCode ? "Vorschlag konnte nicht versendet werden" + res.Content : "Vorschlag erfolgreich versendet", !res.IsSuccessStatusCode ? Severity.Error : Severity.Success);
-            if (res.IsSuccessStatusCode)
+            if (res.Count == 0)
             {
+                snackbar.Add("Vorschlag erfolgreich hinzugefügt.");
                 nav.NavigateTo("/");
             }
             else
             {
-                Console.WriteLine("Error: " + res.Content);
+                foreach (var item in res)
+                {
+                    snackbar.Add(item.ErrorText, Severity.Error);
+                }
             }
         }
 

@@ -9,12 +9,14 @@ namespace OAOPS.Server.Controllers
     public class SuggestionController : ControllerBase
     {
         private readonly ISuggestionService _suggestionService;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly ILoggerService loggerService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public SuggestionController(ISuggestionService suggestionService, IErrorCodeService errorCodeService, UserManager<ApplicationUser> userManager)
+        public SuggestionController(ISuggestionService suggestionService, ILoggerService _loggerService, UserManager<ApplicationUser> userManager)
         {
             _suggestionService = suggestionService;
-            this.userManager = userManager;
+            loggerService = _loggerService;
+            _userManager = userManager;
         }
 
         [HttpPost, AllowAnonymous]
@@ -23,7 +25,7 @@ namespace OAOPS.Server.Controllers
             var tmp = User.Identity.Name;
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var username = userManager.FindByIdAsync(userId).Result.UserName;
+            var username = _userManager.FindByIdAsync(userId).Result.UserName;
 
             if (username == null) return BadRequest();
 

@@ -3,7 +3,7 @@
     public interface ILoggerService
     {
         /// <summary>
-        /// Adds a Log to the db
+        /// Adds a Log to the _db
         /// </summary>
         /// <param name="severity">Severity of the Log</param>
         /// <param name="text">More information about the Log</param>
