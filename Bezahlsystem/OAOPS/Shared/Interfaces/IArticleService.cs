@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OAOPS.Shared.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace OAOPS.Shared.Interfaces
 {
     public interface IArticleService
     {
-        Task<IActionResult> GetAllArticles();
+        public Task<List<ArticleDto>> GetAllArticles();
+        public Task<List<int>> AddArticle(ArticleDto article);
     }
 }

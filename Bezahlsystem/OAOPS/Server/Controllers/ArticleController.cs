@@ -18,7 +18,7 @@ namespace OAOPS.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllArticles()
         {
-            return await _articleService.GetAllArticles();
+            return Ok(await _articleService.GetAllArticles());
         }
     }
 }

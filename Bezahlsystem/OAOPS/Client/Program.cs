@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
 using OAOPS.Client.Configuration;
+using OAOPS.Client.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -15,6 +16,7 @@ builder.Configuration.GetSection("configuration").Bind(config);
 
 builder.Services.AddMudServices();
 
+builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddHttpClient("OAOPS.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 

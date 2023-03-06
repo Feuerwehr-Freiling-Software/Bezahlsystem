@@ -53,6 +53,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<ILoggerService, LoggerService>();
 builder.Services.AddScoped<IErrorCodeService, ErrorCodeService>();
 builder.Services.AddScoped<ISuggestionService, SuggestionService>();
+builder.Services.AddScoped<IPriceService, PriceService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
 
 var app = builder.Build();
 
