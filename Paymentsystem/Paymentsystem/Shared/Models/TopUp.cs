@@ -3,16 +3,15 @@ using System.Collections.Generic;
 
 namespace Paymentsystem.Shared.Models
 {
-    public partial class TopUp
+    public partial class Topup
     {
-        public int TopUpId { get; set; }
-        public string PersonId { get; set; } = null!;
+        public int Id { get; set; }
         public DateTime Date { get; set; }
-        public string Description { get; set; } = null!;
-        public double CashAmount { get; set; }
-        public string ExecutorId { get; set; } = null!;
+        public string CashAmount { get; set; } = null!;
 
-        public virtual User Executor { get; set; } = null!;
-        public virtual User Person { get; set; } = null!;
+        public string UserId { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
+        public string ExecutorId { get; set; } = null!;
+        public ApplicationUser Executor { get; set; } = null!;
     }
 }

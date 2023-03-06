@@ -62,7 +62,7 @@
 
     async void HandleLogin()
     {        
-        var res = await http.PostAsJsonAsync("api/auth/login", User);
+        var res = await http.PostAsJsonAsync("https://localhost:7237/api/Auth/Login", User);
         if (!res.IsSuccessStatusCode)
         {
             errorText = await res.Content.ReadAsStringAsync();
@@ -70,7 +70,9 @@
             InvokeAsync(StateHasChanged);
             return;
         }
+
         var token = await res.Content.ReadAsStringAsync();
+        await LocalStorage.SetItemAsStringAsync("username", User.Username);
         await LocalStorage.SetItemAsync<string>("token", token);
         await provider.GetAuthenticationStateAsync();
         _nav.NavigateTo("");

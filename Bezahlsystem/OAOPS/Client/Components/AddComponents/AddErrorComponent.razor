@@ -1,0 +1,17 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1"/>
+            Errorcode hinzufügen
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudNumericField Min="0" T="int" @bind-Value="@Errorcode.Code" Label="Code" />
+        <MudTextField T="string" @bind-Value="@Errorcode.ErrorText" Label="Text" />
+        <MudSwitch T="bool" @bind-Value="@Errorcode.IsSuccessCode" Label="Is Successerrorcode" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddError">Errorcode Hinzufügen</MudButton>
+    </DialogActions>
+</MudDialog>

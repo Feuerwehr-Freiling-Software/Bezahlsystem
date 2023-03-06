@@ -1,0 +1,17 @@
+﻿<MudCard sm="4">
+    <MudCardMedia Image="@Path" />
+    <MudCardContent>
+        <MudDivider />
+        <MudText Typo="Typo.h5">@Article.Name</MudText>
+        <MudText Typo="Typo.h5">@Article.Amount</MudText>
+        <MudText Typo="Typo.h5">@Article.PriceAmount €</MudText>
+    </MudCardContent>
+</MudCard>
+
+@code{
+    [Parameter]
+    public ArticleDto Article { get; set; }
+
+    [Parameter]
+    public string Path { get; set; }
+}

@@ -1,0 +1,4 @@
+﻿@page "/accessToken"
+@attribute [Authorize(Roles = "Admin")]
+@inject HttpInterceptorService Interceptor
+<h3>Zugriffe</h3>

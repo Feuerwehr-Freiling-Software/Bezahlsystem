@@ -1,9 +1,12 @@
-﻿<CascadingAuthenticationState>
+﻿@inject NavigationManager _nav
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    Fehlende Berechtigung :(
+                    @{
+                        _nav.NavigateTo("login");
+                    }
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />

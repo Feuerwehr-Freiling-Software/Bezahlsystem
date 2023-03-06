@@ -7,15 +7,8 @@ namespace Paymentsystem.Shared.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public int PriceId { get; set; }
-        public int Amount { get; set; }
-        public byte[] ImageData { get; set; } = null!;
-        public int Type { get; set; }
-        public bool? Active { get; set; }
-        public bool? IsInVending { get; set; }
-        public int VendingSlot { get; set; }
-        public int VendingMachineNumber { get; set; }
+        public int ArticleTypeId { get; set; }
 
-        public virtual Price Price { get; set; } = null!;
+        public virtual Articlecategory ArticleType { get; set; } = null!;
     }
 }

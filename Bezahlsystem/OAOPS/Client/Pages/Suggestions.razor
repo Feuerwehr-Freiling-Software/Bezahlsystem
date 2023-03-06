@@ -1,0 +1,15 @@
+﻿@page "/suggestions"
+@inject NavigationManager nav
+@inject HttpClient http
+@inject ISnackbar snackbar
+@inject IHttpClientFactory factory
+
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 50px">
+    <MudPaper>
+        <MudTextField @bind-Text="suggestion.SuggestionText" T="string" Lines="6" Label="Dein Vorschlag:" />
+    </MudPaper>
+</MudContainer>
+<MudContainer MaxWidth="MaxWidth.Small" Style="margin-top: 50px">
+    <MudButton OnClick="SubmitSuggestion" Style="left: 5px">Absenden</MudButton>
+    <MudButton OnClick="Back" Style="right: 5px">Zurück</MudButton>
+</MudContainer>
