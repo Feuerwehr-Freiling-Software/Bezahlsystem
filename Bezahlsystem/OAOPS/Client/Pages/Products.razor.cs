@@ -16,13 +16,13 @@ namespace OAOPS.Client.Pages
 
         }
         [Inject]
-        IDataService dataService { get; set; }
+        IDataService DataService { get; set; }
 
         List<ArticleDto> Articles = new ();
 
         protected override async Task OnInitializedAsync()
         {
-            Articles = await dataService.GetArticles() ?? new();
+            Articles = await DataService.GetArticles() ?? new();
         }
     }
 }

@@ -1,5 +1,18 @@
 ﻿@page "/products"
 
 <MudGrid Justify="Justify.Center">
-
+    @if (Articles.Count == 0)
+    {
+        <!-- No items in Article List -->    
+        <h2 class="mt-5">Keine Artikel gefunden...</h2>
+    }
+    else
+    {
+        @foreach (var item in Articles)
+        {
+            <MudItem xs="3">
+                <Paymentsystem.Client.Components.ProductComponent Article="item" Path="" />
+            </MudItem>
+        }
+    }
 </MudGrid>

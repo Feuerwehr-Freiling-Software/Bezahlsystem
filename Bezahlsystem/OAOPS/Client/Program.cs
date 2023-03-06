@@ -17,8 +17,10 @@ builder.Configuration.GetSection("configuration").Bind(config);
 builder.Services.AddMudServices();
 
 builder.Services.AddScoped<IDataService, DataService>();
-builder.Services.AddHttpClient("OAOPS.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+builder.Services.AddHttpClient("OAOPS.Server", client => { { client.BaseAddress = new Uri(config.ApiEndpoints.BaseUri); } })
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+
+builder.Services.AddScoped(sp => new HttpClient() { BaseAddress = new Uri(config.ApiEndpoints.BaseUri) });
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("OAOPS.ServerAPI"));

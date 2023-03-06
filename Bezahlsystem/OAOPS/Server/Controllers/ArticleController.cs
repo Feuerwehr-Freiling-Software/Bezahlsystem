@@ -15,7 +15,7 @@ namespace OAOPS.Server.Controllers
             _articleService = articleService;
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllArticles()
         {
             return Ok(await _articleService.GetAllArticles());
