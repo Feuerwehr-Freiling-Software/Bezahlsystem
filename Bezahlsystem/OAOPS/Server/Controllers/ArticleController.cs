@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OAOPS.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class ArticleController : ControllerBase
