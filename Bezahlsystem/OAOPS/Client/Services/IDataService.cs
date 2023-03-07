@@ -12,6 +12,7 @@ namespace OAOPS.Client.Services
         #endregion
 
         #region Errors
+        public Task<List<ErrorDto>> GetAllErrors();
 
         #endregion
 

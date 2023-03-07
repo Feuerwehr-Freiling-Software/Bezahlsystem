@@ -1,8 +1,8 @@
 ﻿@page "/manage/Suggestions"
 @using Microsoft.AspNetCore.Authorization;
-@using OAOPS.Client.Helpers;
+@using OAOPS.Client.Services;
 @attribute [Authorize(Roles = "Admin")]
-@inject HttpClient httpClient
+@inject IDataService dataService
 
 <MudContainer MaxWidth="MaxWidth.Medium" Style="margin-top: 50px">
     <MudPaper>        

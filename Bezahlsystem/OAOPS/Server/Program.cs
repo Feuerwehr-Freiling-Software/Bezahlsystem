@@ -17,7 +17,7 @@ try
 
     builder.Host.UseSerilog((ctx, lc) => lc
        .ReadFrom.Configuration(config));
-
+    
     Serilog.Log.Information("======== Starting up. ========");
 
     // Add services to the container.
