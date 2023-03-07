@@ -4,6 +4,9 @@ using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using Serilog.Sinks;
 
+// Centralized Logging Framework
+// https://datalust.co/seq
+//
 try
 {
     var builder = WebApplication.CreateBuilder(args);
