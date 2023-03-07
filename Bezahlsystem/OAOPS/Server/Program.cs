@@ -2,30 +2,30 @@ using Microsoft.AspNetCore.Authentication;
 using Serilog.Core;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
+using Serilog.Sinks;
 
-var levelSwitch = new LoggingLevelSwitch();
-Serilog.Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.ControlledBy(levelSwitch)
-    .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
+//var levelSwitch = new LoggingLevelSwitch();
+//Serilog.Log.Logger = new LoggerConfiguration()
+//    .MinimumLevel.ControlledBy(levelSwitch)
+//    .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
+//    .WriteTo.Console()
+//    .WriteTo.Seq("http://localhost:5341", Serilog.Events.LogEventLevel.Debug, apiKey: "2A8635wTuVbKf12uOV84")
+//    .CreateBootstrapLogger();
 
-Serilog.Log.Information("Starting up.");
+
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    var res = Host.CreateDefaultBuilder(args)
-        .ConfigureLogging(log =>
-        {
-            log.ClearProviders();
-            log.AddSerilog();
-        });
+    var config = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json")
+        .Build();
 
     builder.Host.UseSerilog((ctx, lc) => lc
-            .WriteTo.Console()
-            .ReadFrom.Settings((Serilog.Configuration.ILoggerSettings)ctx.Configuration));
+       .ReadFrom.Configuration(config));
+
+    Serilog.Log.Information("Starting up.");
 
     // Add services to the container.
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
