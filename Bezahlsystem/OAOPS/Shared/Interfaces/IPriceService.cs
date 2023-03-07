@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OAOPS.Shared.Services
+namespace OAOPS.Shared.Interfaces
 {
     public interface IPriceService
     {

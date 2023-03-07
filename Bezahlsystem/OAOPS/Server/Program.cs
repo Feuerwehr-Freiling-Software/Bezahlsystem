@@ -108,6 +108,6 @@ catch (Exception ex)
 }
 finally 
 {
-    Serilog.Log.Information("Shutdown complete");
+    Serilog.Log.Information("======== Successful shutdown ========");
     Serilog.Log.CloseAndFlush();
 }

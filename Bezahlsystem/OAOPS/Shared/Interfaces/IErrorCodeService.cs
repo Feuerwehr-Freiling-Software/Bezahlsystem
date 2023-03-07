@@ -3,11 +3,17 @@
     public interface IErrorCodeService
     {
         /// <summary>
+        /// Gets ErrorCodes from the db with corresponding ErrorCode from given list
+        /// </summary>
+        /// <param name="errors">List with ErrorCodes as int</param>
+        /// <returns>List of<see cref="ErrorCode"/>s </returns>
+        public Task<List<ErrorCode>> GetErrorsFromList(List<int> errors);
+        /// <summary>
         /// Checks if ErrorCode is Success Errorcode
         /// </summary>
         /// <param name="errorCode">ErrorCode</param>
         /// <param name="fullName">Name of the Class + Method the Error occured in</param>
-        /// <returns>Error text if it is an _error or empty string</returns>
+        /// <returns>Error text if it is an error or empty string</returns>
         public string CheckErrorCode(int errorCode, string fullName);
         /// <summary>
         /// Gets Errortext corresponding with given ErrorCode

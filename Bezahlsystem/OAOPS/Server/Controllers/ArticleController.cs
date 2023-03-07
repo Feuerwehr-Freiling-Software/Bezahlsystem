@@ -9,16 +9,28 @@ namespace OAOPS.Server.Controllers
     public class ArticleController : ControllerBase
     {
         public IArticleService _articleService { get; set; }
+        readonly IErrorCodeService _errorService;
 
-        public ArticleController(IArticleService articleService)
+        public ArticleController(IArticleService articleService, IErrorCodeService errorService)
         {
             _articleService = articleService;
+            _errorService = errorService;
         }
 
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetAllArticles()
         {
             return Ok(await _articleService.GetAllArticles());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddArticle(ArticleDto article)
+        {
+            var res = await _articleService.AddArticle(article);
+
+            var errors = await _errorService.GetErrorsFromList(res);
+
+            return Ok(errors);
         }
     }
 }

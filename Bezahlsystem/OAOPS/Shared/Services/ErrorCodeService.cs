@@ -1,14 +1,37 @@
-﻿namespace OAOPS.Shared.Services
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace OAOPS.Shared.Services
 {
     public class ErrorCodeService : IErrorCodeService
     {
         private readonly ApplicationDbContext _db;
-        private readonly ILoggerService _logger;
+        private readonly ILogger _logger;
 
-        public ErrorCodeService(ApplicationDbContext db, ILoggerService loggerService)
+        public ErrorCodeService(ApplicationDbContext db, ILogger loggerService)
         {
             _db = db;
             _logger = loggerService;
+        }
+
+        public async Task<List<ErrorCode>> GetErrorsFromList(List<int> errors)
+        {
+            List<ErrorCode> retList = new();
+
+            foreach (var item in errors)
+            {
+                var res = await _db.ErrorCodes.FirstOrDefaultAsync(x => x.Code == item);
+                if(res != null)
+                {
+                    retList.Add(res);
+                    if (res.IsSuccessCode == false)
+                    {
+                        _logger.LogError(res.ErrorText);
+                    }
+                }
+            }
+
+            return retList;
         }
 
         public string CheckErrorCode(int res, string fullName)
@@ -16,7 +39,7 @@
             if (IsSuccessErrorCode(res))
             {
                 var error = GetErrorText(res);
-                _logger.AddLog(LogSeverity.Error, error, res, fullName);
+                _logger.LogError($"Error occured in {fullName} : {error}");
                 return error;
             }
 
@@ -96,7 +119,7 @@
 
             if (!error.IsSuccessCode)
             {
-                _logger.AddLog(LogSeverity.Error, error.ErrorText, res,  fullName);
+                _logger.LogError($"Error occured in {fullName} : {error.ErrorText}");
             }
 
             return error;

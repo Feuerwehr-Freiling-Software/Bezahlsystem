@@ -43,7 +43,6 @@ namespace OAOPS.Client.Services
         public async Task<List<ArticleDto>?> GetArticles()
         {
             var res = await _http.GetFromJsonAsync<List<ArticleDto>>(configuration.ApiEndpoints.GetAllArticles);
-            var tmp = await _http.GetAsync(configuration.ApiEndpoints.GetAllArticles);
             return res;
         }
 
