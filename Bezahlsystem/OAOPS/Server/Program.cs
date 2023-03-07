@@ -4,16 +4,6 @@ using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using Serilog.Sinks;
 
-//var levelSwitch = new LoggingLevelSwitch();
-//Serilog.Log.Logger = new LoggerConfiguration()
-//    .MinimumLevel.ControlledBy(levelSwitch)
-//    .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
-//    .WriteTo.Console()
-//    .WriteTo.Seq("http://localhost:5341", Serilog.Events.LogEventLevel.Debug, apiKey: "2A8635wTuVbKf12uOV84")
-//    .CreateBootstrapLogger();
-
-
-
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +15,7 @@ try
     builder.Host.UseSerilog((ctx, lc) => lc
        .ReadFrom.Configuration(config));
 
-    Serilog.Log.Information("Starting up.");
+    Serilog.Log.Information("======== Starting up. ========");
 
     // Add services to the container.
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
