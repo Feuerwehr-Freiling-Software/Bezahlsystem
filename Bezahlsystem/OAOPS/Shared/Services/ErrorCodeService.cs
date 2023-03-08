@@ -124,5 +124,10 @@ namespace OAOPS.Shared.Services
 
             return error;
         }
+
+        public List<ErrorCode> GetAllErrors()
+        {
+            return _db.ErrorCodes.ToList();
+        }
     }
 }

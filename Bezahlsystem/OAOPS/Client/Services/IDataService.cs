@@ -12,8 +12,9 @@ namespace OAOPS.Client.Services
         #endregion
 
         #region Errors
+        
         public Task<List<ErrorDto>> GetAllErrors();
-
+        public Task<List<ErrorDto>> AddError(ErrorDto error);
         #endregion
 
         #region Products

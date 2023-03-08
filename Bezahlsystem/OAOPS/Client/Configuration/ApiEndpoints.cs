@@ -9,6 +9,9 @@
         #endregion
         #region ErrorCodes
 
+        public string? GetAllErrors { get; set; }
+        public string? AddError { get; set; }
+
         #endregion
         #region Logs
 

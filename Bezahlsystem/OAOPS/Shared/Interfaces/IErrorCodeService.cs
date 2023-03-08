@@ -62,5 +62,11 @@
         /// <param name="errorCode">Error Code that identifies the Entity</param>
         /// <returns>ErrorCode object</returns>
         public ErrorCode GetError(int res, string fullName);
+
+        /// <summary>
+        /// Gets all ErrorCodes from the Db
+        /// </summary>
+        /// <returns>List of <see cref="ErrorCode"/></returns>
+        public List<ErrorCode> GetAllErrors();
     }
 }

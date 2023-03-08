@@ -14,6 +14,7 @@ namespace OAOPS.Client.Services
             _http = http;
             configuration = options.Value;
         }
+               
 
         #region Suggestions
 
@@ -34,7 +35,18 @@ namespace OAOPS.Client.Services
 
         #region Error
 
+        public async Task<List<ErrorDto>> AddError(ErrorDto error)
+        {
+            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddError, error);
+            var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>>();
+            return result;
+        }
 
+        public async Task<List<ErrorDto>> GetAllErrors()
+        {
+            var res = await _http.GetFromJsonAsync<List<ErrorDto>>(configuration.ApiEndpoints.GetAllErrors);
+            return res;
+        }
 
         #endregion
 
