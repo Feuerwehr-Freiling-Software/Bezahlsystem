@@ -1,4 +1,5 @@
 ﻿using OAOPS.Client.DTO;
+using OAOPS.Client.ViewModels;
 
 namespace OAOPS.Client.Services
 {
@@ -21,6 +22,14 @@ namespace OAOPS.Client.Services
 
         public Task<List<ErrorDto>?> Pay(List<ArticleDto> articles, string username);
         public Task<List<ArticleDto>?> GetArticles();
+
+        #endregion
+
+        #region Storages
+
+        public Task<List<StorageDto>?> GetAllStorages();
+        public Task<List<ErrorDto?>> AddStorage(StorageVM storageVM);
+        public Task<StorageDto?> GetStorageById(int id);
 
         #endregion
     }

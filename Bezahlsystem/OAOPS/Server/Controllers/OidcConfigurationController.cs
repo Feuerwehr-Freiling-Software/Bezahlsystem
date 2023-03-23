@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OAOPS.Server.Controllers
 {
+    [AllowAnonymous]
     public class OidcConfigurationController : Controller
     {
         private readonly ILogger<OidcConfigurationController> _logger;

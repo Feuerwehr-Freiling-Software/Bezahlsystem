@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using OAOPS.Client.Configuration;
+using OAOPS.Client.DTO;
+using OAOPS.Client.ViewModels;
 using static System.Net.WebRequestMethods;
 
 namespace OAOPS.Client.Services
@@ -65,6 +67,29 @@ namespace OAOPS.Client.Services
             var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.Pay, purchase);
             var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>?>();
             return result;
+        }
+
+        #endregion
+
+        #region Storage
+
+        public async Task<List<StorageDto>?> GetAllStorages()
+        {
+            var res = await _http.GetFromJsonAsync<List<StorageDto>?>(configuration.ApiEndpoints.GetAllStorages);
+            return res;
+        }
+
+        public async Task<List<ErrorDto>?> AddStorage(StorageDto storage)
+        {
+            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddStorage, storage);
+            var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>?>();
+            return result;
+        }
+
+        public async Task<StorageVM?> GetStorageById(int id)
+        {
+            var res = await _http.GetFromJsonAsync<StorageVM?>(configuration.ApiEndpoints.GetStorageById + id);
+            return res;
         }
 
         #endregion

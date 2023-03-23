@@ -65,6 +65,7 @@ try
     builder.Services.AddScoped<ISuggestionService, SuggestionService>();
     builder.Services.AddScoped<IPriceService, PriceService>();
     builder.Services.AddScoped<IArticleService, ArticleService>();
+    builder.Services.AddScoped<IStorageService, StorageService>();
 
     var app = builder.Build();
 

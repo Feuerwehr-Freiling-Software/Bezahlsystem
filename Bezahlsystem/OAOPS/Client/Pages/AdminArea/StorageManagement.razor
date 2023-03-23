@@ -1,0 +1,42 @@
+﻿@page "/manage/vendingMachines"
+@using OAOPS.Client.Components.Shared
+@attribute [Authorize(Roles = "Admin")]
+
+<h1>Vending Management</h1>
+
+@if(VendingMachines == null)
+{
+    <LoadingComponent/>
+}
+else
+{
+    @if (!(VendingMachines.Count >= 0))
+    {
+        // empty
+        <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+        <MudGrid>
+            <!-- Settings-->
+            <MudItem xs="12">
+                <MudPaper Elevation="2" Class="pa-4" Style="height: 250px;">
+                    <MudText Typo="Typo.h5">Keine Einträge gefunden...</MudText>
+                </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </MudContainer>
+    }
+    else
+    {
+        <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+            <MudGrid>
+                @foreach (var item in VendingMachines)
+                {
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudPaper Elevation="2" Class="pa-4" Style="height: 250px;" @onclick="(() => OpenSlotsOfStorage(item.StorageName))">
+                            <MudText Typo="Typo.h5">@item.StorageName</MudText>
+                        </MudPaper>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudContainer>
+    }
+}

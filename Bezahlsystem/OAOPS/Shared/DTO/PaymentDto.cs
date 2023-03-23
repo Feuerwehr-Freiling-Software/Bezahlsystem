@@ -1,4 +1,4 @@
-﻿using OAOPS.Client.DTO;
+﻿using OAOPS.Shared.DTO;
 
 namespace OAOPS.Client.DTO
 {

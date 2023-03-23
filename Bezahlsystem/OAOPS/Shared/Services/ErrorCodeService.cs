@@ -6,9 +6,9 @@ namespace OAOPS.Shared.Services
     public class ErrorCodeService : IErrorCodeService
     {
         private readonly ApplicationDbContext _db;
-        private readonly ILogger _logger;
+        private readonly ILoggerService _logger;
 
-        public ErrorCodeService(ApplicationDbContext db, ILogger loggerService)
+        public ErrorCodeService(ApplicationDbContext db, ILoggerService loggerService)
         {
             _db = db;
             _logger = loggerService;
@@ -26,7 +26,7 @@ namespace OAOPS.Shared.Services
                     retList.Add(res);
                     if (res.IsSuccessCode == false)
                     {
-                        _logger.LogError(res.ErrorText);
+                        //_logger.LogError(res.ErrorText);
                     }
                 }
             }
@@ -39,7 +39,7 @@ namespace OAOPS.Shared.Services
             if (IsSuccessErrorCode(res))
             {
                 var error = GetErrorText(res);
-                _logger.LogError($"Error occured in {fullName} : {error}");
+                //_logger.LogError($"Error occured in {fullName} : {error}");
                 return error;
             }
 
@@ -119,7 +119,7 @@ namespace OAOPS.Shared.Services
 
             if (!error.IsSuccessCode)
             {
-                _logger.LogError($"Error occured in {fullName} : {error.ErrorText}");
+                //_logger.LogError($"Error occured in {fullName} : {error.ErrorText}");
             }
 
             return error;

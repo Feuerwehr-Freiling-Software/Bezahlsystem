@@ -14,5 +14,8 @@ namespace OAOPS.Client.Pages.AdminArea
         {
 
         }
+
+        [Parameter]
+        public string Name { get; set; }
     }
 }
