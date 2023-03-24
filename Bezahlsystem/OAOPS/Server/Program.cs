@@ -3,6 +3,8 @@ using Serilog.Core;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using Serilog.Sinks;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 // Centralized Logging Framework
 // https://datalust.co/seq
@@ -10,7 +12,6 @@ using Serilog.Sinks;
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
     var config = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
         .Build();
@@ -32,7 +33,9 @@ try
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>();
 
-    builder.Services.AddIdentityServer()
+    builder.Services
+        .AddIdentityServer()
+        .AddClients()
         .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(opt =>
         {
             opt.IdentityResources["openid"].UserClaims.Add("role");
@@ -42,6 +45,13 @@ try
 
     builder.Services.AddAuthentication()
         .AddIdentityServerJwt();
+
+    builder.Services.AddAuthentication("Bearer")
+        .AddIdentityServerAuthentication("Bearer", opt =>
+        {
+            opt.ApiName = "api1";
+            opt.Authority = "https://localhost:7127";
+        });
 
     builder.Services.AddTransient<IEmailSender, EmailSender>();
     builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
@@ -57,6 +67,46 @@ try
 
     builder.Services.AddControllersWithViews();
     builder.Services.AddRazorPages();
+
+    builder.Services.AddSwaggerGen(opt =>
+    {        
+        opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Protected API", Version = "v1" });
+        opt.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.OAuth2,
+            Flows = new OpenApiOAuthFlows
+            {
+                AuthorizationCode = new OpenApiOAuthFlow
+                {
+                    AuthorizationUrl = new Uri("https://localhost:7127/connect/authorize"),
+                    TokenUrl = new Uri("https://localhost:7127/connect/token"),
+                    Scopes = new Dictionary<string, string>
+                    {
+                        {
+                            "api1", "Demo API - full access"
+                        }
+                    }
+                }
+            }
+        });
+        opt.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.OAuth2,
+            Flows = new OpenApiOAuthFlows
+            {
+                AuthorizationCode = new OpenApiOAuthFlow
+                {
+                    AuthorizationUrl = new Uri("https://localhost:5000/connect/authorize"),
+                    TokenUrl = new Uri("https://localhost:5000/connect/token"),
+                    Scopes = new Dictionary<string, string>
+            {
+                {"api1", "Demo API - full access"}
+            }
+                }
+            }
+        });
+        opt.OperationFilter<AuthorizeCheckOperationFilter>();
+    });
 
 
     // add custom Services
@@ -74,6 +124,16 @@ try
     {
         app.UseMigrationsEndPoint();
         app.UseWebAssemblyDebugging();
+
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+
+            options.OAuthClientId("demo_api_swagger");
+            options.OAuthAppName("Demo API - Swagger");
+            options.OAuthUsePkce();
+        });
     }
     else
     {

@@ -79,16 +79,16 @@ namespace OAOPS.Client.Services
             return res;
         }
 
-        public async Task<List<ErrorDto>?> AddStorage(StorageDto storage)
+        public async Task<List<ErrorDto>?> AddStorage(StorageVM storage)
         {
             var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddStorage, storage);
             var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>?>();
             return result;
         }
 
-        public async Task<StorageVM?> GetStorageById(int id)
+        public async Task<StorageDto?> GetStorageById(int id)
         {
-            var res = await _http.GetFromJsonAsync<StorageVM?>(configuration.ApiEndpoints.GetStorageById + id);
+            var res = await _http.GetFromJsonAsync<StorageDto?>(configuration.ApiEndpoints.GetStorageById + id);
             return res;
         }
 

@@ -23,12 +23,12 @@ namespace OAOPS.Client.Pages.AdminArea
         [Inject]
         public NavigationManager navigation { get; set; }
 
-        public List<StorageVM> VendingMachines { get; set; }
+        public List<StorageDto> VendingMachines { get; set; }
 
 
         protected override async Task OnInitializedAsync()
         {
-            VendingMachines = await DataService.GetAllStorages() ?? new List<StorageVM>();
+            VendingMachines = await DataService.GetAllStorages() ?? new List<StorageDto>();
         }
 
         void OpenSlotsOfStorage(string name)
