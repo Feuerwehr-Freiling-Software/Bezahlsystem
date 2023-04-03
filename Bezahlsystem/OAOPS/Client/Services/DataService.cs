@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using OAOPS.Client.Configuration;
-using OAOPS.Client.DTO;
 using OAOPS.Client.ViewModels;
-using static System.Net.WebRequestMethods;
+using System.Net.Http.Json;
 
 namespace OAOPS.Client.Services
 {
@@ -79,16 +77,13 @@ namespace OAOPS.Client.Services
 
         public async Task<List<StorageDto>?> GetAllStorages()
         {
-            var accessTokenResult = await TokenProvider.RequestAccessToken();
-            string accessToken = string.Empty;
-
-            if (accessTokenResult.TryGetToken(out var token))
+            var result = await _http.GetAsync(configuration.ApiEndpoints.GetAllStorages);
+            if (!result.IsSuccessStatusCode)
             {
-                accessToken = token.Value;
+                return new();
             }
 
-            var res = await _http.GetFromJsonAsync<List<StorageDto>?>(configuration.ApiEndpoints.GetAllStorages);
-            return res;
+            return await result.Content.ReadFromJsonAsync<List<StorageDto>>();
         }
 
         public async Task<List<ErrorDto>?> AddStorage(StorageVM storage)

@@ -35,6 +35,5 @@ namespace OAOPS.Client.Pages.AdminArea
         {
             navigation.NavigateTo("/manage/slot/" + name);
         }
-
     }
 }

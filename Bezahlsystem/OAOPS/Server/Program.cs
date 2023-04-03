@@ -42,6 +42,7 @@ try
             opt.IdentityResources["openid"].UserClaims.Add("role");
             opt.ApiResources.Single().UserClaims.Add("role");
         });
+
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
 
     builder.Services.AddAuthentication()

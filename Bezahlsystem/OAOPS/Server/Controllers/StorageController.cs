@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 
 namespace OAOPS.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize (Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class StorageController : ControllerBase
     {
         public IStorageService StorageService { get; }
@@ -15,9 +16,12 @@ namespace OAOPS.Server.Controllers
             StorageService = storageService;
         }
 
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IActionResult GetAllStorages()
         {
+            var req = Request;
+            var user = User.Identity;
+
             var res = StorageService.GetAllStorages();
             return Ok(res);
         }

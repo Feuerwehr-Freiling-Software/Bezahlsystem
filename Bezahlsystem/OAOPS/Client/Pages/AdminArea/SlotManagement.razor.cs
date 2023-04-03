@@ -17,5 +17,13 @@ namespace OAOPS.Client.Pages.AdminArea
 
         [Parameter]
         public string Name { get; set; }
+
+        [Inject]
+        public NavigationManager navigation { get; set; }
+
+        void GoBack()
+        {
+            navigation.NavigateTo("/manage/vendingMachines");
+        }
     }
 }
