@@ -3,8 +3,24 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
 using OAOPS.Client.Configuration;
 using OAOPS.Client.Services;
+using Serilog;
+using Serilog.Core;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+var levelSwitch = new LoggingLevelSwitch
+{
+    MinimumLevel = Serilog.Events.LogEventLevel.Debug
+};
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.ControlledBy(levelSwitch)
+    .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
+    .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341")
+    .CreateLogger();
+
+builder.Services.AddLogging(loggingbuilder => loggingbuilder.AddSerilog(dispose: true));
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 

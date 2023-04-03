@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.Extensions.Options;
 using OAOPS.Client.Configuration;
 using OAOPS.Client.DTO;
 using OAOPS.Client.ViewModels;
@@ -10,6 +11,9 @@ namespace OAOPS.Client.Services
     {
         private readonly HttpClient _http;
         private readonly ClientOptions configuration;
+
+        [Inject]
+        public IAccessTokenProvider TokenProvider { get; set; }
 
         public DataService(HttpClient http, IOptions<ClientOptions> options)
         {
@@ -75,6 +79,14 @@ namespace OAOPS.Client.Services
 
         public async Task<List<StorageDto>?> GetAllStorages()
         {
+            var accessTokenResult = await TokenProvider.RequestAccessToken();
+            string accessToken = string.Empty;
+
+            if (accessTokenResult.TryGetToken(out var token))
+            {
+                accessToken = token.Value;
+            }
+
             var res = await _http.GetFromJsonAsync<List<StorageDto>?>(configuration.ApiEndpoints.GetAllStorages);
             return res;
         }

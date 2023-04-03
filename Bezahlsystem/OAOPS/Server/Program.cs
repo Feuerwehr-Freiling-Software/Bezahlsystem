@@ -5,10 +5,11 @@ using System.IdentityModel.Tokens.Jwt;
 using Serilog.Sinks;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Duende.IdentityServer.Models;
 
 // Centralized Logging Framework
 // https://datalust.co/seq
-//
+
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -83,25 +84,9 @@ try
                     Scopes = new Dictionary<string, string>
                     {
                         {
-                            "api1", "Demo API - full access"
+                            "OAOPS.ServerAPI", "Demo API - full access"
                         }
                     }
-                }
-            }
-        });
-        opt.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-        {
-            Type = SecuritySchemeType.OAuth2,
-            Flows = new OpenApiOAuthFlows
-            {
-                AuthorizationCode = new OpenApiOAuthFlow
-                {
-                    AuthorizationUrl = new Uri("https://localhost:5000/connect/authorize"),
-                    TokenUrl = new Uri("https://localhost:5000/connect/token"),
-                    Scopes = new Dictionary<string, string>
-            {
-                {"api1", "Demo API - full access"}
-            }
                 }
             }
         });
@@ -130,7 +115,7 @@ try
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 
-            options.OAuthClientId("demo_api_swagger");
+            options.OAuthClientId("api_swagger");
             options.OAuthAppName("Demo API - Swagger");
             options.OAuthUsePkce();
         });
