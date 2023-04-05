@@ -32,5 +32,11 @@
         public string GetStorageById { get; set; }
 
         #endregion
+
+        #region Slots
+
+        public string GetSlotsOfStorageByName { get; set; }
+
+        #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using OAOPS.Client.Configuration;
+using OAOPS.Client.DTO;
 using OAOPS.Client.ViewModels;
 using System.Net.Http.Json;
 
@@ -98,6 +99,18 @@ namespace OAOPS.Client.Services
             var res = await _http.GetFromJsonAsync<StorageDto?>(configuration.ApiEndpoints.GetStorageById + id);
             return res;
         }
+
+        #endregion
+
+        #region Slots
+
+        public async Task<List<StorageSlotDto>?> GetSlotsOfStorageByName(string name)
+        {
+            var res = await _http.GetFromJsonAsync<List<StorageSlotDto>?>(configuration.ApiEndpoints.GetSlotsOfStorageByName + name);
+            return res;
+        }
+
+
 
         #endregion
     }

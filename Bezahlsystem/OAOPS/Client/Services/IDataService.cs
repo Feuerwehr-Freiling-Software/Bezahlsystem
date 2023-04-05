@@ -32,5 +32,11 @@ namespace OAOPS.Client.Services
         public Task<StorageDto?> GetStorageById(int id);
 
         #endregion
+
+        #region Slots
+
+        public Task<List<StorageSlotDto>?> GetSlotsOfStorageByName(string name);
+
+        #endregion
     }
 }

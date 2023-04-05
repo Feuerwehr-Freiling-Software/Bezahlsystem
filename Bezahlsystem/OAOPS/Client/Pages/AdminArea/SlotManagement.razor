@@ -2,4 +2,45 @@
 @attribute [Authorize]
 
 <h1>Slots of @Name</h1>
-<MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="GoBack" Color="Color.Primary" aria-label="back"></MudIconButton>
+<MudIconButton Style="position: fixed; right: 0; bottom: 0;" Icon="@Icons.Material.Filled.ArrowBack" OnClick="GoBack" Color="Color.Primary" aria-label="back"></MudIconButton>
+
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success">Slot Hinzufügen</MudButton>
+        </MudItem>
+        @if (Slots == null)
+        {
+            // Not yet loaded
+            <OAOPS.Client.Components.Shared.LoadingComponent />
+        }
+        else if(Slots.Count == 0)
+        {
+            // loaded but empty
+            <MudItem xs="12">
+                <MudText Color="Color.Primary">Keine Slots für diesen Storage gefunden...</MudText>
+            </MudItem>
+        }
+        else
+        {
+            // loaded Slots
+            <MudDataGrid T="StorageSlotDto" Items="Slots" EditMode="DataGridEditMode.Form"
+                     StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
+                     Bordered="true" Dense="true" EditTrigger="DataGridEditTrigger.Manual">
+                 <Columns>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="SlotId" Title=""/>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="SlotName" Title="Slot Name"/>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="StorageName" Title="Name"/>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="StorageConnectionId" Title="Verbindungs Id Automat"/>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="ArticleName" Title="Artikel im Slot"/>
+                    <Column T="StorageSlotDto" CellClass="d-flex justify-end">
+                        <CellTemplate>
+                            <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Outlined.Delete" OnClick="@(() => DeleteSlot(context.Item))" />
+                            <MudIconButton Size="@Size.Small" Color=Color.Primary Icon="@Icons.Outlined.Edit" OnClick="@context.Actions.StartEditingItem" />
+                        </CellTemplate>
+                    </Column>
+                 </Columns>
+            </MudDataGrid>
+        }
+    </MudGrid>
+</MudContainer>

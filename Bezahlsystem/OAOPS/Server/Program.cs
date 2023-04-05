@@ -48,13 +48,6 @@ try
     builder.Services.AddAuthentication()
         .AddIdentityServerJwt();
 
-    builder.Services.AddAuthentication("Bearer")
-        .AddIdentityServerAuthentication("Bearer", opt =>
-        {
-            opt.ApiName = "api1";
-            opt.Authority = "https://localhost:7127";
-        });
-
     builder.Services.AddTransient<IEmailSender, EmailSender>();
     builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
