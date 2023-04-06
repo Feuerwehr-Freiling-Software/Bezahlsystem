@@ -110,7 +110,11 @@ namespace OAOPS.Client.Services
             return res;
         }
 
-
+        public async Task<ErrorDto> UpdateStorageSlot(StorageSlotDto slot)
+        {
+            var res = await _http.PutAsJsonAsync(configuration.ApiEndpoints.UpdateStorageSlot, slot);
+            return await res.Content.ReadFromJsonAsync<ErrorDto>();
+        }
 
         #endregion
     }

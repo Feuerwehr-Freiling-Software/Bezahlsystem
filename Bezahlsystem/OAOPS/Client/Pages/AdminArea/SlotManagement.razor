@@ -28,15 +28,15 @@
                      StartedEditingItem="@StartedEditingItem" CanceledEditingItem="@CanceledEditingItem" CommittedItemChanges="@CommittedItemChanges"
                      Bordered="true" Dense="true" EditTrigger="DataGridEditTrigger.Manual">
                  <Columns>
-                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="SlotId" Title=""/>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="SlotId" Title="Id"/>
                     <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="SlotName" Title="Slot Name"/>
                     <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="StorageName" Title="Name"/>
                     <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="StorageConnectionId" Title="Verbindungs Id Automat"/>
                     <Column HeaderClass="datagrid-header" CellClass="px-auto" T="StorageSlotDto" Field="ArticleName" Title="Artikel im Slot"/>
-                    <Column T="StorageSlotDto" CellClass="d-flex justify-end">
+                    <Column HeaderClass="datagrid-header" T="StorageSlotDto" CellClass="d-flex justify-end" Title="Aktion" Sortable="false">
                         <CellTemplate>
-                            <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Outlined.Delete" OnClick="@(() => DeleteSlot(context.Item))" />
-                            <MudIconButton Size="@Size.Small" Color=Color.Primary Icon="@Icons.Outlined.Edit" OnClick="@context.Actions.StartEditingItem" />
+                            <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteSlot(context.Item))" />
+                            <MudIconButton Size="@Size.Small" Color=Color.Primary Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItem" />
                         </CellTemplate>
                     </Column>
                  </Columns>

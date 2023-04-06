@@ -40,7 +40,7 @@ namespace OAOPS.Client.Pages.AdminArea
 
         void DeleteSlot(StorageSlotDto slot)
         {
-
+            
         }
 
         // events
@@ -54,9 +54,10 @@ namespace OAOPS.Client.Pages.AdminArea
 
         }
 
-        void CommittedItemChanges(StorageSlotDto item)
+        async void CommittedItemChanges(StorageSlotDto item)
         {
-            // update in db
+            var res = await dataService.UpdateStorageSlot(item);
+
         }
     }
 }

@@ -91,10 +91,23 @@ namespace OAOPS.Shared.Services
         public int UpdateStorageSlot(StorageSlotDto storageSlot)
         {
             var fSlot = Db.Slots.FirstOrDefault(x => x.Id == storageSlot.SlotId);
+            if (fSlot == null) return 36;
 
             // TODO: add Article to slot
+            var fArticle = Db.Articles.FirstOrDefault(x => x.Name == storageSlot.ArticleName);
+            if (fArticle != null)
+            {
+                ArticleInStorageSlot articleInSlot = new()
+                {
+                    ArticleId = fArticle.Id,
+                    MinAmount = storageSlot.MinAmount,
+                    QuantityActual = storageSlot.QuantityAtStart,
+                    QuantityAtStart = storageSlot.QuantityAtStart,
+                    SlotId = storageSlot.SlotId
+                };
 
-            if (fSlot == null) return 36;
+                Db.ArticleInStorageSlots.Add(articleInSlot);
+            }
 
             fSlot.Name = storageSlot.SlotName;
             fSlot.StorageId = storageSlot.StorageId;
@@ -102,8 +115,8 @@ namespace OAOPS.Shared.Services
             Db.Slots.Update(fSlot);
 
             var res = Db.SaveChanges();
-            if (res <= 0) return 32;
-            if (res == 1) return 30;
+            if (res <= 1) return 32;
+            if (res == 2) return 30;
             else return 33;
         }
     }
