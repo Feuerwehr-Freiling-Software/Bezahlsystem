@@ -84,7 +84,7 @@ namespace OAOPS.Shared.Services
 
         public StorageDto? GetStorageByName(string name)
         {
-            var res = Db.Storages.Select(x => new StorageDto() { StorageName = x.StorageName}).FirstOrDefault(s => s.StorageName == name);
+            var res = Db.Storages.Select(x => new StorageDto() { StorageName = x.StorageName, Id = x.Id}).FirstOrDefault(s => s.StorageName == name);
             return res;
         }
 
@@ -108,9 +108,14 @@ namespace OAOPS.Shared.Services
 
                 Db.ArticleInStorageSlots.Add(articleInSlot);
             }
+            var fStorage = GetStorageByName(storageSlot.StorageName);
+
+            if (fStorage != null && storageSlot.StorageName != fSlot.Storage.StorageName)
+            {
+                fSlot.StorageId = fStorage.Id;
+            }
 
             fSlot.Name = storageSlot.SlotName;
-            fSlot.StorageId = storageSlot.StorageId;
 
             Db.Slots.Update(fSlot);
 

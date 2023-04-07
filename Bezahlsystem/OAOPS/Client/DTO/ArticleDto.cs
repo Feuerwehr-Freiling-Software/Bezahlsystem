@@ -4,7 +4,7 @@
     {
         public string StorageName { get; set; }
         public string StorageSlot { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int Amount { get; set; }
         public double PriceAmount { get; set; }
         public string Category { get; set; }

@@ -24,6 +24,7 @@ namespace OAOPS.Shared.DTO
             StorageName = storage.StorageName;
         }
 
+        public int Id { get; set; }
         public string StorageName { get; set; }
     }
 }

@@ -71,6 +71,11 @@ namespace OAOPS.Client.Components.UpdateComponents
             await InvokeAsync(StateHasChanged);
         }
 
+        private void ClearSelectedArticle()
+        {
+            SelectedArticle = new ArticleDto();
+        }
+
         private async Task<IEnumerable<ArticleDto>> AutocompleteArticleSearch(string input)
         {
             if (input == null)
