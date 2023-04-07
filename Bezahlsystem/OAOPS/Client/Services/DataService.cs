@@ -116,6 +116,17 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<ErrorDto>();
         }
 
+        public async Task<List<ArticleCategoryDto>?> GetCategories()
+        {
+            var result = await _http.GetAsync(configuration.ApiEndpoints.GetCategories);
+            if (!result.IsSuccessStatusCode)
+            {
+                return new();
+            }
+
+            return await result.Content.ReadFromJsonAsync<List<ArticleCategoryDto>>();
+        }
+
         #endregion
     }
 }
