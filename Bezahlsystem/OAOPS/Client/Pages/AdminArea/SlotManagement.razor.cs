@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using OAOPS.Client.Components.UpdateComponents;
 using OAOPS.Client.DTO;
 using OAOPS.Client.Services;
 using System;
@@ -26,6 +27,9 @@ namespace OAOPS.Client.Pages.AdminArea
         [Inject]
         public IDataService dataService { get; set; }
 
+        [Inject]
+        public IDialogService DialogService { get; set; }
+
         public List<StorageSlotDto>? Slots { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -43,21 +47,15 @@ namespace OAOPS.Client.Pages.AdminArea
             
         }
 
-        // events
-        void StartedEditingItem(StorageSlotDto item)
+        void UpdateSlot(StorageSlotDto slot)
         {
+            var param = new DialogParameters
+            {
+                { "Slot", slot }
+            };
 
-        }
-        
-        void CanceledEditingItem(StorageSlotDto item)
-        {
-
-        }
-
-        async void CommittedItemChanges(StorageSlotDto item)
-        {
-            var res = await dataService.UpdateStorageSlot(item);
-
+            var opt = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
+            DialogService.Show<UpdateStorageSlot>("Slot Update", param, opt);
         }
     }
 }

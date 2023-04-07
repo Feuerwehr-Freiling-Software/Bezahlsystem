@@ -11,5 +11,10 @@
         public int QuantityActual { get; set; }
         public int QuantityAtStart { get; set; }
         public int MinAmount { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

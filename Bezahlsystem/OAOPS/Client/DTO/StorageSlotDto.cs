@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace OAOPS.Client.DTO
 {
@@ -16,5 +17,11 @@ namespace OAOPS.Client.DTO
         public string ArticleName { get; set; } = string.Empty;
         public int QuantityAtStart { get; set; }
         public int MinAmount { get; set; }
+
+        public override bool Equals(object o)
+        {
+            var other = o as StorageSlotDto;
+            return other?.StorageName == StorageName;
+        }
     }
 }

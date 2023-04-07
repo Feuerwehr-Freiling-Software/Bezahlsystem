@@ -20,5 +20,10 @@ namespace OAOPS.Client.DTO
         }
 
         public string StorageName { get; set; }
+
+        public override string ToString()
+        {
+            return StorageName;
+        }
     }
 }

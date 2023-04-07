@@ -7,5 +7,13 @@
     </TitleContent>
     <DialogContent>
         <MudTextField Value="@Slot.SlotName" Label="Slot Name"/>
+        <MudAutocomplete Variant="Variant.Outlined" Label="Storage" @bind-Value="SelectedStorage" SearchFunc="(x) => AutocompleteStorageSearch(x)"/>
+        <MudAutocomplete Variant="Variant.Outlined" Label="Artikel" @bind-Value="SelectedArticle" SearchFunc="(x) => AutocompleteArticleSearch(x)"/>
+        <MudNumericField @bind-Value="@Slot.QuantityAtStart" Label="Anzahl bei Start" Variant="Variant.Outlined" Min="0"/>
+        <MudNumericField @bind-Value="@Slot.MinAmount" Label="Min Anzahl für Benachrichtigung" Variant="Variant.Outlined" Min="0"/>
     </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="UpdateSlot">Update Slot</MudButton>
+    </DialogActions>
 </MudDialog>
