@@ -37,7 +37,8 @@
 
         public string GetSlotsOfStorageByName { get; set; } = string.Empty;
         public string UpdateStorageSlot { get; set; } = string.Empty;
-        public string GetCategories { get; internal set; } = string.Empty;
+        public string GetCategories { get; set; } = string.Empty;
+        public string UpdateCategory { get; set; } = string.Empty;
 
         #endregion
     }

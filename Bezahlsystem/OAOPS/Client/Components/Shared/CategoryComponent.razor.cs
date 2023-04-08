@@ -8,41 +8,28 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace OAOPS.Client.Pages.AdminArea
+namespace OAOPS.Client.Components.Shared
 {
-    public partial class CategoryManagement
+    public partial class CategoryComponent
     {
-        [Inject]
-        public ISnackbar Snackbar { get; set; }
-
         [Inject]
         public IDataService DataService { get; set; }
 
         [Inject]
-        public NavigationManager navigation { get; set; }
-
-        public List<ArticleCategoryDto> Categories { get; set; }
-
-        [Inject]
         public IDialogService DialogService { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        [Parameter]
+        public ArticleCategoryDto ParentCategory { get; set; }
+
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
+
+        public CategoryComponent()
         {
-            await LoadCategories();
+
         }
 
-        private async Task LoadCategories()
-        {
-            Categories = await DataService.GetCategories() ?? new ();
-
-        }
-
-        void GoBack()
-        {
-            navigation.NavigateTo("/");
-        }
-
-        async Task AddNewCategory()
+        private async void AddNewCategory(ArticleCategoryDto category)
         {
             // Open a new Dialog to add a new category
             var opt = new DialogOptions()
@@ -52,15 +39,17 @@ namespace OAOPS.Client.Pages.AdminArea
 
             var param = new DialogParameters()
             {
-                { "Category", new ArticleCategoryDto() }
+                { "Category", category }
             };
 
             var dialogResult = DialogService.Show<AddCategoryDialog>("Kategorie Hinzufügen", options: opt, parameters: param);
             var result = await dialogResult.Result;
 
-            Snackbar.Add(!result.Canceled ? "Kategorie erfolgreich hinzugefügt." : "Fehler beim Hinzufügen", !result.Canceled ? Severity.Success : Severity.Error);
+            Snackbar.Add(!result.Canceled ? "Kategorie erfolgreich hinzugefügt." : "Fehler beim Hinzufügen", !result.Canceled? Severity.Success : Severity.Error);
 
             await InvokeAsync(StateHasChanged);
+
         }
+
     }
 }

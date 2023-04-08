@@ -1,0 +1,11 @@
+﻿<MudExpansionPanel Text="@ParentCategory.Name">
+    @if (ParentCategory.Children?.Count > 0)
+    {
+        @foreach (var item in ParentCategory.Children)
+        {
+            <CategoryComponent Categories="item.Children" />
+        }    
+    }
+    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="() => AddNewCategory(ParentCategory)" Color="Color.Success">Kategorie Hinzufügen</MudButton>
+
+</MudExpansionPanel>

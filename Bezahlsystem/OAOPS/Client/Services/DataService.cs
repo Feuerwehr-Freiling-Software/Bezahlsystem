@@ -127,6 +127,18 @@ namespace OAOPS.Client.Services
             return await result.Content.ReadFromJsonAsync<List<ArticleCategoryDto>>();
         }
 
+        public async Task<ErrorDto?> UpdateCategory(ArticleCategoryDto category)
+        {
+            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.UpdateCategory, category);
+            //  check if result is ok and return error 
+            if (!res.IsSuccessStatusCode)
+            {
+                return new ErrorDto() { Code = 1, ErrorText = "Error while adding category", IsSuccessCode = false };
+            }
+
+            return await res.Content.ReadFromJsonAsync<ErrorDto>();
+        }
+
         #endregion
     }
 }

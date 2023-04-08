@@ -5,14 +5,21 @@
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
     <MudGrid>
         <MudItem xs="12">
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success">Slot Hinzufügen</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="AddNewCategory" Color="Color.Success">Kategorie Hinzufügen</MudButton>
         </MudItem>
         @if(Categories == null)
         {
             <OAOPS.Client.Components.Shared.LoadingComponent/>
         }else
         {
-
+            <MudItem>
+                <MudExpansionPanels>
+                    @foreach (var item in Categories)
+                    {
+                        <OAOPS.Client.Components.Shared.CategoryComponent ParentCategory="item"/>
+                    }
+                </MudExpansionPanels>
+            </MudItem>
         }
     </MudGrid>
 </MudContainer>

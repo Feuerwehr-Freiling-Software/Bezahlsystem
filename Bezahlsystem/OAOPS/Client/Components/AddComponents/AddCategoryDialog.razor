@@ -1,0 +1,15 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+            Kategorie hinzufügen
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField T="string" @bind-Value="@Category.Name" Label="Kategorie Name" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddCategory">Kategorie Hinzufügen</MudButton>
+    </DialogActions>
+</MudDialog>

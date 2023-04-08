@@ -95,6 +95,7 @@ try
     builder.Services.AddScoped<IPriceService, PriceService>();
     builder.Services.AddScoped<IArticleService, ArticleService>();
     builder.Services.AddScoped<IStorageService, StorageService>();
+    builder.Services.AddScoped<ICategoryService, CategoryService>();
 
     var app = builder.Build();
 
