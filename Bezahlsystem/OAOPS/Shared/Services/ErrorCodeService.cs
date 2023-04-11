@@ -6,9 +6,9 @@ namespace OAOPS.Shared.Services
     public class ErrorCodeService : IErrorCodeService
     {
         private readonly ApplicationDbContext _db;
-        private readonly ILoggerService _logger;
+        private readonly ILogger<ErrorCodeService> _logger;
 
-        public ErrorCodeService(ApplicationDbContext db, ILoggerService loggerService)
+        public ErrorCodeService(ApplicationDbContext db, ILogger<ErrorCodeService> loggerService)
         {
             _db = db;
             _logger = loggerService;
@@ -110,7 +110,9 @@ namespace OAOPS.Shared.Services
 
         public ErrorCode GetError(int errorCode)
         {
-            return _db.ErrorCodes.First(x => x.Code == errorCode);
+            var res = _db.ErrorCodes.First(x => x.Code == errorCode);
+            _logger.LogError(res.ErrorText);
+            return res;
         }
 
         public ErrorCode GetError(int res, string fullName)

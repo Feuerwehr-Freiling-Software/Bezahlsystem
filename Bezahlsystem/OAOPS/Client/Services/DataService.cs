@@ -129,7 +129,7 @@ namespace OAOPS.Client.Services
 
         public async Task<ErrorDto?> UpdateCategory(ArticleCategoryDto category)
         {
-            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.UpdateCategory, category);
+            var res = await _http.PutAsJsonAsync(configuration.ApiEndpoints.UpdateCategory, category);
             //  check if result is ok and return error 
             if (!res.IsSuccessStatusCode)
             {

@@ -32,7 +32,7 @@ namespace OAOPS.Client.Components.AddComponents
 
         protected override Task OnInitializedAsync()
         {
-            Category = new ArticleCategoryDto();
+            NewCategory = new ArticleCategoryDto();
             return base.OnInitializedAsync();
         }
 

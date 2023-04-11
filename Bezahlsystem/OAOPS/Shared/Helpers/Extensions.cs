@@ -53,13 +53,15 @@ namespace OAOPS.Shared.Helpers
             var cat = new ArticleCategory
             {
                 Id = dto.Id,
-                Name = dto.Name
+                Name = dto.Name,
+                Children = new List<ArticleCategory>()
             };
 
             if (dto.Parent != null)
             {
                 cat.Parent = MapArticleCategoryDtoToCategory(dto.Parent);
             }
+            
             if (dto.Children != null)
             {
                 foreach (var child in dto.Children)
@@ -67,6 +69,7 @@ namespace OAOPS.Shared.Helpers
                     cat?.Children?.Add(MapArticleCategoryDtoToCategory(child));
                 }
             }
+
             return cat;
         }
 

@@ -2,7 +2,7 @@
 {
     public class ApiEndpoints
     {
-        public string BaseUri { get; set; }
+        public string BaseUri { get; set; } = string.Empty;
 
         #region Suggestions
         public string AddSuggestion { get; set; } = string.Empty;

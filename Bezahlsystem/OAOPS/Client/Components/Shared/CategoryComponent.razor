@@ -3,7 +3,7 @@
     {
         @foreach (var item in ParentCategory.Children)
         {
-            <CategoryComponent Categories="item.Children" />
+            <CategoryComponent ParentCategory="item" />
         }    
     }
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="() => AddNewCategory(ParentCategory)" Color="Color.Success">Kategorie Hinzufügen</MudButton>

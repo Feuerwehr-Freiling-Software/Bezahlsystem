@@ -32,6 +32,7 @@ namespace OAOPS.Shared.Services
                           Name = cat.Name,
                           Parent = cat.Parent.MapArticleCategoryToDto() ?? null
                       };
+
             return await res.ToListAsync();
         }
 
@@ -57,9 +58,13 @@ namespace OAOPS.Shared.Services
         public async Task<ErrorDto> UpdateCategory(ArticleCategoryDto category)
         {
             var fCat = await Db.ArticleCategories.FirstOrDefaultAsync(c => c.Name == category.Name);
-            if (fCat == null) return await AddCategory(category);
+            if (category.Children == null) return await AddCategory(category);
 
-            fCat.Children = category.MapArticleCategoryDtoToCategory().Children;
+            var children = category.MapArticleCategoryDtoToCategory().Children;
+
+            fCat.Children = new List<ArticleCategory>(); // this is the line that fixes the issue
+            fCat.Children.AddRange(children);
+
             var res = await Db.SaveChangesAsync();
 
             if (res <= 0)
