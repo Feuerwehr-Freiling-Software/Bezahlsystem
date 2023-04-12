@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using OAOPS.Shared.DTO;
 using OAOPS.Shared.Helpers;
 using System;
@@ -25,15 +26,21 @@ namespace OAOPS.Shared.Services
             var res = from cat in Db.ArticleCategories
                         .Include(c => c.Children)
                         .Include(c => c.Parent)
-                      select new ArticleCategoryDto
-                      {
-                          Children = cat.MapArticleCategoryToDto().Children ?? null,
-                          Id = cat.Id,
-                          Name = cat.Name,
-                          Parent = cat.Parent.MapArticleCategoryToDto() ?? null
-                      };
+                      select cat;
 
-            return await res.ToListAsync();
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ArticleCategory, ArticleCategoryDto>();
+            });
+
+            var retList = new List<ArticleCategoryDto>();
+
+            foreach (var item in res)
+            {
+                retList.Add(new Mapper(mapperConfig).Map<ArticleCategoryDto>(item));
+            }
+
+            return retList;
         }
 
         public async Task<ErrorDto> AddCategory(ArticleCategoryDto category)
@@ -57,10 +64,15 @@ namespace OAOPS.Shared.Services
 
         public async Task<ErrorDto> UpdateCategory(ArticleCategoryDto category)
         {
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ArticleCategoryDto, ArticleCategory>();
+            });
+
             var fCat = await Db.ArticleCategories.FirstOrDefaultAsync(c => c.Name == category.Name);
             if (category.Children == null) return await AddCategory(category);
 
-            var children = category.MapArticleCategoryDtoToCategory().Children;
+            var children = new Mapper(mapperConfig).Map<ArticleCategory>(category).Children;
 
             fCat.Children = new List<ArticleCategory>(); // this is the line that fixes the issue
             fCat.Children.AddRange(children);

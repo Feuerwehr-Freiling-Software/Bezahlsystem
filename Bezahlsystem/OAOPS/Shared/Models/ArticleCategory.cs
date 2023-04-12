@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace OAOPS.Shared.Models
@@ -10,11 +11,12 @@ namespace OAOPS.Shared.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public ArticleCategory? Parent { get; set; }
         public int? ParentId { get; set; }
-
-        [System.Text.Json.Serialization.JsonIgnore]
+        [JsonIgnore]
+        public ArticleCategory? Parent { get; set; }
+        [JsonIgnore]
         public List<ArticleCategory>? Children { get; set; }
+        [JsonIgnore]
         public List<Article>? Articles { get; set; }
     }
 }

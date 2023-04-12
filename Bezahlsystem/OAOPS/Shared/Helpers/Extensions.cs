@@ -24,7 +24,7 @@ namespace OAOPS.Shared.Helpers
                 dto.Parent = MapArticleCategoryToDto(category.Parent);
             }
 
-            if (category.Children != null)
+           if (category.Children != null)
             {
                 foreach (var child in category.Children)
                 {
@@ -34,6 +34,9 @@ namespace OAOPS.Shared.Helpers
 
             return dto;
         }
+
+        // method to convert a ArticleCategory object to ArticleCategoryDto
+
 
         public static ErrorDto MapErrorCodeToDto(this ErrorCode code)
         {
