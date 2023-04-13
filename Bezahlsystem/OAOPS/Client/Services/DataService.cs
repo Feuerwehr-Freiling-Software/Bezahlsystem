@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Options;
 using OAOPS.Client.Configuration;
 using OAOPS.Client.DTO;
 using OAOPS.Client.ViewModels;
@@ -70,6 +71,27 @@ namespace OAOPS.Client.Services
             var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.Pay, purchase);
             var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>?>();
             return result;
+        }
+
+        public async Task<List<ArticleDto>?> GetArticlesFiltered(string? articleName = null, int? page = null, int? pageSize = null)
+        {
+            QueryBuilder queryBuilder = new ();
+            if(articleName != null)
+            {
+                queryBuilder.Add(nameof(articleName), articleName);
+            }
+
+            if (page != null)
+            {
+                queryBuilder.Add(nameof(page), page.Value.ToString());
+            }
+
+            if(pageSize != null)
+            {
+                queryBuilder.Add(nameof(pageSize), pageSize.Value.ToString());
+            }
+
+            return await _http.GetFromJsonAsync<List<ArticleDto>>(configuration.ApiEndpoints.GetAllArticlesFiltered + queryBuilder.ToString());
         }
 
         #endregion

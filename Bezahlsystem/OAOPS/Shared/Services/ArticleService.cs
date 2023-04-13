@@ -4,6 +4,7 @@ using OAOPS.Shared.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,6 +81,41 @@ namespace OAOPS.Shared.Services
                 SlotId = storageSlot.SlotId
             };
             return new List<int>() { 0 };
+        }
+
+        public async Task<List<ArticleDto>> GetAllArticlesFiltered(string? articleName, int? page, int? pageSize)
+        {
+            IQueryable<ArticleInStorageSlot> query = _db.ArticleInStorageSlots
+                .Include(x => x.Article)
+                .ThenInclude(x => x.ArticleCategory)
+                .Include(x => x.Slot)
+                .ThenInclude(x => x.Storage);
+
+            if (articleName != null)
+            {
+                query = query.Where(x => x.Article.Name.StartsWith(articleName));
+            }
+
+            if (page != null && pageSize != null)
+            {
+                query = query.Skip(page.Value * pageSize.Value).Take(pageSize.Value);
+            }
+
+            var tmp = from res in query
+                      select new ArticleDto
+                      {
+                          MinAmount = res.MinAmount,
+                          Amount = 1,
+                          PriceAmount = _db.Prices.FirstOrDefault(x => x.ArticleId == res.ArticleId).Amount,
+                          QuantityActual = res.QuantityActual,
+                          QuantityAtStart = res.QuantityAtStart,
+                          Category = res.Article.ArticleCategory.Name,
+                          Name = res.Article.Name,
+                          StorageName = res.Slot.Storage.StorageName,
+                          StorageSlot = res.Slot.Name
+                      };
+
+            return await tmp.ToListAsync();
         }
     }
 }

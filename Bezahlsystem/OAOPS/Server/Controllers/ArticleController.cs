@@ -32,5 +32,12 @@ namespace OAOPS.Server.Controllers
 
             return Ok(errors);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetArticlesFiltered(string? articleName = null, int? page = null, int? pageSize = null)
+        {
+            List<ArticleDto> res = await _articleService.GetAllArticlesFiltered(articleName, page, pageSize);
+            return Ok(res);
+        }
     }
 }

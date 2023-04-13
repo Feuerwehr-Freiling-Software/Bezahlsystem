@@ -22,7 +22,7 @@
 
         public string GetAllArticles { get; set; } = string.Empty;
         public string Pay { get; set; } = string.Empty;
-
+        public string GetAllArticlesFiltered { get; set; } = string.Empty;
         #endregion
 
         #region Storage
