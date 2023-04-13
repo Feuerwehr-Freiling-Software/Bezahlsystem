@@ -8,7 +8,7 @@ namespace OAOPS.Shared.DTO
         public string Name { get; set; } = string.Empty;
         [JsonIgnore]
         public ArticleCategoryDto? Parent { get; set; }
-        [JsonIgnore]
+        
         public List<ArticleCategoryDto>? Children { get; set; } = new List<ArticleCategoryDto>();
     }
 }

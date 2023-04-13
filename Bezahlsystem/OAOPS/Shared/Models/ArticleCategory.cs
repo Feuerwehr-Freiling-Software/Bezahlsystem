@@ -14,7 +14,7 @@ namespace OAOPS.Shared.Models
         public int? ParentId { get; set; }
         [JsonIgnore]
         public ArticleCategory? Parent { get; set; }
-        [JsonIgnore]
+        
         public List<ArticleCategory>? Children { get; set; }
         [JsonIgnore]
         public List<Article>? Articles { get; set; }

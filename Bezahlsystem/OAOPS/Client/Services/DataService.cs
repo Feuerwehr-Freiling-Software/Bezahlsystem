@@ -139,6 +139,18 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<ErrorDto>();
         }
 
+        public async Task<ErrorDto>? DeleteCategory(ArticleCategoryDto category)
+        {
+            var res = await _http.DeleteAsync(configuration.ApiEndpoints.DeleteCategory + "/" + category.Id);
+            //  check if result is ok and return error 
+            if (!res.IsSuccessStatusCode)
+            {
+                return new ErrorDto() { Code = 1, ErrorText = "Unexpected error while deleting. See logs for further Information", IsSuccessCode = false };
+            }
+
+            return await res.Content.ReadFromJsonAsync<ErrorDto>();
+        }
+
         #endregion
     }
 }

@@ -29,6 +29,33 @@ namespace OAOPS.Client.Components.Shared
 
         }
 
+        private async void RemoveCategory(ArticleCategoryDto category)
+        {
+            // Open a new Dialog to add a new category
+            var opt = new DialogOptions()
+            {
+                MaxWidth = MaxWidth.Large
+            };
+
+            bool? result = await DialogService.ShowMessageBox(
+                "Kategorie löschen",
+                "Achtung! Du bist dabei die Kategorie",
+                yesText: "Löschen",
+                cancelText: "Cancel"
+                );
+
+            if (result != null)
+            {
+                var res = await DataService.DeleteCategory(category);
+                if (res.IsSuccessCode)
+                {
+                    Snackbar.Add(res.IsSuccessCode ? "Kategorie erfolgreich gelöscht." : $"Fehler beim löschen: {res.ErrorText}", res.IsSuccessCode ? Severity.Success : Severity.Error);
+                }
+            }
+
+            await InvokeAsync(StateHasChanged);
+        }
+
         private async void AddNewCategory(ArticleCategoryDto category)
         {
             // Open a new Dialog to add a new category

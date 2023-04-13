@@ -39,6 +39,7 @@
         public string UpdateStorageSlot { get; set; } = string.Empty;
         public string GetCategories { get; set; } = string.Empty;
         public string UpdateCategory { get; set; } = string.Empty;
+        public string? DeleteCategory { get; set; } = string.Empty;
 
         #endregion
     }

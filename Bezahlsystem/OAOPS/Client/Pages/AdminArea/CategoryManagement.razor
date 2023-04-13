@@ -2,8 +2,8 @@
 <h1>Artikel Kategorien</h1>
 <MudIconButton Style="position: fixed; right: 0; bottom: 0;" Icon="@Icons.Material.Filled.ArrowBack" OnClick="GoBack" Color="Color.Primary" aria-label="back"></MudIconButton>
 
-<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
-    <MudGrid>
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Large">
+    <MudGrid Justify="Justify.Center">
         <MudItem xs="12">
             <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="AddNewCategory" Color="Color.Success">Kategorie Hinzufügen</MudButton>
         </MudItem>
@@ -12,8 +12,8 @@
             <OAOPS.Client.Components.Shared.LoadingComponent/>
         }else
         {
-            <MudItem>
-                <MudExpansionPanels>
+            <MudItem xs="12">
+                <MudExpansionPanels MultiExpansion="true">
                     @foreach (var item in Categories)
                     {
                         <OAOPS.Client.Components.Shared.CategoryComponent ParentCategory="item"/>

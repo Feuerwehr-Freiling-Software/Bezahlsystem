@@ -31,5 +31,11 @@ namespace OAOPS.Server.Controllers
         {
             return await categoryService.UpdateCategory(category);
         }
+
+        [HttpDelete("{categoryId:int}")]
+        public async Task<ActionResult<ErrorDto>> DeleteCategory(int categoryId)
+        {
+            return await categoryService.DeleteCategory(categoryId);
+        }
     }
 }

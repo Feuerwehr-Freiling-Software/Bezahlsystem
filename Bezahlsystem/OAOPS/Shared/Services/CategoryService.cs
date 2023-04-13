@@ -5,6 +5,7 @@ using OAOPS.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,8 +25,9 @@ namespace OAOPS.Shared.Services
         public async Task<List<ArticleCategoryDto>> GetCategories()
         {
             var res = from cat in Db.ArticleCategories
-                        .Include(c => c.Children)
                         .Include(c => c.Parent)
+                        .Include(c => c.Children).ToList()
+                      where cat.ParentId == null
                       select cat;
 
             var mapperConfig = new MapperConfiguration(cfg =>
@@ -76,7 +78,7 @@ namespace OAOPS.Shared.Services
 
             fCat.Children = new List<ArticleCategory>(); // this is the line that fixes the issue
             fCat.Children.AddRange(children);
-
+            Db.ArticleCategories.Update(fCat);
             var res = await Db.SaveChangesAsync();
 
             if (res <= 0)
@@ -143,6 +145,23 @@ namespace OAOPS.Shared.Services
                 return CodeService.GetError(42).MapErrorCodeToDto();
             }
             return CodeService.GetError(40).MapErrorCodeToDto();    
+        }
+
+        public async Task<ErrorDto> DeleteCategory(int categoryId)
+        {
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ErrorDto, ErrorCode>();
+            });
+
+            var fCat = Db.ArticleCategories.FirstOrDefault(x => x.Id == categoryId);
+            if (fCat == null)
+            {
+                return new Mapper(mapperConfig).Map<ErrorDto>(CodeService.GetError(41));
+            }
+
+            Db.DeleteCategory(fCat);
+            return new Mapper(mapperConfig).Map<ErrorDto>(CodeService.GetError(40));
         }
     }
 }

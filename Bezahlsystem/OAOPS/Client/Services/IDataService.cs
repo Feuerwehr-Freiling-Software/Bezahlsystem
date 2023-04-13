@@ -39,6 +39,7 @@ namespace OAOPS.Client.Services
         public Task<ErrorDto> UpdateStorageSlot(StorageSlotDto slot);
         public Task<List<ArticleCategoryDto>?> GetCategories();
         public Task<ErrorDto> UpdateCategory(ArticleCategoryDto category);
+        public Task<ErrorDto>? DeleteCategory(ArticleCategoryDto category);
 
         #endregion
     }
