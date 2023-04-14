@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using OAOPS.Client.Configuration;
 using OAOPS.Client.DTO;
 using OAOPS.Client.ViewModels;
+using System.Collections.Generic;
 using System.Net.Http.Json;
 
 namespace OAOPS.Client.Services
@@ -90,8 +91,10 @@ namespace OAOPS.Client.Services
             {
                 queryBuilder.Add(nameof(pageSize), pageSize.Value.ToString());
             }
-
-            return await _http.GetFromJsonAsync<List<ArticleDto>>(configuration.ApiEndpoints.GetAllArticlesFiltered + queryBuilder.ToString());
+            string query = queryBuilder.ToQueryString().ToString();
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetAllArticlesFiltered + query);
+            var result = await res.Content.ReadAsStringAsync();
+            return res.IsSuccessStatusCode ? await res.Content.ReadFromJsonAsync<List<ArticleDto>>() : new List<ArticleDto>();
         }
 
         #endregion

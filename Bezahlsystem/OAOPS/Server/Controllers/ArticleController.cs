@@ -5,7 +5,7 @@ namespace OAOPS.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class ArticleController : ControllerBase
     {
         public IArticleService _articleService { get; set; }

@@ -30,7 +30,7 @@
         <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="MinAmount" Title="Min. Anzahl für Nachricht"/>
         <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="Category" Title="Kategorie" />
         <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="StorageName" Title="Name des Storages" />
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="SlotName" Title="Name des Slots" />
+        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="StorageSlot" Title="Name des Slots" />
     </Columns>
         <LoadingContent>
             <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
@@ -48,7 +48,7 @@
     [Inject]
     public IDataService DataService { get; set; }
 
-    public MudDataGrid<ArticleDto> DataGrid { get; set; }
+    public MudDataGrid<ArticleDto> DataGrid { get; set; } = new();
     public List<FilterDefinition<ArticleDto>> FilterDefinitions { get; set; } 
     private string _articleNameFilter = "";
 
@@ -76,7 +76,7 @@
     protected bool OrderNumberFilterFunction(ArticleDto article)
             => String.IsNullOrEmpty(ArticleNameFilter) || article.Name.Contains(ArticleNameFilter);
 
-    public ArticleDto SelectedArticle { get; set; }
+    public ArticleDto SelectedArticle { get; set; } = new();
 
     protected string RowClass(ArticleDto article, int idx)
     {
@@ -91,11 +91,11 @@
 
     protected async Task<GridData<ArticleDto>> LoadData(GridState<ArticleDto> gridState)
     {
-        var articles = await DataService.GetArticlesFiltered();
+        var articles = await DataService.GetArticlesFiltered(articleName: ArticleNameFilter, page: gridState.Page, pageSize: gridState.PageSize) ?? new();
         return new GridData<ArticleDto>()
             {
                 Items = articles,
-                TotalItems = articles?.Count ?? 0
+                TotalItems = articles.Count
             };
     }
 }
