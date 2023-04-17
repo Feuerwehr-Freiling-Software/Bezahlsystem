@@ -37,5 +37,11 @@ namespace OAOPS.Server.Controllers
         {
             return await categoryService.DeleteCategory(categoryId);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<List<ArticleCategoryDto>>> GetAllCategories()
+        {
+            return await categoryService.GetAllCategories();
+        }
     }
 }

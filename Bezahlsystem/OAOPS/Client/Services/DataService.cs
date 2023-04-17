@@ -91,8 +91,9 @@ namespace OAOPS.Client.Services
             {
                 queryBuilder.Add(nameof(pageSize), pageSize.Value.ToString());
             }
+
             string query = queryBuilder.ToQueryString().ToString();
-            var res = await _http.GetAsync(configuration.ApiEndpoints.GetAllArticlesFiltered + query);
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetArticlesFiltered + query);
             var result = await res.Content.ReadAsStringAsync();
             return res.IsSuccessStatusCode ? await res.Content.ReadFromJsonAsync<List<ArticleDto>>() : new List<ArticleDto>();
         }
@@ -170,6 +171,28 @@ namespace OAOPS.Client.Services
             //  check if result is ok and return error 
             if (!res.IsSuccessStatusCode)
             {
+                return new ErrorDto() { Code = 1, ErrorText = "Unexpected error while deleting. See logs for further Information", IsSuccessCode = false };
+            }
+
+            return await res.Content.ReadFromJsonAsync<ErrorDto>();
+        }
+
+        public async Task<List<ArticleCategoryDto>?> GetAllCategories()
+        {
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetAllCategories);
+            if (!res.IsSuccessStatusCode)
+            {
+                return new();
+            }
+
+            return await res.Content.ReadFromJsonAsync<List<ArticleCategoryDto>>();
+        }
+
+        public async Task<ErrorDto>? AddArticle(ArticleDto newArticle)
+        {
+            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddArticle, newArticle);
+            if (!res.IsSuccessStatusCode)
+            {                
                 return new ErrorDto() { Code = 1, ErrorText = "Unexpected error while deleting. See logs for further Information", IsSuccessCode = false };
             }
 

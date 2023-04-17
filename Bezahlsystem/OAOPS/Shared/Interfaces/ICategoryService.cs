@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OAOPS.Shared.DTO;
+using OAOPS.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace OAOPS.Shared.Interfaces
         Task<ErrorDto> AddArticleToCategory(ArticleDto article, string categoryName);
         Task<ErrorDto> RemoveArticleFromCategory(ArticleDto article, string categoryName);
         Task<ErrorDto> DeleteCategory(int categoryId);
+        Task<List<ArticleCategoryDto>> GetAllCategories();
+        Task<ArticleCategory?> GetCategoryByName(string category);
     }
 }

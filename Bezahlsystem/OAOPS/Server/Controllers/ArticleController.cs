@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace OAOPS.Server.Controllers
@@ -28,9 +29,9 @@ namespace OAOPS.Server.Controllers
         {
             var res = await _articleService.AddArticle(article);
 
-            var errors = await _errorService.GetErrorsFromList(res);
+            var error = _errorService.GetError(res.First());
 
-            return Ok(errors);
+            return Ok(error);
         }
 
         [HttpGet]

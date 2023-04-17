@@ -21,7 +21,12 @@ namespace OAOPS.Client.DTO
         public override bool Equals(object o)
         {
             var other = o as StorageSlotDto;
-            return other?.StorageName == StorageName;
+            return other?.SlotName == SlotName;
+        }
+
+        public override string ToString()
+        {
+            return SlotName;
         }
     }
 }

@@ -22,7 +22,7 @@
 
         public string GetAllArticles { get; set; } = string.Empty;
         public string Pay { get; set; } = string.Empty;
-        public string GetAllArticlesFiltered { get; set; } = string.Empty;
+        public string GetArticlesFiltered { get; set; } = string.Empty;
         #endregion
 
         #region Storage
@@ -39,7 +39,9 @@
         public string UpdateStorageSlot { get; set; } = string.Empty;
         public string GetCategories { get; set; } = string.Empty;
         public string UpdateCategory { get; set; } = string.Empty;
-        public string? DeleteCategory { get; set; } = string.Empty;
+        public string DeleteCategory { get; set; } = string.Empty;
+        public string AddArticle { get; set; } = string.Empty;
+        public string GetAllCategories { get; set; } = string.Empty;
 
         #endregion
     }

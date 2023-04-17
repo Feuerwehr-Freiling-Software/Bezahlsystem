@@ -163,5 +163,29 @@ namespace OAOPS.Shared.Services
             Db.DeleteCategory(fCat);
             return new Mapper(mapperConfig).Map<ErrorDto>(CodeService.GetError(40));
         }
+
+        public async Task<List<ArticleCategoryDto>> GetAllCategories()
+        {
+            var categories = Db.ArticleCategories.ToList();
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ArticleCategory, ArticleCategoryDto>();
+            });
+
+            var retList = new List<ArticleCategoryDto>();
+
+            foreach (var item in categories)
+            {
+                retList.Add(new Mapper(mapperConfig).Map<ArticleCategoryDto>(item));
+            }
+
+            return retList;
+        }
+
+        public async Task<ArticleCategory?> GetCategoryByName(string category)
+        {
+            var cat = Db.ArticleCategories.FirstOrDefault(x => x.Name == category);
+            return cat;
+        }
     }
 }

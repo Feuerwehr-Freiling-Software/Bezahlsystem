@@ -1,52 +1,68 @@
 ﻿@page "/manage/Articles"
+@using OAOPS.Client.Components.AddComponents;
 @using OAOPS.Client.Services;
 @using System.Text;
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Artikel Management</PageTitle>
 
-<div class="d-flex gap-3 flex-column justify-space-between" style="height:100%;">
-    <MudTextField Label="Artikelname" @bind-Value="ArticleNameFilter" DebounceInterval="500" Variant="Variant.Filled" FullWidth="false" Class="flex-none align-self-start"/>
-    <MudDataGrid SortMode="SortMode.Multiple"
-                Dense="true"
-                ServerData="LoadData"
-                Context="Articles"
-                Outlined="true"
-                Class="pa-2 flex-grow-1"
-                RowClassFunc="RowClass"
-                @bind-SelectedItem="SelectedArticle"
-                FilterDefinitions="FilterDefinitions"
-                Height="calc(100% - 52px)"
-                Style="height: 50%"
-                FixedHeader="true"
-                Virtualize="true"
-                OverscanCount="5"
-                @ref="DataGrid">
-    <Columns>
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="Name" Title="Artikelname" />
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="PriceAmount" Title="Preis" />
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="QuantityActual" Title="Anzahl" />
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="QuantityAtStart" Title="Anzahl beim Erstellen" />
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="MinAmount" Title="Min. Anzahl für Nachricht"/>
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="Category" Title="Kategorie" />
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="StorageName" Title="Name des Storages" />
-        <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="StorageSlot" Title="Name des Slots" />
-    </Columns>
-        <LoadingContent>
-            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
-        </LoadingContent>
-        <NoRecordsContent>
-            <MudText Typo="Typo.h6">Es gibt aktuell keine Artikel</MudText>
-        </NoRecordsContent>
-        <PagerContent>
-            <MudDataGridPager T="ArticleDto" InfoFormat="{first_item}-{last_item} / {all_items}" PageSizeOptions="@(new int[]{ 15, 25, 50, 100 })"/>
-        </PagerContent>
-    </MudDataGrid>
-</div>
+<MudGrid Justify="Justify.Center" Class="mt-5">
+    <MudItem xs="10">
+        <MudButton Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateArticle">Artikel Hinzufügen</MudButton>
+        <MudTextField Label="Artikelname" @bind-Value="ArticleNameFilter" DebounceInterval="500" Variant="Variant.Filled" FullWidth="false" Class="align-self-start mt-5" />
+
+        <MudPaper>
+            <MudDataGrid SortMode="SortMode.Multiple"
+                         Dense="true"
+                         ServerData="LoadData"
+                         Context="Articles"
+                         Outlined="true"
+                         Class="pa-2 flex-grow-1 mt-5 mb-5"
+                         RowClassFunc="RowClass"
+                         @bind-SelectedItem="SelectedArticle"
+                         FilterDefinitions="FilterDefinitions"
+                         Height="calc(100% - 52px)"
+                         Style="height: 50%"
+                         FixedHeader="true"
+                         Virtualize="true"
+                         OverscanCount="5"
+                         @ref="DataGrid">
+                <Columns>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="Name" Title="Artikelname" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="PriceAmount" Title="Preis" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="QuantityActual" Title="Anzahl" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="QuantityAtStart" Title="Anzahl beim Erstellen" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="MinAmount" Title="Min. Anzahl für Nachricht" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="Category" Title="Kategorie" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="StorageName" Title="Name des Storages" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="ArticleDto" Field="StorageSlot" Title="Name des Slots" />
+                    <Column HeaderClass="datagrid-header" T="ArticleDto" CellClass="d-flex justify-end" Title="Aktion" Sortable="false">
+                        <CellTemplate>
+                            <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteArticle(context.Item))" />
+                            <MudIconButton Size="@Size.Small" Color=Color.Primary Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateArticle(context.Item))" />
+                        </CellTemplate>
+                    </Column>
+                </Columns>
+                <LoadingContent>
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+                </LoadingContent>
+                <NoRecordsContent>
+                    <MudText Typo="Typo.h6">Es gibt aktuell keine Artikel</MudText>
+                </NoRecordsContent>
+                <PagerContent>
+                    <MudDataGridPager T="ArticleDto" InfoFormat="{first_item}-{last_item} / {all_items}" PageSizeOptions="@(new int[]{ 15, 25, 50, 100 })" />
+                </PagerContent>
+            </MudDataGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 
 @code{
     [Inject]
     public IDataService DataService { get; set; }
+
+    [Inject]
+    public IDialogService DialogService { get; set; }
 
     public MudDataGrid<ArticleDto> DataGrid { get; set; } = new();
     public List<FilterDefinition<ArticleDto>> FilterDefinitions { get; set; } 
@@ -87,6 +103,30 @@
         }
 
         return classes.ToString();
+    }
+
+    protected async Task CreateArticle()
+    {
+        var opt = new DialogOptions()
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Medium
+            };
+
+        var dialog = await DialogService.ShowAsync<AddArticleComponent>("Artikel Hinzufügen", opt);
+        var res = await dialog.Result;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected async Task UpdateArticle(ArticleDto article)
+    {
+
+    }
+
+    protected async Task DeleteArticle(ArticleDto article)
+    {
+        
     }
 
     protected async Task<GridData<ArticleDto>> LoadData(GridState<ArticleDto> gridState)

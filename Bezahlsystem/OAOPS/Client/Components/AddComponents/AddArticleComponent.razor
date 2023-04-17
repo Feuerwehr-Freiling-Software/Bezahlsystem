@@ -1,0 +1,25 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+            Artikel hinzufügen
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Required="true" T="string" @bind-Value="@NewArticle.Name" Label="Kategorie Name" />
+        <MudNumericField Required="true" T="double" @bind-Value="@NewArticle.PriceAmount" Label="Preis" Min="0.0" Step="0.1" />
+        <MudAutocomplete Variant="Variant.Outlined" Label="Kategorie" @bind-Value="SelectedCategory" SearchFunc="(x) => AutocompleteCategorySearch(x)" Clearable="true" OnClearButtonClick="OnClearCategoryClick"/>
+        <MudAutocomplete Variant="Variant.Outlined" Label="Storage" @bind-Value="SelectedStorage" SearchFunc="(x) => AutocompleteStorageSearch(x)" Clearable="true" OnClearButtonClick="OnClearStorageClick" />
+        <MudAutocomplete Variant="Variant.Outlined" Label="Slot" @bind-Value="SelectedSlot" SearchFunc="(x) => AutocompleteSlotSearch(x)" Clearable="true" OnClearButtonClick="OnClearSlotClick" />
+        @if (!string.IsNullOrEmpty(SelectedSlot.SlotName))
+        {
+            <MudNumericField T="int" @bind-Value="@NewArticle.MinAmount" Label="Minimale Anzahl für Benachrichtigung" Min="0" />
+            <MudNumericField T="int" @bind-Value="@NewArticle.QuantityAtStart" Label="Anzahl beim Zeitpunkt des Eintragens" Min="0" />
+        }
+        
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddArticle">Artikel Hinzufügen</MudButton>
+    </DialogActions>
+</MudDialog>

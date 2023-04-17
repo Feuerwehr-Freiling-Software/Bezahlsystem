@@ -13,10 +13,12 @@ namespace OAOPS.Shared.Services
     public class ArticleService : IArticleService
     {
         private readonly ApplicationDbContext _db;
+        private readonly ICategoryService categoryService;
 
-        public ArticleService(ApplicationDbContext db, IPriceService priceService)
+        public ArticleService(ApplicationDbContext db, IPriceService priceService, ICategoryService categoryService)
         {
             _db = db;
+            this.categoryService = categoryService;
         }
 
         public async Task<List<ArticleDto>> GetAllArticles()
@@ -31,10 +33,19 @@ namespace OAOPS.Shared.Services
         public async Task<List<int>> AddArticle(ArticleDto article)
         {
             // add new Entities to db
+
             Article newArticle = new()
             {
                 Name = article.Name
             };
+
+            var category = await categoryService.GetCategoryByName(article.Category);
+            if(category != null)
+            {
+                newArticle.ArticleCategoryId = category.Id;
+            }
+
+            var createdArticle = _db.Articles.Add(newArticle);
 
             Price newPrice = new ()
             {
@@ -43,12 +54,18 @@ namespace OAOPS.Shared.Services
                 Since = DateTime.Now
             };
 
-            ArticleCategory newCategory = new()
+            var res1 = _db.Prices.Add(newPrice);
+            if (string.IsNullOrEmpty(article.StorageName))
             {
-                Name = article.Category,
-                Parent = null,
-                Children = null
-            };
+                var res = await _db.SaveChangesAsync();
+                switch (res)
+                {
+                    case < 1:
+                        return new List<int>() { 61 };
+                    case >= 1:
+                        return new List<int>() { 60 };
+                }
+            }
 
             // get all necessary ID's
 
@@ -60,7 +77,7 @@ namespace OAOPS.Shared.Services
                                    SlotId = slot.Id,
                                    StorageName = storage.StorageName,
                                    SlotName = slot.Name,
-                                   StorageConnectionId = storage.ConnectionId,
+                                   StorageConnectionId = storage.ConnectionId ?? string.Empty,
                                    StorageId = storage.Id
                                }).FirstOrDefault();
 
@@ -72,15 +89,28 @@ namespace OAOPS.Shared.Services
 
             // add Article to storage
 
+            var fArticle = _db.Articles.FirstOrDefault(x => x.Name == article.Name);
+            if(fArticle == null) return new List<int>() { 63 };
+
             var SlotInStorageHasArticle = new ArticleInStorageSlot
             {
-                Article = newArticle,
+                ArticleId = fArticle.Id,
                 MinAmount = article.MinAmount,
                 QuantityAtStart = article.QuantityAtStart,
                 QuantityActual = article.QuantityAtStart,
                 SlotId = storageSlot.SlotId
             };
-            return new List<int>() { 0 };
+
+            _db.ArticleInStorageSlots.Add(SlotInStorageHasArticle);
+            var res2 = await _db.SaveChangesAsync();
+
+            switch (res2)
+            {
+                case < 1:
+                    return new List<int>() { 61 };
+                case >= 1:
+                    return new List<int>() { 60 };
+            }
         }
 
         public async Task<List<ArticleDto>> GetAllArticlesFiltered(string? articleName, int? page, int? pageSize)

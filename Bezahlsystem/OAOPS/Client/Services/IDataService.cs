@@ -41,6 +41,8 @@ namespace OAOPS.Client.Services
         public Task<List<ArticleCategoryDto>?> GetCategories();
         public Task<ErrorDto> UpdateCategory(ArticleCategoryDto category);
         public Task<ErrorDto>? DeleteCategory(ArticleCategoryDto category);
+        public Task<ErrorDto>? AddArticle(ArticleDto newArticle);
+        Task<List<ArticleCategoryDto>?> GetAllCategories();
 
         #endregion
     }
