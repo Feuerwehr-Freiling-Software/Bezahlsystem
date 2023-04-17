@@ -31,7 +31,12 @@ namespace OAOPS.Server.Controllers
 
             var error = _errorService.GetError(res.First());
 
-            return Ok(error);
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ErrorCode, ErrorDto>();
+            });
+
+            return Ok(new Mapper(mapperConfig).Map<ErrorDto>(error));
         }
 
         [HttpGet]

@@ -55,6 +55,7 @@ namespace OAOPS.Shared.Services
             };
 
             var res1 = _db.Prices.Add(newPrice);
+            _db.SaveChanges();
             if (string.IsNullOrEmpty(article.StorageName))
             {
                 var res = await _db.SaveChangesAsync();
