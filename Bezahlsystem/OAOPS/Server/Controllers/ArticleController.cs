@@ -44,7 +44,7 @@ namespace OAOPS.Server.Controllers
         public async Task<IActionResult> Pay(List<ArticleDto> articles)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var clearId = userId.Replace('}', ' ').Trim().Split(':')[2];
+            ErrorDto res = await _articleService.Pay(articles, userId);
             return Ok();
         }
 

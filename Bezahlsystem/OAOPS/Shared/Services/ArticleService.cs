@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OAOPS.Shared.DTO;
@@ -17,12 +18,14 @@ namespace OAOPS.Shared.Services
         private readonly ApplicationDbContext _db;
         private readonly ICategoryService categoryService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IErrorCodeService codeService;
 
-        public ArticleService(ApplicationDbContext db, IPriceService priceService, ICategoryService categoryService, UserManager<ApplicationUser> userManager)
+        public ArticleService(ApplicationDbContext db, IPriceService priceService, ICategoryService categoryService, UserManager<ApplicationUser> userManager, IErrorCodeService codeService)
         {
             _db = db;
             this.categoryService = categoryService;
             this.userManager = userManager;
+            this.codeService = codeService;
         }
 
         public async Task<List<ArticleDto>> GetAllArticles()
@@ -156,6 +159,11 @@ namespace OAOPS.Shared.Services
             if (user == null) return new ErrorDto();
             List<UserBoughtArticleFromSlot> payments = new();
 
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ArticleCategory, ArticleCategoryDto>();
+            });
+
             foreach (var item in articles)
             {
                 // get corresponding ArticleInStorageSlot from db
@@ -171,6 +179,25 @@ namespace OAOPS.Shared.Services
                 };
 
                 // TODO: Calculate total price and subtract it from User Balance
+                var price = _db.Prices.FirstOrDefault(x => x.ArticleId == storageArticle.ArticleId && x.Until == default);
+                if (price == null) break;
+                
+                var totalPrice = price.Amount * item.Amount;
+                if (user.Balance < totalPrice) break;
+
+                user.Balance -= totalPrice;
+                payments.Add(payment);
+            }
+
+            await _db.UserBoughtArticleFromSlots.AddRangeAsync(payments);
+            var res = await _db.SaveChangesAsync();
+
+            switch (res)
+            {
+                case < 1:
+                    return new Mapper(mapperConfig).Map<ErrorDto>(codeService.GetError(61));
+                case >= 1:
+                    return new Mapper(mapperConfig).Map<ErrorDto>(codeService.GetError(60));
             }
         }
     }
