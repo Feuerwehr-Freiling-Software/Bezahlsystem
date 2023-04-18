@@ -23,4 +23,4 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./Bezahlsystem/Bezahlsystem.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore ./Bezahlsystem/Bezahlsystem.sln
