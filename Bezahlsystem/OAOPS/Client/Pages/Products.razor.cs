@@ -15,10 +15,13 @@ namespace OAOPS.Client.Pages
         {
 
         }
+
         [Inject]
         IDataService DataService { get; set; }
 
         List<ArticleDto> Articles = new ();
+
+        public List<ArticleDto> Cart { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

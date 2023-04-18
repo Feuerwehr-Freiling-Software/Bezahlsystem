@@ -23,11 +23,7 @@ namespace OAOPS.Shared.Services
 
         public async Task<List<ArticleDto>> GetAllArticles()
         {
-            return (from res in _db.Articles
-                    select new ArticleDto
-                    {
-                        Name = res.Name,
-                    }).ToList();
+            return await GetAllArticlesFiltered();
         }
 
         public async Task<List<int>> AddArticle(ArticleDto article)
@@ -114,7 +110,7 @@ namespace OAOPS.Shared.Services
             }
         }
 
-        public async Task<List<ArticleDto>> GetAllArticlesFiltered(string? articleName, int? page, int? pageSize)
+        public async Task<List<ArticleDto>> GetAllArticlesFiltered(string? articleName = null, int? page = null, int? pageSize = null)
         {
             IQueryable<ArticleInStorageSlot> query = _db.ArticleInStorageSlots
                 .Include(x => x.Article)

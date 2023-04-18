@@ -1,4 +1,5 @@
 
+using Blazored.LocalStorage;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
 using OAOPS.Client.Configuration;
@@ -18,6 +19,8 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.Seq("http://localhost:5341")
     .CreateLogger();
+
+builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddLogging(loggingbuilder => loggingbuilder.AddSerilog(dispose: true));
 
