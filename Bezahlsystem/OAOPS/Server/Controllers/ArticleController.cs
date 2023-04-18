@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace OAOPS.Server.Controllers
 {
@@ -39,7 +40,15 @@ namespace OAOPS.Server.Controllers
             return Ok(new Mapper(mapperConfig).Map<ErrorDto>(error));
         }
 
-        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> Pay(List<ArticleDto> articles)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var clearId = userId.Replace('}', ' ').Trim().Split(':')[2];
+            return Ok();
+        }
+
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetArticlesFiltered(string? articleName = null, int? page = null, int? pageSize = null)
         {
             List<ArticleDto> res = await _articleService.GetAllArticlesFiltered(articleName, page, pageSize);

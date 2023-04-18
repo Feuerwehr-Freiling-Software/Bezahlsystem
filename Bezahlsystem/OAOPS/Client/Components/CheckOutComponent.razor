@@ -54,6 +54,11 @@
 
     public double TotalSum { get; set; } = 0;
 
+    protected override void OnInitialized()
+    {
+        SetTotalAmount();
+    }
+
     private void Cancel()
     {
         MudDialog?.Cancel();
@@ -62,13 +67,13 @@
     private async void Pay()
     {
         var authState = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
-        var userName = authState.User.Identity.Name;
+        var userName = authState.User.Identity?.Name;
         if (userName == null)
         {
             Snackbar.Add("Nicht angemeldet", Severity.Error);
             return;
         }
-        var res = dataService.Pay(Cart, userName);
+        var res = dataService.Pay(Cart);
 
         Snackbar.Add("Bezahlt", Severity.Success);
         MudDialog.Close(DialogResult.Ok("success"));
@@ -113,7 +118,12 @@
         if (fArt != null)
         {
             if (fArt.Amount > 1) fArt.Amount--;
-            else if (fArt.Amount <= 1) Cart.Remove(fArt);
+            else if (fArt.Amount <= 1)
+            {
+                Cart.Remove(fArt);
+                await localStorage.SetItemAsync("Cart", Cart);
+                MudDialog?.Cancel();
+            }
         }
 
         await localStorage.SetItemAsync("Cart", Cart);

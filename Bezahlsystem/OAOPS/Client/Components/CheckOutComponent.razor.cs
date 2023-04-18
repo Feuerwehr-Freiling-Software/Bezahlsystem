@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using OAOPS.Client.Services;
 
 namespace Paymentsystem.Client.Components
 {
@@ -12,7 +13,11 @@ namespace Paymentsystem.Client.Components
         [Inject]
         public ISnackbar Snackbar { get; set; }
 
-        [Inject] public ILocalStorageService localStorage { get; set; }
+        [Inject]
+        public ILocalStorageService localStorage { get; set; }
+
+        [Inject]
+        public IDataService DataService { get; set; }
 
         [CascadingParameter]
         MudDialogInstance MudDialog { get; set; }
@@ -24,6 +29,12 @@ namespace Paymentsystem.Client.Components
 
         public double TotalSum { get; set; } = 0;
 
+        protected override Task OnInitializedAsync()
+        {
+            SetTotalAmount();
+            return Task.CompletedTask;
+        }
+
         private void Cancel()
         {
             MudDialog?.Cancel();
@@ -33,6 +44,8 @@ namespace Paymentsystem.Client.Components
         {
             Snackbar.Add("Bezahlt", Severity.Success);
             MudDialog.Close(DialogResult.Ok("success"));
+
+            DataService.Pay(Cart);
         }
 
         async void AddArticle(ArticleDto article)

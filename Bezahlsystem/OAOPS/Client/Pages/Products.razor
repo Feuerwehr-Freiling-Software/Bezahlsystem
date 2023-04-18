@@ -1,22 +1,28 @@
 ﻿@page "/products"
 
 <MudGrid Justify="Justify.Center">
-    @if (Articles.Count == 0)
+    @if (Articles == null)
     {
-        <!-- No items in Article List -->    
+        // Not yet loaded
+        <OAOPS.Client.Components.Shared.LoadingComponent />
+    }
+    else if (Articles.Count == 0)
+    {
+        // No items in Article List
         <h2 class="mt-5">Keine Artikel gefunden...</h2>
     }
     else
     {
         @foreach (var item in Articles)
         {
-            <MudItem xs="3">
+            <MudItem xs="3" @onclick="(() => AddToCart(item.Name))">
                 <OAOPS.Client.Components.ProductCardComponent Article="@item" Path="@string.Empty"/>
             </MudItem>
         }
     }
 </MudGrid>
-@if(Cart.Count > 0)
+
+@if(Cart != null && Cart.Count > 0)
 {
     <OAOPS.Client.Components.CartIconComponent Cart="Cart"/>
-})
+}

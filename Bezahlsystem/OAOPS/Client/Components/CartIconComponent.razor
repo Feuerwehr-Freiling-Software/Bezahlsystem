@@ -1,9 +1,9 @@
 ﻿@inject IDialogService DialogService
 @inject NavigationManager nav
 
-<div>
+<MudBadge Style="position: fixed; bottom: 50px; right: 50px;" Content="Cart.Sum(x =>x .Amount)" Overlap="true">
     <MudFab OnClick="Checkout" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ShoppingCart" />
-</div>
+</MudBadge>
 
 @code{
     [Parameter]
@@ -23,7 +23,9 @@
 
         if (!result.Canceled)
         {
-
+            // TODO: Keine ahnung bro
         }
+
+        await InvokeAsync(StateHasChanged);
     }
 }

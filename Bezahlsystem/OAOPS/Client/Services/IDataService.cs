@@ -20,7 +20,7 @@ namespace OAOPS.Client.Services
 
         #region Products
 
-        public Task<List<ErrorDto>?> Pay(List<ArticleDto> articles, string username);
+        public Task<List<ErrorDto>?> Pay(List<ArticleDto> articles);
         public Task<List<ArticleDto>?> GetArticles();
         public Task<List<ArticleDto>?> GetArticlesFiltered(string? articleName = null, int? page = null, int? pageSize = null);
 

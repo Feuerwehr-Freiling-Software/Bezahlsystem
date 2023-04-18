@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OAOPS.Shared.DTO;
+using OAOPS.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +16,13 @@ namespace OAOPS.Shared.Services
     {
         private readonly ApplicationDbContext _db;
         private readonly ICategoryService categoryService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ArticleService(ApplicationDbContext db, IPriceService priceService, ICategoryService categoryService)
+        public ArticleService(ApplicationDbContext db, IPriceService priceService, ICategoryService categoryService, UserManager<ApplicationUser> userManager)
         {
             _db = db;
             this.categoryService = categoryService;
+            this.userManager = userManager;
         }
 
         public async Task<List<ArticleDto>> GetAllArticles()
@@ -143,6 +147,31 @@ namespace OAOPS.Shared.Services
                       };
 
             return await tmp.ToListAsync();
+        }
+
+        public async Task<ErrorDto> Pay(List<ArticleDto> articles, string userId)
+        {
+            // TODO: Payment logic
+            var user = _db.Users.FirstOrDefault(x => x.Id == userId);
+            if (user == null) return new ErrorDto();
+            List<UserBoughtArticleFromSlot> payments = new();
+
+            foreach (var item in articles)
+            {
+                // get corresponding ArticleInStorageSlot from db
+
+                var storageArticle = _db.ArticleInStorageSlots.Include(x => x.Article).FirstOrDefault(x => x.Article.Name == item.Name);
+                if (storageArticle == null) break;
+                var payment = new UserBoughtArticleFromSlot()
+                {
+                    ArticleInStorageSlotId = storageArticle.Id,
+                    Quantity = item.Amount,
+                    TimeBought = DateTime.Now,
+                    UserId = user.Id
+                };
+
+                // TODO: Calculate total price and subtract it from User Balance
+            }
         }
     }
 }
