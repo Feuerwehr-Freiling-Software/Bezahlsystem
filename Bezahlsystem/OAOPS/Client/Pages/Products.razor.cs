@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using OAOPS.Client.Components;
 using OAOPS.Client.Services;
 using System;
 using System.Collections.Generic;
@@ -27,9 +28,12 @@ namespace OAOPS.Client.Pages
 
         public List<ArticleDto> Cart { get; set; }
 
+        public CartIconComponent CartIconComponent { get; set; } = new CartIconComponent();
+
         protected override async Task OnInitializedAsync()
         {
             Articles = await DataService.GetArticles() ?? new();
+            await LoadCart();            
         }
 
         private async Task LoadCart()
@@ -43,6 +47,7 @@ namespace OAOPS.Client.Pages
             {
                 Cart = res;
             }
+            await InvokeAsync(StateHasChanged);
         }
 
         private async Task AddToCart(string article)

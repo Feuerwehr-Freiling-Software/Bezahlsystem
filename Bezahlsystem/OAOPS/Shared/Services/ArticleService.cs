@@ -161,7 +161,7 @@ namespace OAOPS.Shared.Services
 
             var mapperConfig = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<ArticleCategory, ArticleCategoryDto>();
+                cfg.CreateMap<ErrorCode, ErrorDto>();
             });
 
             foreach (var item in articles)
@@ -185,11 +185,11 @@ namespace OAOPS.Shared.Services
                 var totalPrice = price.Amount * item.Amount;
                 if (user.Balance < totalPrice) break;
 
+                await _db.UserBoughtArticleFromSlots.AddRangeAsync(payments);
                 user.Balance -= totalPrice;
                 payments.Add(payment);
             }
 
-            await _db.UserBoughtArticleFromSlots.AddRangeAsync(payments);
             var res = await _db.SaveChangesAsync();
 
             switch (res)
