@@ -197,6 +197,21 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<ErrorDto>();
         }
 
+        public async Task<string> GetBalance(string username)
+        {
+            QueryBuilder builder = new QueryBuilder();
+            builder.Add("username", username);
+            var userQuery = builder.ToQueryString().ToString();
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetBalance + userQuery);
+
+            if (!res.IsSuccessStatusCode)
+            {
+                return " - - -";
+            }
+
+            return await res.Content.ReadFromJsonAsync<string>() ?? "- - -";
+        }
+
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims;
+@using OAOPS.Client.Services;
 
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager Navigation
@@ -47,6 +48,10 @@
     ClaimsPrincipal user;
     bool isAdmin;
     bool isAuthenticated;
+    string balance;
+
+    [Inject]
+    public IDataService DataService { get; set; }
 
     private async Task BeginSignOut(MouseEventArgs args)
     {
@@ -60,8 +65,8 @@
         user = authState.User;
 
         await InvokeAsync(StateHasChanged);
-        //isAuthenticated = user.Identity.IsAuthenticated;
         isAdmin = user.IsInRole("Admin");
-        //await InvokeAsync(StateHasChanged);
+
+        balance = await DataService.GetBalance(user.Identity?.Name);
     }
 }

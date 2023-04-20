@@ -44,5 +44,11 @@
         public string GetAllCategories { get; set; } = string.Empty;
 
         #endregion
+
+        #region Users
+
+        public string GetBalance { get; set; } = string.Empty;
+
+        #endregion
     }
 }

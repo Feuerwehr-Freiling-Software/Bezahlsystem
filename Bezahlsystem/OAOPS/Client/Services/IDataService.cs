@@ -45,5 +45,11 @@ namespace OAOPS.Client.Services
         Task<List<ArticleCategoryDto>?> GetAllCategories();
 
         #endregion
+
+        #region Users
+
+        public Task<string> GetBalance(string username);
+
+        #endregion
     }
 }

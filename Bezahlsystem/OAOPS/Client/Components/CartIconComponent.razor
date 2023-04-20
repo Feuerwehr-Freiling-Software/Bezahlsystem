@@ -1,31 +1,17 @@
 ﻿@using OAOPS.Client.Components.Shared;
 @inject IDialogService DialogService
 
-<MudBadge Style="position: fixed; bottom: 50px; right: 50px;" Content="TotalAmount" Overlap="true">
-    <MudFab OnClick="Checkout" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ShoppingCart" />
-</MudBadge>
+@if (Cart.Count > 0)
+{
+    <MudBadge Style="position: fixed; bottom: 50px; right: 50px;" Content="Cart.Sum(x => x.Amount)" Overlap="true">
+        <MudFab OnClick="Checkout" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ShoppingCart" />
+    </MudBadge>
+}
 
 @code{
     [Parameter]
     public List<ArticleDto> Cart { get; set; } = new List<ArticleDto>();
-
-    private double totalAmount;
-
-    public double TotalAmount
-    {
-        get 
-        {
-            var totalAmount = 0.0;
-            foreach (var item in Cart)
-            {
-                totalAmount += item.Amount * item.PriceAmount;
-            }
-
-            return totalAmount;
-        }
-    }
     
-
     protected override Task OnInitializedAsync()
     {
         return base.OnInitializedAsync();
@@ -46,15 +32,5 @@
         }
 
         await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task<string> GetTotalAmount()
-    {
-        var totalAmount = 0.0;
-        foreach (var item in Cart)
-        {
-            totalAmount += item.Amount * item.PriceAmount;
-        }
-        return totalAmount.ToString();
     }
 }
