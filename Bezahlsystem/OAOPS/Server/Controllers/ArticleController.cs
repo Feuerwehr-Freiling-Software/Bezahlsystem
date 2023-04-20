@@ -45,7 +45,7 @@ namespace OAOPS.Server.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             ErrorDto res = await _articleService.Pay(articles, userId);
-            return Ok();
+            return Ok(res);
         }
 
         [HttpGet, AllowAnonymous]

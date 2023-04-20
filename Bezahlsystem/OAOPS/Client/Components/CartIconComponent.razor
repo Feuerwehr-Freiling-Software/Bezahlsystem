@@ -1,13 +1,30 @@
-﻿@inject IDialogService DialogService
-@inject NavigationManager nav
+﻿@using OAOPS.Client.Components.Shared;
+@inject IDialogService DialogService
 
-<MudBadge Style="position: fixed; bottom: 50px; right: 50px;" Content="Cart.Sum(x =>x .Amount)" Overlap="true">
+<MudBadge Style="position: fixed; bottom: 50px; right: 50px;" Content="TotalAmount" Overlap="true">
     <MudFab OnClick="Checkout" Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ShoppingCart" />
 </MudBadge>
 
 @code{
     [Parameter]
     public List<ArticleDto> Cart { get; set; } = new List<ArticleDto>();
+
+    private double totalAmount;
+
+    public double TotalAmount
+    {
+        get 
+        {
+            var totalAmount = 0.0;
+            foreach (var item in Cart)
+            {
+                totalAmount += item.Amount * item.PriceAmount;
+            }
+
+            return totalAmount;
+        }
+    }
+    
 
     protected override Task OnInitializedAsync()
     {
@@ -18,14 +35,27 @@
     {
         var parameters = new DialogParameters { ["Cart"] = Cart };
 
-        var dialog = await DialogService.ShowAsync(typeof(CheckOutComponent), "Checkout", parameters);
+        var dialog = await DialogService.ShowAsync(typeof(CheckoutProcessComponent), "Checkout", parameters);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
             // TODO: Keine ahnung bro
+            var cart = result.Data as List<ArticleDto>;
+            Cart = cart ?? new List<ArticleDto>();
         }
 
         await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task<string> GetTotalAmount()
+    {
+        var totalAmount = 0.0;
+        foreach (var item in Cart)
+        {
+            totalAmount += item.Amount * item.PriceAmount;
+        }
+        await InvokeAsync(StateHasChanged);
+        return totalAmount.ToString();
     }
 }

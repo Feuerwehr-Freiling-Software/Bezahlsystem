@@ -65,10 +65,10 @@ namespace OAOPS.Client.Services
             return res;
         }
 
-        public async Task<List<ErrorDto>?> Pay(List<ArticleDto> articles)
+        public async Task<ErrorDto?> Pay(List<ArticleDto> articles)
         {
             var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.Pay, articles);
-            var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>?>();
+            var result = await res.Content.ReadFromJsonAsync<ErrorDto?>();
             return result;
         }
 
