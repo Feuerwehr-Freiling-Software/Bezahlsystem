@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OAOPS.Client.DTO;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace OAOPS.Client.Components.AddComponents
 {
@@ -41,6 +42,8 @@ namespace OAOPS.Client.Components.AddComponents
                 LoadSlots(value.StorageName);
             }
         }
+
+        public IBrowserFile? file { get; set; }
 
         public StorageSlotDto SelectedSlot { get { return selectedSlot; } set { selectedSlot = value; InvokeAsync(StateHasChanged); } }
         public List<StorageSlotDto> Slots { get; set; }
@@ -151,6 +154,11 @@ namespace OAOPS.Client.Components.AddComponents
                 input = input.ToLower();
                 return Categories.Where(a => a.Name.StartsWith(input));
             }
+        }
+
+        private async Task OnInputFileChange(InputFileChangeEventArgs args)
+        {
+            file = args.File;
         }
     }
 }

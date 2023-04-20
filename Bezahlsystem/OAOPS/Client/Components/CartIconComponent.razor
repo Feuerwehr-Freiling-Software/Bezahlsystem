@@ -55,7 +55,6 @@
         {
             totalAmount += item.Amount * item.PriceAmount;
         }
-        await InvokeAsync(StateHasChanged);
         return totalAmount.ToString();
     }
 }
