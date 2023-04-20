@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAOPS.Client", "OAOPS\Clien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAOPS.Shared", "OAOPS\Shared\OAOPS.Shared.csproj", "{A74BE4E8-89F3-4DE0-B2D9-02A91FCB5080}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{DCAD8868-3B4A-4DA8-942A-A6020AC2C133}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A74BE4E8-89F3-4DE0-B2D9-02A91FCB5080}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A74BE4E8-89F3-4DE0-B2D9-02A91FCB5080}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A74BE4E8-89F3-4DE0-B2D9-02A91FCB5080}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCAD8868-3B4A-4DA8-942A-A6020AC2C133}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCAD8868-3B4A-4DA8-942A-A6020AC2C133}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCAD8868-3B4A-4DA8-942A-A6020AC2C133}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCAD8868-3B4A-4DA8-942A-A6020AC2C133}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
