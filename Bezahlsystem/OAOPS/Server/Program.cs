@@ -96,6 +96,7 @@ try
     builder.Services.AddScoped<IArticleService, ArticleService>();
     builder.Services.AddScoped<IStorageService, StorageService>();
     builder.Services.AddScoped<ICategoryService, CategoryService>();
+    builder.Services.AddScoped<IUserService, UserService>();
 
     var app = builder.Build();
 

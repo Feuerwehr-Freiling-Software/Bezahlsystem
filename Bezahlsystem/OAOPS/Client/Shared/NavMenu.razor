@@ -32,6 +32,7 @@
             <MudDivider />
             <MudNavLink Icon="@Icons.Material.Filled.Lightbulb" IconColor="Color.Primary" Href="suggestions">Vorschläge</MudNavLink>
             <MudNavLink Icon="@Icons.Material.Filled.Person" IconColor="Color.Primary" Color="Color.Inherit" Href="authentication/profile">@user?.Identity?.Name's Account</MudNavLink>
+            <MudNavLink Icon="@Icons.Material.Filled.AccountBalance" IconColor="Color.Primary" Href="user/Profile">Kontostand: @balance</MudNavLink>
             <MudNavLink Icon="@Icons.Material.Filled.Logout" IconColor="Color.Primary" Color="Color.Inherit" OnClick="BeginSignOut">Logout</MudNavLink>
 
         </Authorized>
@@ -67,6 +68,7 @@
         await InvokeAsync(StateHasChanged);
         isAdmin = user.IsInRole("Admin");
 
-        balance = await DataService.GetBalance(user.Identity?.Name);
+        var retBal = await DataService.GetBalance(user.Identity?.Name);
+        balance = retBal.ToString("C2");
     }
 }

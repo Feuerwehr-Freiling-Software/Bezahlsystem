@@ -1,2 +1,57 @@
 ﻿@page "/manage/users"
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Benutzer Management</PageTitle>
+
+<MudGrid Justify="Justify.Center" Class="mt-5">
+    <MudItem xs="10">
+        <MudTextField Label="Benutzername:" @bind-Value="UsernameFilter" DebounceInterval="500" Variant="Variant.Filled" FullWidth="false" Class="align-self-start mt-5" />
+        <MudPaper>
+            <MudDataGrid SortMode="SortMode.Multiple"
+                         Dense="true"
+                         ServerData="LoadData"
+                         Context="User"
+                         Outlined="true"
+                         Class="pa-2 flex-grow-1 mt-5 mb-5"
+                         RowClassFunc="RowClass"
+                         @bind-SelectedItem="SelectedUser"
+                         FilterDefinitions="FilterDefinitions"
+                         Height="100%"
+                         Style="height: 50%"
+                         FixedHeader="true"
+                         Virtualize="true"
+                         OverscanCount="5"
+                         @ref="DataGrid">
+            
+                <Columns>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="UserDto" Field="Username" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="UserDto" Field="FirstName" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="UserDto" Field="LastName" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="UserDto" Field="Balance"/>
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="UserDto" Field="Comment" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="UserDto" Field="Role" />
+                    <Column HeaderClass="datagrid-header" CellClass="px-auto" T="UserDto" Field="IsConfirmedUser">
+                        <CellTemplate>
+                            <MudIcon Icon="@(context.Item.IsConfirmedUser ? Icons.Material.Filled.Check : Icons.Material.Filled.Clear)" Color="@(context.Item.IsConfirmedUser ? Color.Success : Color.Error)" />
+                        </CellTemplate>
+                    </Column>
+                    <Column HeaderClass="datagrid-header" CellClass="d-flex justify-end" T="UserDto" Title="Aktion" Sortable="false">
+                        <CellTemplate>
+                            <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeactivateUser(context.Item))" />
+                            <MudIconButton Size="@Size.Small" Color=Color.Primary Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateUser(context.Item))" />
+                        </CellTemplate>
+                    </Column>
+                </Columns>
+                <LoadingContent>
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+                </LoadingContent>
+                <NoRecordsContent>
+                    <MudText>Keine Benutzer gefunden</MudText>
+                </NoRecordsContent>
+                <PagerContent>
+                    <MudDataGridPager T="UserDto" InfoFormat="{first_item}-{last_item} / {all_items}" PageSizeOptions="@(new int[]{ 15, 25, 50, 100})"/>
+                </PagerContent>
+            </MudDataGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>

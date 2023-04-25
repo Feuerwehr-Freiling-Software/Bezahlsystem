@@ -48,6 +48,10 @@
         #region Users
 
         public string GetBalance { get; set; } = string.Empty;
+        public string GetAllUsers { get; set; } = string.Empty;
+        public string GetUsersFiltered { get; set; } = string.Empty;
+        public string DeactivateUser { get; set; } = string.Empty;
+        public string UpdateUser { get; set; } = string.Empty;
 
         #endregion
     }

@@ -197,19 +197,72 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<ErrorDto>();
         }
 
-        public async Task<string> GetBalance(string username)
+        public async Task<double> GetBalance(string username)
         {
             QueryBuilder builder = new QueryBuilder();
-            builder.Add("username", username);
+            builder.Add(nameof(username), username);
             var userQuery = builder.ToQueryString().ToString();
             var res = await _http.GetAsync(configuration.ApiEndpoints.GetBalance + userQuery);
 
             if (!res.IsSuccessStatusCode)
             {
-                return " - - -";
+                return 0.0;
             }
 
-            return await res.Content.ReadFromJsonAsync<string>() ?? "- - -";
+            double balance = 0;
+
+            try
+            {
+                balance = await res.Content.ReadFromJsonAsync<double>();
+            }
+            catch (Exception)
+            {
+                await Console.Out.WriteLineAsync(await res.Content.ReadAsStringAsync());
+            }
+            return balance;
+        }
+
+        public async Task<List<UserDto>> GetAllUsers()
+        {
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetAllUsers);
+            if (!res.IsSuccessStatusCode)
+            {
+                return new();
+            }
+
+            return await res.Content.ReadFromJsonAsync<List<UserDto>>() ?? new();
+        }
+
+        public async Task<List<UserDto>?> GetUsersFiltered(string? username = null, int? page = null, int? pageSize = null)
+        {
+            QueryBuilder builder = new QueryBuilder();
+            if (username != null) builder.Add(nameof(username), username);
+            if (page != null) builder.Add(nameof(page), page.Value.ToString());
+            if (pageSize != null) builder.Add(nameof(pageSize), pageSize.Value.ToString());
+
+            var query = builder.ToQueryString().ToString();
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetUsersFiltered + query);
+            if (!res.IsSuccessStatusCode)
+            {
+                return new();
+            }
+
+            return await res.Content.ReadFromJsonAsync<List<UserDto>>();
+        }
+
+        public async Task DeactivateUser(string username)
+        {
+            var res = await _http.DeleteAsync(configuration.ApiEndpoints.DeactivateUser + "?" + nameof(username) + "=" + username);
+        }
+
+        public async Task<ErrorDto> UpdateUser(UserDto user)
+        {
+            var res = await _http.PutAsJsonAsync(configuration.ApiEndpoints.UpdateUser, user);
+            if (!res.IsSuccessStatusCode)
+            {
+                return new ErrorDto();
+            }
+            return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new ErrorDto();
         }
 
         #endregion
