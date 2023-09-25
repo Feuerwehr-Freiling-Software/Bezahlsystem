@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string? ConnectionId { get; set; }
-        public string StorageName { get; set; } = null!;
+        public string StorageName { get; set; } = string.Empty;
     }
 }

@@ -25,6 +25,9 @@ namespace OAOPS.Client.Components.UpdateComponents
         [Inject]
         public IDataService DataService { get; set; }
 
+        [Inject]
+        public ILogger<UpdateStorageSlot> Logger { get; set; }
+
         public List<ArticleDto> Articles { get; set; }
 
         public List<StorageDto> Storages { get; set; }
@@ -38,10 +41,15 @@ namespace OAOPS.Client.Components.UpdateComponents
             await LoadStorages();
             await LoadArticles();
 
-            SelectedStorage = new StorageDto() { StorageName = Slot.StorageName };
-            SelectedArticle = new ArticleDto() { Name = Slot.ArticleName };
+            
 
-            await InvokeAsync(StateHasChanged);
+            if (firstRender == true)
+            {
+                SelectedStorage = new StorageDto() { StorageName = Slot.StorageName };
+                SelectedArticle = new ArticleDto() { Name = Slot.ArticleName };
+
+                await InvokeAsync(StateHasChanged);
+            }
         }
 
         private void Cancel()
@@ -66,6 +74,10 @@ namespace OAOPS.Client.Components.UpdateComponents
 
             var res = await DataService.UpdateStorageSlot(Slot);
             Snackbar.Add(res.IsSuccessCode ? $"Slot {Slot} erfolgreich geupdated." : $"Fehler beim updaten des Slots {Slot}: {res.ErrorText}", res.IsSuccessCode ? Severity.Success : Severity.Error );
+            if (res.IsSuccessCode == false)
+            {
+                Logger.LogError(res.ErrorText);
+            }
             MudDialog.Close(DialogResult.Ok(Slot.SlotId));
 
             await InvokeAsync(StateHasChanged);
@@ -85,7 +97,7 @@ namespace OAOPS.Client.Components.UpdateComponents
             else
             {
                 input = input.ToLower();
-                return Articles.Where(a => a.Name.StartsWith(input));
+                return Articles.Where(a => a.Name.ToLower().StartsWith(input));
             }
         }
 

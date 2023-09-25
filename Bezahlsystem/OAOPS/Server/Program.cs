@@ -6,6 +6,7 @@ using Serilog.Sinks;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Duende.IdentityServer.Models;
+using OAOPS.Client.Services;
 
 // Centralized Logging Framework
 // https://datalust.co/seq

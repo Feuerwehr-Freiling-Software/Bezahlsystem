@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using OAOPS.Client.Components.AddComponents;
 using OAOPS.Client.Components.UpdateComponents;
 using OAOPS.Client.DTO;
 using OAOPS.Client.Services;
@@ -35,6 +36,11 @@ namespace OAOPS.Client.Pages.AdminArea
         protected override async Task OnInitializedAsync()
         {
             Slots = await dataService.GetSlotsOfStorageByName(Name) ?? new();
+
+            foreach (StorageSlotDto slot in Slots)
+            {
+                await Console.Out.WriteLineAsync($"{slot.SlotId} {slot.SlotName} {slot.StorageConnectionId} {slot.ArticleName}");
+            }
         }
 
         void GoBack()
@@ -46,6 +52,8 @@ namespace OAOPS.Client.Pages.AdminArea
         {
             
         }
+
+        void AddSlot() => DialogService.Show<AddStorageSlot>("Add Slot", new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium });
 
         void UpdateSlot(StorageSlotDto slot)
         {

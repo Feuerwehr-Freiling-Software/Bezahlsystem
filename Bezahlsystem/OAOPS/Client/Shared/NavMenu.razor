@@ -68,7 +68,15 @@
         await InvokeAsync(StateHasChanged);
         isAdmin = user.IsInRole("Admin");
 
-        var retBal = await DataService.GetBalance(user.Identity?.Name);
+        var userName = user.Identity?.Name;
+
+        if (userName == null)
+        {
+            balance = 0.ToString("C2");
+            return;
+        }
+
+        var retBal = await DataService.GetBalance(userName);
         balance = retBal.ToString("C2");
     }
 }
