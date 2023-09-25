@@ -7,7 +7,7 @@
 <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
     <MudGrid>
         <MudItem xs="12">
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success">Slot Hinzufügen</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => AddSlot())" Color="Color.Success">Slot Hinzufügen</MudButton>
         </MudItem>
         @if (Slots == null)
         {

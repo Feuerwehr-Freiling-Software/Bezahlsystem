@@ -11,7 +11,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 var levelSwitch = new LoggingLevelSwitch
 {
-    MinimumLevel = Serilog.Events.LogEventLevel.Debug
+    MinimumLevel = Serilog.Events.LogEventLevel.Information
 };
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.ControlledBy(levelSwitch)

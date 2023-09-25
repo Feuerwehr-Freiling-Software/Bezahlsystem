@@ -8,7 +8,8 @@
     <DialogContent>
         <MudTextField Value="@Slot.SlotName" Label="Slot Name"/>
         <MudAutocomplete Variant="Variant.Outlined" Label="Storage" @bind-Value="SelectedStorage" SearchFunc="(x) => AutocompleteStorageSearch(x)"/>
-        <MudAutocomplete Variant="Variant.Outlined" Label="Artikel" @bind-Value="SelectedArticle" SearchFunc="(x) => AutocompleteArticleSearch(x)" /> <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => ClearSelectedArticle()" />
+        <MudAutocomplete Variant="Variant.Outlined" Label="Artikel" @bind-Value="SelectedArticle" SearchFunc="(x) => AutocompleteArticleSearch(x)" />
+        <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => ClearSelectedArticle()" />
         @if (!string.IsNullOrEmpty(SelectedArticle.Name))
         {
             <MudNumericField @bind-Value="@Slot.QuantityAtStart" Label="Anzahl bei Start" Variant="Variant.Outlined" Min="0" />

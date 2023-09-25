@@ -10,7 +10,7 @@ namespace OAOPS.Shared.DTO
     {
         public int StorageId { get; set; }
         public string StorageName { get; set; } = string.Empty;
-        public string StorageConnectionId { get; set; } = string.Empty; 
+        public string? StorageConnectionId { get; set; } 
         public int SlotId { get; set; }
         public string SlotName { get; set; } = string.Empty;
         public string ArticleName { get; set; } = string.Empty;

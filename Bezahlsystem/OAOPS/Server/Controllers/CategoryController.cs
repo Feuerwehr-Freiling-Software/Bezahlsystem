@@ -5,6 +5,7 @@ namespace OAOPS.Server.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService categoryService;

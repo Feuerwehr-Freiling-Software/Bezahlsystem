@@ -115,6 +115,10 @@ namespace OAOPS.Client.Components.Shared
                 {
                     Cart.Remove(fArt);
                     await localStorage.SetItemAsync("Cart", Cart);
+                }
+
+                if (Cart.Sum(x => x.Amount) < 1)
+                {
                     MudDialog?.Cancel();
                 }
             }

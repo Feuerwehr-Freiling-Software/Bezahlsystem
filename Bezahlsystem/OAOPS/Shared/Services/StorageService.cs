@@ -62,16 +62,19 @@ namespace OAOPS.Shared.Services
 
         public List<StorageSlotDto>? GetSlotsOfStorageByName(string name)
         {
-            var slots = from slot in Db.Slots.Include(x => x.Storage)
-                        where slot.Storage.StorageName == name
-                        select new StorageSlotDto
-                        {
-                            SlotId = slot.StorageId,
-                            SlotName = slot.Name,
-                            StorageConnectionId = slot.Storage.ConnectionId,
-                            StorageId = slot.StorageId,
-                            StorageName = name
-                        };
+            var slots = from articleInSlot in Db.ArticleInStorageSlots.Include(x => x.Article).Include(x => x.Slot).ThenInclude(x => x.Storage).ToList()
+                       where articleInSlot.Slot.Storage.StorageName == name
+                       select new StorageSlotDto
+                       {
+                           ArticleName = articleInSlot.Article.Name,
+                           MinAmount = articleInSlot.MinAmount,
+                           QuantityAtStart = articleInSlot.QuantityAtStart,
+                           SlotId = articleInSlot.SlotId,
+                           SlotName = articleInSlot.Slot.Name,
+                           StorageConnectionId = articleInSlot.Slot.Storage.ConnectionId,
+                           StorageId = articleInSlot.Slot.StorageId,
+                           StorageName = articleInSlot.Slot.Storage.StorageName
+                       };
 
             return slots.ToList();
         }

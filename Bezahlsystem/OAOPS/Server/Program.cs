@@ -6,6 +6,7 @@ using Serilog.Sinks;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Duende.IdentityServer.Models;
+using OAOPS.Client.Services;
 
 // Centralized Logging Framework
 // https://datalust.co/seq
@@ -96,6 +97,7 @@ try
     builder.Services.AddScoped<IArticleService, ArticleService>();
     builder.Services.AddScoped<IStorageService, StorageService>();
     builder.Services.AddScoped<ICategoryService, CategoryService>();
+    builder.Services.AddScoped<IUserService, UserService>();
 
     var app = builder.Build();
 
