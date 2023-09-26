@@ -10,6 +10,9 @@
 
 @code{
     [Parameter]
+    public EventCallback SuccessfulPayment { get; set; }
+
+    [Parameter]
     public List<ArticleDto> Cart { get; set; } = new List<ArticleDto>();
     
     protected override Task OnInitializedAsync()
@@ -29,6 +32,7 @@
             // TODO: Keine ahnung bro
             var cart = result.Data as List<ArticleDto>;
             Cart = cart ?? new List<ArticleDto>();
+            await SuccessfulPayment.InvokeAsync();
         }
 
         await InvokeAsync(StateHasChanged);
