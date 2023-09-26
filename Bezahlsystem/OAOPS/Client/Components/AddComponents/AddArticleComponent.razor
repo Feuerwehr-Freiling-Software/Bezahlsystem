@@ -12,14 +12,18 @@
         <MudAutocomplete Variant="Variant.Outlined" Label="Storage" @bind-Value="SelectedStorage" SearchFunc="(x) => AutocompleteStorageSearch(x)" Clearable="true" OnClearButtonClick="OnClearStorageClick" />
         <MudAutocomplete Variant="Variant.Outlined" Label="Slot" @bind-Value="SelectedSlot" SearchFunc="(x) => AutocompleteSlotSearch(x)" Clearable="true" OnClearButtonClick="OnClearSlotClick" />
         <InputFile OnChange="OnInputFileChange"></InputFile>
-        <Cropper ImageFile="@file"></Cropper>
             
         @if (!string.IsNullOrEmpty(SelectedSlot.SlotName))
         {
             <MudNumericField T="int" @bind-Value="@NewArticle.MinAmount" Label="Minimale Anzahl für Benachrichtigung" Min="0" />
             <MudNumericField T="int" @bind-Value="@NewArticle.QuantityAtStart" Label="Anzahl beim Zeitpunkt des Eintragens" Min="0" />
         }
-        
+
+        @if (NewArticle.Base64data != "")
+        {
+            <img src="data:png;base64,@NewArticle.Base64data"/>            
+        }
+
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>

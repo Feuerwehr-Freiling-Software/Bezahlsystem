@@ -17,6 +17,7 @@
         public int MinAmount { get; set; } = 0;
         public string StorageName { get; set; } = string.Empty;
         public string StorageSlot { get; set; } = string.Empty;
+        public string Base64data { get; set; } = string.Empty;
 
         public override string ToString()
         {

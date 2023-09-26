@@ -20,5 +20,17 @@ namespace OAOPS.Client.Components
 
         [Parameter]
         public string Path { get; set; } = string.Empty;
+
+        string getImage()
+        {
+            if (Article.Base64data != "")
+            {
+                return $"data:image/png;base64,{Article.Base64data}";
+            }
+            else
+            {
+                return "/images/no-image.png";
+            }
+        }
     }
 }
