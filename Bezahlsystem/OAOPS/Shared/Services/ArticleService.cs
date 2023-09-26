@@ -39,7 +39,8 @@ namespace OAOPS.Shared.Services
 
             Article newArticle = new()
             {
-                Name = article.Name
+                Name = article.Name,
+                Base64data = article.Base64data
             };
 
             var category = await categoryService.GetCategoryByName(article.Category);
@@ -146,7 +147,8 @@ namespace OAOPS.Shared.Services
                           Category = res.Article.ArticleCategory.Name,
                           Name = res.Article.Name,
                           StorageName = res.Slot.Storage.StorageName,
-                          StorageSlot = res.Slot.Name
+                          StorageSlot = res.Slot.Name,
+                          Base64data = res.Article.Base64data
                       };
 
             return await tmp.ToListAsync();

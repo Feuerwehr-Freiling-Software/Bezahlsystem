@@ -11,6 +11,6 @@
         public int QuantityActual { get; set; } = 0;
         public int QuantityAtStart { get; set; } = 0;
         public int MinAmount { get; set; } = 0;
-        public string? PicturePath { get; set; } = string.Empty;
+        public string Base64data { get; set; } = string.Empty;
     }
 }

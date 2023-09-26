@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OAOPS.Client.DTO;
 using Microsoft.AspNetCore.Components.Forms;
+using System.Net.Mime;
 
 namespace OAOPS.Client.Components.AddComponents
 {
@@ -158,7 +159,15 @@ namespace OAOPS.Client.Components.AddComponents
 
         private async Task OnInputFileChange(InputFileChangeEventArgs args)
         {
-            file = args.File;
+            var file = args.File;
+            var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
+            var buf = new byte[resizedFile.Size]; // allocate a buffer to fill with the file's data
+            using (var stream = resizedFile.OpenReadStream())
+            {
+                await stream.ReadAsync(buf); // copy the stream to the buffer
+            }
+
+            NewArticle.Base64data = Convert.ToBase64String(buf); // convert to a base64 string!!
         }
     }
 }
