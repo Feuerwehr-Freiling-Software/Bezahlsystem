@@ -36,6 +36,12 @@ namespace OAOPS.Client.Pages
             await LoadCart();            
         }
 
+        private async Task PaymentSuccessful()
+        {
+            Articles = await DataService.GetArticles() ?? new();
+            Cart = new();
+        }
+
         private async Task LoadCart()
         {
             var res = await localStorage.GetItemAsync<List<ArticleDto>>("Cart");

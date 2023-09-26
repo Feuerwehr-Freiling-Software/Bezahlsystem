@@ -180,6 +180,8 @@ namespace OAOPS.Shared.Services
                     UserId = user.Id
                 };
 
+                storageArticle.QuantityActual -= item.Amount;
+                                
                 // TODO: Calculate total price and subtract it from User Balance
                 var price = _db.Prices.FirstOrDefault(x => x.ArticleId == storageArticle.ArticleId && x.Until == default);
                 if (price == null) break;
@@ -187,8 +189,10 @@ namespace OAOPS.Shared.Services
                 var totalPrice = price.Amount * item.Amount;
                 if (user.Balance < totalPrice) break;
 
+                _db.ArticleInStorageSlots.Update(storageArticle);
                 await _db.UserBoughtArticleFromSlots.AddRangeAsync(payments);
                 user.Balance -= totalPrice;
+
                 payments.Add(payment);
             }
 
