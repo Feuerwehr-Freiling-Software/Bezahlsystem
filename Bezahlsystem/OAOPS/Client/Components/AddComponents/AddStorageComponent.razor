@@ -1,0 +1,32 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+            Lagerplatz hinzufügen
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField T="string" @bind-Value="@NewStorage.StorageName" Label="Lagerplatz Name" />
+
+        <MudFileUpload T="IBrowserFile" Accept=".jpg, .png" FilesChanged="OnInputFileChange" MaximumFileCount="1">
+            <ButtonTemplate>
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.CloudUpload"
+                           for="@context">
+                    Only .pdf files
+                </MudButton>
+            </ButtonTemplate>
+        </MudFileUpload>
+
+        @if (NewStorage.ImageData != "")
+        {
+            <img src="data:png;base64,@NewStorage.ImageData" />
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddStorage">Kategorie Hinzufügen</MudButton>
+    </DialogActions>
+</MudDialog>

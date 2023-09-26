@@ -20,6 +20,7 @@ namespace OAOPS.Client.DTO
         }
 
         public string StorageName { get; set; }
+        public string ImageData { get; set; } = string.Empty;
 
         public override string ToString()
         {

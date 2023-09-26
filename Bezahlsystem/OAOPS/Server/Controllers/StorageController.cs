@@ -50,5 +50,20 @@ namespace OAOPS.Server.Controllers
                 return Ok(res);
             }
         }
+
+        [HttpPost]
+        public IActionResult AddStorage(StorageDto storage)
+        {
+            int error = StorageService.AddStorage(storage);
+            var res = errorCodeService.GetError(error);
+            if (!res.IsSuccessCode)
+            {
+                return BadRequest(new ErrorDto() { Code = res.Code, ErrorText = res.ErrorText, IsSuccessCode = res.IsSuccessCode});
+            }
+            else
+            {
+                return Ok(new ErrorDto() { Code = res.Code, ErrorText = res.ErrorText, IsSuccessCode = res.IsSuccessCode });
+            }
+        }
     }
 }

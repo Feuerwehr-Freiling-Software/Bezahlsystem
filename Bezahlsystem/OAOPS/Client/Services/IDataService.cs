@@ -29,7 +29,7 @@ namespace OAOPS.Client.Services
         #region Storages
 
         public Task<List<StorageDto>?> GetAllStorages();
-        public Task<List<ErrorDto?>> AddStorage(StorageVM storageVM);
+        public Task<List<ErrorDto?>> AddStorage(StorageDto storageVM);
         public Task<StorageDto?> GetStorageById(int id);
 
         #endregion

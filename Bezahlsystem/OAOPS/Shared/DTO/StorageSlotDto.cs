@@ -16,5 +16,6 @@ namespace OAOPS.Shared.DTO
         public string ArticleName { get; set; } = string.Empty;
         public int QuantityAtStart { get; set; }
         public int MinAmount { get; set; }
+        public string? ImageData { get; set; } = string.Empty;
     }
 }
