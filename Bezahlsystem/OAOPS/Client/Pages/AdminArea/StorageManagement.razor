@@ -26,15 +26,21 @@ else
     }
     else
     {
+        <MudButton Color="Color.Success" StartIcon="@Icons.Material.Filled.Add" OnClick="CreateStorage">Lagerplatz Hinzufügen</MudButton>
         <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
             <MudGrid>
                 @foreach (var item in VendingMachines)
                 {
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudPaper Elevation="2" Class="pa-4" Style="height: 250px;" @onclick="(() => OpenSlotsOfStorage(item.StorageName))">
-                            <MudText Typo="Typo.h5">@item.StorageName</MudText>
-                        </MudPaper>
-                    </MudItem>
+                    <MudItem xs="12" sm="6" md="4" Style="height: 250px; max-height: 250px">
+                        <MudCard Elevation="2" Class="pa-4"  >
+                            <div @onclick="(() => OpenSlotsOfStorage(item.StorageName))">
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h5">@item.StorageName</MudText>
+                                </MudCardContent>
+                                <MudCardMedia Image="@getImageData(item.StorageName)" />
+                            </div>
+                        </MudCard>
+                    </MudItem>                    
                 }
             </MudGrid>
         </MudContainer>

@@ -17,6 +17,7 @@ namespace OAOPS.Client.DTO
         public string ArticleName { get; set; } = string.Empty;
         public int QuantityAtStart { get; set; }
         public int MinAmount { get; set; }
+        public string? ImageData { get; set; }
 
         public override bool Equals(object o)
         {

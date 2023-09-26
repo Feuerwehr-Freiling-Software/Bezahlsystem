@@ -27,7 +27,7 @@ namespace OAOPS.Shared.Services
             var fStorage = Db.Storages.FirstOrDefault(x => x.StorageName == storage.StorageName);
             if (fStorage != null) return 31;
 
-            var newStorage = new Storage() { StorageName = storage.StorageName };
+            var newStorage = new Storage() { StorageName = storage.StorageName, ImageData = storage.ImageData };
             Db.Storages.Add(newStorage);
             var res = Db.SaveChanges();
 
@@ -54,7 +54,8 @@ namespace OAOPS.Shared.Services
             var storages = from storage in Db.Storages
                            select new StorageDto
                            {
-                               StorageName = storage.StorageName
+                               StorageName = storage.StorageName,
+                               ImageData = storage.ImageData
                            };
 
             return storages.ToList();

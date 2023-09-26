@@ -111,7 +111,7 @@ namespace OAOPS.Client.Services
             return await result.Content.ReadFromJsonAsync<List<StorageDto>>();
         }
 
-        public async Task<List<ErrorDto>?> AddStorage(StorageVM storage)
+        public async Task<List<ErrorDto>?> AddStorage(StorageDto storage)
         {
             var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddStorage, storage);
             var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>?>();
