@@ -52,6 +52,7 @@
         public string GetUsersFiltered { get; set; } = string.Empty;
         public string DeactivateUser { get; set; } = string.Empty;
         public string UpdateUser { get; set; } = string.Empty;
+        public string AddStorageSlot { get; set; } = string.Empty;
 
         #endregion
     }

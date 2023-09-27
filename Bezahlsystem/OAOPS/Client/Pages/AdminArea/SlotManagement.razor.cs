@@ -48,12 +48,20 @@ namespace OAOPS.Client.Pages.AdminArea
             navigation.NavigateTo("/manage/vendingMachines");
         }
 
-        void DeleteSlot(StorageSlotDto slot)
+        async Task DeleteSlot(StorageSlotDto slot)
         {
-            
+            await dataService.DeleteStorageSlot(slot.SlotId);
         }
 
-        void AddSlot() => DialogService.Show<AddStorageSlot>("Add Slot", new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium });
+        void AddSlot()
+        {
+            var parameter = new DialogParameters()
+            {
+                {"StorageName", Name }
+            };
+
+            DialogService.Show<AddStorageSlot>("Add Slot", parameter ,new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium });
+        }
 
         void UpdateSlot(StorageSlotDto slot)
         {

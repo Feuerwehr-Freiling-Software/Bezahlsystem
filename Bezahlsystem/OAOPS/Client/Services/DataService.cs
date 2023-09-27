@@ -265,6 +265,22 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new ErrorDto();
         }
 
+        public async Task<ErrorDto> AddStorageSlot(StorageSlotDto newSlot)
+        {
+            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddStorageSlot, newSlot);
+            if (!res.IsSuccessStatusCode)
+            {
+                return new ErrorDto();
+            }
+            return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new ErrorDto();
+        }
+
+        public Task<ErrorDto> DeleteStorageSlot(int slotId)
+        {
+            // TODO: Implement
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }
