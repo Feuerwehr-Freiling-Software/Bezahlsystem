@@ -72,6 +72,19 @@ namespace OAOPS.Shared.Services
             else return 33;
         }
 
+        public int DeleteStorageSlot(int storageSlotId)
+        {
+            var fSlot = Db.Slots.FirstOrDefault(x => x.Id == storageSlotId);
+            if (fSlot == null) return 41;
+
+            Db.Slots.Remove(fSlot);
+            var res = Db.SaveChanges();
+
+            if (res <= 0) return 32;
+            if (res == 1) return 30;
+            else return 33;
+        }
+
         public List<StorageDto> GetAllStorages()
         {
             var storages = from storage in Db.Storages
