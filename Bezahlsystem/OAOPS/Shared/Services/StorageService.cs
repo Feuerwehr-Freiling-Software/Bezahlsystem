@@ -99,90 +99,24 @@ namespace OAOPS.Shared.Services
 
         public List<StorageSlotDto>? GetSlotsOfStorageByName(string name)
         {
-            var slots = from articleInSlot in Db.ArticleInStorageSlots.Include(x => x.Article).Include(x => x.Slot).ThenInclude(x => x.Storage).ToList()
-                       where articleInSlot.Slot.Storage.StorageName == name
-                        join slot in Db.Slots.ToList() on articleInSlot.SlotId equals slot.Id into gj
-                        from test in gj.DefaultIfEmpty()
-                       select new StorageSlotDto
-                       {
-                           ArticleName = articleInSlot.Article.Name,
-                           MinAmount = articleInSlot.MinAmount,
-                           QuantityAtStart = articleInSlot.QuantityAtStart,
-                           SlotId = test.Id,
-                           SlotName = test.Name,
-                           StorageConnectionId = test.Storage.ConnectionId,
-                           StorageId = test.StorageId,
-                           StorageName = test.Storage.StorageName
-                       };
+            var slots = from slot in Db.Slots
+                        join storage in Db.Storages on slot.StorageId equals storage.Id
+                        where storage.StorageName == name
+                        join articleInSlot in Db.ArticleInStorageSlots on slot.Id equals articleInSlot.SlotId into gj
+                        from articleInSlot in gj.DefaultIfEmpty()
+                        select new StorageSlotDto
+                        {
+                            ArticleName = articleInSlot != null ? articleInSlot.Article.Name : "",
+                            MinAmount = articleInSlot != null ? articleInSlot.MinAmount : 0,
+                            QuantityAtStart = articleInSlot != null ? articleInSlot.QuantityAtStart : 0,
+                            SlotId = slot.Id,
+                            SlotName = slot.Name,
+                            StorageConnectionId = storage.ConnectionId,
+                            StorageId = storage.Id,
+                            StorageName = storage.StorageName
+                        };
 
-            var allSlotsQuery = from slot in Db.Slots.ToList()
-                                join articleInSlot in Db.ArticleInStorageSlots
-                                    .Include(x => x.Article)
-                                    .Include(x => x.Slot)
-                                    .ThenInclude(x => x.Storage)
-                                on slot.Id equals articleInSlot.SlotId into gj
-                                from articleInSlot in gj.DefaultIfEmpty() // Perform left join
-                                group articleInSlot by slot.Name;
-
-            var sourceQuery = allSlotsQuery
-                .Where(group => group.Any(articleInSlot => articleInSlot != null && articleInSlot.Slot.Storage.StorageName.Equals(name)))
-                .FirstOrDefault();
-
-            if (sourceQuery == null || !sourceQuery.Any())
-                return null;
-
-            Dictionary<Slot, List<ArticleInStorageSlot>> dict = new();
-            var allSlots = Db.Slots.ToList().Where(x => x.Storage.StorageName == name);
-            // get all Slots of Storage and add to dict
-            foreach (var item in allSlots)
-            {
-                List<ArticleInStorageSlot> articlesInSlot = new();
-                articlesInSlot = Db.ArticleInStorageSlots.Where(x => x.SlotId == item.Id).ToList();
-                dict.Add(item, articlesInSlot);
-                Console.WriteLine($"{item.Name} Count: {articlesInSlot.Count}");
-            }
-
-            List<StorageSlotDto> resultList = new();
-
-            foreach (var slot in dict)
-            {
-                if (slot.Value.Count <= 0)
-                {
-                    var storageSlot = new StorageSlotDto
-                    {
-                        ArticleName = "",
-                        MinAmount = 0,
-                        QuantityAtStart = 0,
-                        ImageData = "",
-                        SlotId = slot.Key.Id,
-                        SlotName = slot.Key.Name,
-                        StorageConnectionId = slot.Key.Storage.ConnectionId,
-                        StorageId = slot.Key.Storage.Id,
-                        StorageName = slot.Key.Storage.StorageName
-                    };
-                    resultList.Add(storageSlot);
-                }
-                else
-                {
-                    var tmpArticleInSlot = from article in slot.Value
-                              select new StorageSlotDto
-                              {
-                                  ArticleName = article.Article.Name,
-                                  MinAmount = article.MinAmount,
-                                  QuantityAtStart = article.QuantityAtStart,
-                                  ImageData = article.Article.Base64data,
-                                  SlotId = slot.Key.Id,
-                                  SlotName = slot.Key.Name,
-                                  StorageConnectionId = slot.Key.Storage.ConnectionId,
-                                  StorageId = slot.Key.Storage.Id,
-                                  StorageName = slot.Key.Storage.StorageName
-                              };
-
-                    resultList.AddRange(tmpArticleInSlot);
-                }
-            }
-
-            return resultList;
+            return slots.ToList();
         }
 
         public StorageDto? GetStorageById(int id)

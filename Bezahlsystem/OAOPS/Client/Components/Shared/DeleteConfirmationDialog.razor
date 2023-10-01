@@ -1,0 +1,12 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Are you sure?</MudText>
+    </TitleContent>
+    <DialogContent>
+        <span>Bist du sicher, dass du @Name löschen möchtest?</span>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@(async () => await DeleteAsync())">Delete</MudButton>
+        <MudButton OnClick="@(async () => await CancelAsync())">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>

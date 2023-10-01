@@ -130,8 +130,22 @@ namespace OAOPS.Client.Services
 
         public async Task<List<StorageSlotDto>?> GetSlotsOfStorageByName(string name)
         {
-            var res = await _http.GetFromJsonAsync<List<StorageSlotDto>?>(configuration.ApiEndpoints.GetSlotsOfStorageByName + name);
-            return res;
+            var result = await _http.GetAsync(configuration.ApiEndpoints.GetSlotsOfStorageByName + name);
+            if (!result.IsSuccessStatusCode)
+            {
+                return new();
+            }
+            else
+            {
+                try
+                {
+                    return await result.Content.ReadFromJsonAsync<List<StorageSlotDto>?>();
+                }
+                catch (Exception)
+                {
+                    return new();
+                }
+            }
         }
 
         public async Task<ErrorDto> UpdateStorageSlot(StorageSlotDto slot)

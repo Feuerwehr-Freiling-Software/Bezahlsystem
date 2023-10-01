@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using MudBlazor;
 using OAOPS.Client.Components.AddComponents;
+using OAOPS.Client.Components.Shared;
 using OAOPS.Client.Components.UpdateComponents;
 using OAOPS.Client.DTO;
 using OAOPS.Client.Services;
@@ -31,7 +33,10 @@ namespace OAOPS.Client.Pages.AdminArea
         [Inject]
         public IDialogService DialogService { get; set; }
 
-        public List<StorageSlotDto>? Slots { get; set; }
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
+
+        public List<StorageSlotDto>? Slots { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -50,7 +55,25 @@ namespace OAOPS.Client.Pages.AdminArea
 
         async Task DeleteSlot(StorageSlotDto slot)
         {
-            await dataService.DeleteStorageSlot(slot.SlotId);
+            var param = new DialogParameters
+            {
+                { "Name", slot.SlotName + " Slot" }
+            };
+            var res = await DialogService.Show<DeleteConfirmationDialog>("Delete Slot", param, new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium }).Result;
+            if (res.Canceled)
+            {
+                return;
+            }
+
+            var error = await dataService.DeleteStorageSlot(slot.SlotId);
+            if (error.IsSuccessCode)
+            {
+                Snackbar.Add($"Slot {slot.SlotName} erfolgreich gelöscht.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add($"Fehler beim löschen des Slots {slot.SlotName}", Severity.Error);
+            }
         }
 
         void AddSlot()
