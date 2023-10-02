@@ -9,6 +9,8 @@ namespace OAOPS.Client.Services
 
         public Task<ErrorDto> AddSuggestion(SuggestionDTO suggestion);
         public Task<List<SuggestionDTO>?> GetAllSuggestions();
+        public Task<ErrorDto> UpdateSuggestion(SuggestionDTO item);
+        public Task<ErrorDto?> DeleteSuggestion(int itemId); 
 
         #endregion
 
