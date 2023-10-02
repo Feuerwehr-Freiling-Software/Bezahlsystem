@@ -1,0 +1,69 @@
+﻿@page "/user/profile"
+@using System.Security.Claims;
+@using OAOPS.Client.Services;
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider authStateProvider
+@inject IDataService DataService
+
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="5">
+        <MudText Typo="Typo.h4">@user.Identity?.Name</MudText>
+    </MudItem>
+    <MudItem xs="5">
+        <MudText Typo="Typo.h4">Kontostand: @balance</MudText>
+    </MudItem>
+    <MudItem xs="5">
+        <MudPaper>
+            <MudBlazor.Charts.Pie>
+                <!-- Add chart for Article distribution -->
+            </MudBlazor.Charts.Pie>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="5">
+        <MudPaper>
+            <MudBlazor.Charts.Line>
+                <!-- Add chart for Payment distribution -->
+            </MudBlazor.Charts.Line>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="5">
+        <MudPaper>
+            <!-- ImageButton for Payments -->
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="5">
+        <MudPaper>
+            <!-- ImageButton for Top Ups-->
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code{
+
+    ClaimsPrincipal user;
+    bool isAdmin;
+    bool isAuthenticated;
+    string balance;
+
+    override protected async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        isAdmin = user.IsInRole("Admin");
+
+        var userName = user.Identity?.Name;
+
+        if (userName == null)
+        {
+            balance = 0.ToString("C2");
+            return;
+        }
+
+        var retBal = await DataService.GetBalance(userName);
+        balance = retBal.ToString("C2");
+
+        await InvokeAsync(StateHasChanged);
+    }
+}
