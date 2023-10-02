@@ -11,16 +11,18 @@ namespace OAOPS.Server.Controllers
         private readonly ISuggestionService _suggestionService;
         private readonly ILoggerService loggerService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IErrorCodeService _errorCodeService;
 
-        public SuggestionController(ISuggestionService suggestionService, ILoggerService _loggerService, UserManager<ApplicationUser> userManager)
+        public SuggestionController(ISuggestionService suggestionService, ILoggerService _loggerService, UserManager<ApplicationUser> userManager, IErrorCodeService errorCodeService)
         {
             _suggestionService = suggestionService;
             loggerService = _loggerService;
             _userManager = userManager;
+            _errorCodeService = errorCodeService;
         }
 
         [HttpPost, AllowAnonymous]
-        public async Task<ActionResult<ErrorCode>> AddSuggestion(SuggestionDTO suggestion)
+        public async Task<IActionResult> AddSuggestion(SuggestionDTO suggestion)
         {
             var tmp = User.Identity.Name;
 
@@ -30,8 +32,8 @@ namespace OAOPS.Server.Controllers
             if (username == null) return BadRequest();
 
             var res = _suggestionService.AddSuggestion(suggestion, username);
-
-            return Ok();
+            var error = _errorCodeService.GetError(res);
+            return Ok(error);
         }
 
         [HttpGet]
