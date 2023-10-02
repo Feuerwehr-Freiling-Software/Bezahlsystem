@@ -7,7 +7,7 @@ namespace OAOPS.Client.Services
     {
         #region Suggestions
 
-        public Task<List<ErrorDto>?> AddSuggestion(SuggestionDTO suggestion);
+        public Task<ErrorDto> AddSuggestion(SuggestionDTO suggestion);
         public Task<List<SuggestionDTO>?> GetAllSuggestions();
 
         #endregion

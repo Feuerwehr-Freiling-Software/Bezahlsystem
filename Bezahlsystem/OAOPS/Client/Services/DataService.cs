@@ -24,11 +24,18 @@ namespace OAOPS.Client.Services
                
         #region Suggestions
 
-        public async Task<List<ErrorDto>?> AddSuggestion(SuggestionDTO suggestion)
+        public async Task<ErrorDto> AddSuggestion(SuggestionDTO suggestion)
         {
             var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddSuggestion, suggestion);
-            var result = await res.Content.ReadFromJsonAsync<List<ErrorDto>?>();
-            return result;
+            try
+            {
+                var result = await res.Content.ReadFromJsonAsync<ErrorDto>();
+                return result;
+            }
+            catch (Exception)
+            {
+                return new ErrorDto { ErrorText = "Fehler beim Hinzufügen des Vorschlags." };
+            }
         }
 
         public async Task<List<SuggestionDTO>?> GetAllSuggestions()

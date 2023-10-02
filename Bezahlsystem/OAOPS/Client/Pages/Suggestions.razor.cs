@@ -1,11 +1,12 @@
 ﻿using OAOPS.Client.Services;
+using static MudBlazor.CategoryTypes;
 
 namespace OAOPS.Client.Pages
 {
     public partial class Suggestions
     {
         [Inject]
-        public DataService dataService { get; set; }
+        public IDataService dataService { get; set; }
 
         SuggestionDTO suggestion;
 
@@ -19,17 +20,14 @@ namespace OAOPS.Client.Pages
         {
             var res = await dataService.AddSuggestion(suggestion);
 
-            if (res.Count == 0)
+            if (res.IsSuccessCode)
             {
                 snackbar.Add("Vorschlag erfolgreich hinzugefügt.");
                 nav.NavigateTo("/");
             }
             else
             {
-                foreach (var item in res)
-                {
-                    snackbar.Add(item.ErrorText, Severity.Error);
-                }
+                snackbar.Add(res.ErrorText, Severity.Error);
             }
         }
 
