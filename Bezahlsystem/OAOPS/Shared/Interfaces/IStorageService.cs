@@ -17,5 +17,6 @@ namespace OAOPS.Shared.Interfaces
         public List<StorageSlotDto>? GetSlotsOfStorageByName(string name);
         int UpdateStorageSlot(StorageSlotDto storageSlot);
         int AddStorageSlot(StorageSlotDto storageSlot);
+        public int DeleteStorageSlot(int storageSlotId);
     }
 }

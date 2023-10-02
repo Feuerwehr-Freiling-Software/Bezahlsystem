@@ -78,5 +78,21 @@ namespace OAOPS.Server.Controllers
                 return Ok(new ErrorDto() { Code = res.Code, ErrorText = res.ErrorText, IsSuccessCode = res.IsSuccessCode });
             }
         }
+
+        [HttpDelete]
+        public IActionResult DeleteStorageSlot(int storageSlotId)
+        {
+            int error = StorageService.DeleteStorageSlot(storageSlotId);
+            var res = errorCodeService.GetError(error);
+
+            if (!res.IsSuccessCode)
+            {
+                return BadRequest(new ErrorDto() { Code = res.Code, ErrorText = res.ErrorText, IsSuccessCode = res.IsSuccessCode });
+            }
+            else
+            {
+                return Ok(new ErrorDto() { Code = res.Code, ErrorText = res.ErrorText, IsSuccessCode = res.IsSuccessCode });
+            }
+        }
     }
 }

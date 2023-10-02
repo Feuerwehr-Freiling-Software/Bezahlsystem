@@ -22,7 +22,6 @@ namespace OAOPS.Client.Services
             configuration = options.Value;
         }
                
-
         #region Suggestions
 
         public async Task<List<ErrorDto>?> AddSuggestion(SuggestionDTO suggestion)
@@ -130,8 +129,22 @@ namespace OAOPS.Client.Services
 
         public async Task<List<StorageSlotDto>?> GetSlotsOfStorageByName(string name)
         {
-            var res = await _http.GetFromJsonAsync<List<StorageSlotDto>?>(configuration.ApiEndpoints.GetSlotsOfStorageByName + name);
-            return res;
+            var result = await _http.GetAsync(configuration.ApiEndpoints.GetSlotsOfStorageByName + name);
+            if (!result.IsSuccessStatusCode)
+            {
+                return new();
+            }
+            else
+            {
+                try
+                {
+                    return await result.Content.ReadFromJsonAsync<List<StorageSlotDto>?>();
+                }
+                catch (Exception)
+                {
+                    return new();
+                }
+            }
         }
 
         public async Task<ErrorDto> UpdateStorageSlot(StorageSlotDto slot)
@@ -260,7 +273,7 @@ namespace OAOPS.Client.Services
             var res = await _http.PutAsJsonAsync(configuration.ApiEndpoints.UpdateUser, user);
             if (!res.IsSuccessStatusCode)
             {
-                return new ErrorDto();
+                return new ErrorDto() { Code = 1, ErrorText = "Unexpected error while updating User. See logs for further Information", IsSuccessCode = false };
             }
             return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new ErrorDto();
         }
@@ -270,15 +283,20 @@ namespace OAOPS.Client.Services
             var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddStorageSlot, newSlot);
             if (!res.IsSuccessStatusCode)
             {
-                return new ErrorDto();
+                return new ErrorDto() { Code = 1, ErrorText = "Unexpected error while adding Storageslot. See logs for further Information", IsSuccessCode = false };
             }
             return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new ErrorDto();
         }
 
-        public Task<ErrorDto> DeleteStorageSlot(int slotId)
+        public async Task<ErrorDto> DeleteStorageSlot(int slotId)
         {
             // TODO: Implement
-            throw new NotImplementedException();
+            var res = await _http.DeleteAsync(configuration.ApiEndpoints.DeleteStorageSlot + "?storageSlotId=" + slotId);
+            if (!res.IsSuccessStatusCode)
+            {
+                return new ErrorDto() { Code = 1, ErrorText = "Unexpected error while adding Storageslot. See logs for further Information", IsSuccessCode = false };
+            }
+            return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new ErrorDto();
         }
 
         #endregion
