@@ -14,6 +14,6 @@ namespace OAOPS.Shared.Interfaces
         public List<SuggestionDTO> GetSuggestions(bool? onlyNew = null, Importance? importance = null);
         public int AddSuggestion(SuggestionDTO suggestion, string username);
         public int RemoveSuggestion(int id);
-        public int UpdateSuggestion(int id, SuggestionDTO suggestion);
+        public int UpdateSuggestion(SuggestionDTO suggestion);
     }
 }

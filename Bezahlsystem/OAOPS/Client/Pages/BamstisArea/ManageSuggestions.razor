@@ -15,7 +15,7 @@
                 <Column T="SuggestionDTO" Field="Importance" Title="Dringlichkeit">
                     <EditTemplate>
                         <MudSelect @bind-Value="context.Item.Importance" Required RequiredError="Hawara du muasd a Notwendigkeit setzn" Margin="@Margin.Dense">
-                            @foreach (var item in Enum.GetValues(typeof(Enums.Importance)))
+                            @foreach (Enums.Importance item in Enum.GetValues(typeof(Enums.Importance)))
                             {
                                 <MudSelectItem Value="item">@item</MudSelectItem>
                             }

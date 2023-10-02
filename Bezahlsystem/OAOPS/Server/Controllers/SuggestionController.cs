@@ -42,5 +42,13 @@ namespace OAOPS.Server.Controllers
             var list = _suggestionService.GetSuggestions();
             return Ok(list);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateSuggestion(SuggestionDTO suggestion)
+        {
+            var res = _suggestionService.UpdateSuggestion(suggestion);
+            var error = _errorCodeService.GetError(res);
+            return Ok(error);
+        }
     }
 }

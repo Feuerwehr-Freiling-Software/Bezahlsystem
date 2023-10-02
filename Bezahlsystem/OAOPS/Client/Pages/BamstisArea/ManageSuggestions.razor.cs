@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using MudBlazor;
 using OAOPS.Client.DTO;
 using OAOPS.Client.Helpers;
 using OAOPS.Client.Services;
@@ -15,7 +16,10 @@ namespace OAOPS.Client.Pages.BamstisArea
     public partial class ManageSuggestions : ComponentBase
     {
         [Inject]
-        public DataService dataService { get; set; }
+        public IDataService dataService { get; set; }
+
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
 
         public ManageSuggestions()
         {
@@ -27,11 +31,6 @@ namespace OAOPS.Client.Pages.BamstisArea
         protected override async Task OnInitializedAsync()
         {            
             Elements = await dataService.GetAllSuggestions() ?? new List<SuggestionDTO>();
-
-            foreach (var item in Enum.GetValues(typeof(Enums.Importance)))
-            {
-                Console.WriteLine(item);
-            }
         }
 
         // events
@@ -45,9 +44,15 @@ namespace OAOPS.Client.Pages.BamstisArea
 
         }
 
-        void CommittedItemChanges(SuggestionDTO item)
+        async void CommittedItemChanges(SuggestionDTO item)
         {
-
+            var res = await dataService.UpdateSuggestion(item);
+            if (res.IsSuccessCode)
+            {
+                Elements = await dataService.GetAllSuggestions() ?? new List<SuggestionDTO>();
+                StateHasChanged();
+                Snackbar.Add($"Dringlichkeit des Vorschlags von {item.Username} erfolgreich gespeichert.", Severity.Success);
+            }
         }
     }
 }

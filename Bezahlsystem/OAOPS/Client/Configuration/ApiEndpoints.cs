@@ -54,6 +54,7 @@
         public string UpdateUser { get; set; } = string.Empty;
         public string AddStorageSlot { get; set; } = string.Empty;
         public string DeleteStorageSlot { get; set; } = string.Empty;
+        public string UpdateSuggestion { get; set; } = string.Empty;
 
         #endregion
     }

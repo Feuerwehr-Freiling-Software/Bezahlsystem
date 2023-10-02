@@ -306,6 +306,21 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new ErrorDto();
         }
 
+        public async Task<ErrorDto> UpdateSuggestion(SuggestionDTO item)
+        {
+            var res = await _http.PutAsJsonAsync(configuration.ApiEndpoints.UpdateSuggestion, item);
+            if (!res.IsSuccessStatusCode)
+            {
+                return new ErrorDto() { Code = 1, ErrorText = "Unexpected error while updating Suggestion. See logs for further Information", IsSuccessCode = false };
+            }
+            return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new ErrorDto();
+        }
+
+        public Task<ErrorDto?> DeleteSuggestion(int itemId)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

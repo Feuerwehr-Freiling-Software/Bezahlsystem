@@ -15,6 +15,7 @@ namespace OAOPS.Client.DTO
 
         }
 
+        public int Id { get; set; } = 0;
         public string SuggestionText { get; set; } = string.Empty;
         public Importance Importance { get; set; } = Importance.NotSet;
         public string Username { get; set; } = string.Empty;

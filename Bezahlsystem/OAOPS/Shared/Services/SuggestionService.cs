@@ -48,6 +48,7 @@ namespace OAOPS.Shared.Services
                     .Include(x => x.Suggestions)
                     .SelectMany(user => user.Suggestions, (user, suggestion) => new SuggestionDTO
                     {
+                        Id = suggestion.Id,
                         Importance = suggestion.Importance,
                         SuggestionText = suggestion.SuggestionText,
                         Username = user.UserName
@@ -62,6 +63,7 @@ namespace OAOPS.Shared.Services
                     .Include(x => x.Suggestions)
                     .SelectMany(user => user.Suggestions, (user, suggestion) => new SuggestionDTO
                     {
+                        Id = suggestion.Id,
                         Importance = suggestion.Importance,
                         SuggestionText = suggestion.SuggestionText,
                         Username = user.UserName
@@ -75,6 +77,7 @@ namespace OAOPS.Shared.Services
                     .Include(x => x.Suggestions)
                     .SelectMany(user => user.Suggestions, (user, suggestion) => new SuggestionDTO
                     {
+                        Id = suggestion.Id,
                         Importance = suggestion.Importance,
                         SuggestionText = suggestion.SuggestionText,
                         Username = user.UserName
@@ -102,9 +105,9 @@ namespace OAOPS.Shared.Services
             }
         }
 
-        public int UpdateSuggestion(int id, SuggestionDTO suggestion)
+        public int UpdateSuggestion(SuggestionDTO suggestion)
         {
-            var fSuggestion = db.Suggestions.FirstOrDefault(x => x.Id == id);
+            var fSuggestion = db.Suggestions.FirstOrDefault(x => x.Id == suggestion.Id);
             if (fSuggestion == null) return 44;
 
             fSuggestion.SuggestionText = suggestion.SuggestionText;
