@@ -40,12 +40,12 @@ namespace OAOPS.Client.Pages.AdminArea
 
         protected override async Task OnInitializedAsync()
         {
-            Slots = await dataService.GetSlotsOfStorageByName(Name) ?? new();
+            await LoadSlots();
+        }
 
-            foreach (StorageSlotDto slot in Slots)
-            {
-                await Console.Out.WriteLineAsync($"{slot.SlotId} {slot.SlotName} {slot.StorageConnectionId} {slot.ArticleName}");
-            }
+        private async Task LoadSlots()
+        {
+            Slots = await dataService.GetSlotsOfStorageByName(Name) ?? new();
         }
 
         void GoBack()
@@ -74,19 +74,22 @@ namespace OAOPS.Client.Pages.AdminArea
             {
                 Snackbar.Add($"Fehler beim löschen des Slots {slot.SlotName}", Severity.Error);
             }
+
+            await LoadSlots();
         }
 
-        void AddSlot()
+        async Task AddSlot()
         {
             var parameter = new DialogParameters()
             {
                 {"StorageName", Name }
             };
 
-            DialogService.Show<AddStorageSlot>("Add Slot", parameter ,new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium });
+            var result = await DialogService.Show<AddStorageSlot>("Add Slot", parameter, new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium }).Result;
+            await LoadSlots();
         }
 
-        void UpdateSlot(StorageSlotDto slot)
+        async Task UpdateSlot(StorageSlotDto slot)
         {
             var param = new DialogParameters
             {
@@ -94,7 +97,9 @@ namespace OAOPS.Client.Pages.AdminArea
             };
 
             var opt = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Medium };
-            DialogService.Show<UpdateStorageSlot>("Slot Update", param, opt);
+            await DialogService.Show<UpdateStorageSlot>("Slot Update", param, opt).Result;
+
+            await LoadSlots();
         }
     }
 }

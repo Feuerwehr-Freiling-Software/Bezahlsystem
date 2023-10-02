@@ -22,7 +22,6 @@ namespace OAOPS.Client.Services
             configuration = options.Value;
         }
                
-
         #region Suggestions
 
         public async Task<List<ErrorDto>?> AddSuggestion(SuggestionDTO suggestion)
@@ -292,7 +291,7 @@ namespace OAOPS.Client.Services
         public async Task<ErrorDto> DeleteStorageSlot(int slotId)
         {
             // TODO: Implement
-            var res = await _http.DeleteAsync(configuration.ApiEndpoints.DeleteStorageSlot + "?" + slotId);
+            var res = await _http.DeleteAsync(configuration.ApiEndpoints.DeleteStorageSlot + "?storageSlotId=" + slotId);
             if (!res.IsSuccessStatusCode)
             {
                 return new ErrorDto() { Code = 1, ErrorText = "Unexpected error while adding Storageslot. See logs for further Information", IsSuccessCode = false };
