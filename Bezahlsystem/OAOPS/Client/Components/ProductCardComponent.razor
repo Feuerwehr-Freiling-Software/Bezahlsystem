@@ -2,8 +2,9 @@
     <MudCardMedia Image="@getImage()"/>
     <MudCardContent>
         <MudDivider/>
-        <MudText Typo="Typo.h6">Name: </MudText><MudText Typo="Typo.h5">@Article.Name</MudText>
-        <MudText Typo="Typo.h6">Anzahl verbleibend: </MudText><MudText Typo="Typo.h5">@Article.QuantityActual</MudText>
-        <MudText Typo="Typo.h6">Preis: </MudText><MudText Typo="Typo.h6">@Article.PriceAmount €</MudText>
+        <MudText Typo="Typo.h5">Name: </MudText><MudText Typo="Typo.h6">@Article.Name</MudText>
+        <MudText Typo="Typo.h5">Lagerplatz: </MudText><MudText Typo="Typo.h6">@(Article.StorageName + " " + Article.StorageSlot)</MudText>
+        <MudText Typo="Typo.h5">Anzahl verbleibend: </MudText><MudText Typo="Typo.h6">@Article.QuantityActual</MudText>
+        <MudText Typo="Typo.h5">Preis: </MudText><MudText Typo="Typo.h6">@Article.PriceAmount €</MudText>
     </MudCardContent>
 </MudCard>
