@@ -56,6 +56,7 @@ namespace OAOPS.Client.Services
         public Task DeactivateUser(string username);
         public Task<ErrorDto> AddStorageSlot(StorageSlotDto newSlot);
         public Task<ErrorDto> DeleteStorageSlot(int slotId);
+        public Task<UserStatsDto> GetUserStats(string username);
 
         #endregion
     }

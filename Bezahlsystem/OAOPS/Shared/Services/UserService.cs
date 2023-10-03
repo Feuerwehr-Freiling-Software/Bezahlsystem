@@ -82,5 +82,57 @@ namespace OAOPS.Shared.Services
 
             return users.ToList();
         }
+
+        public async Task<UserStatsDto> GetUserStats(string username)
+        {
+            UserStatsDto userStats = new ();
+            // Topup or Withdraw - Amount in month
+            Dictionary<string, Dictionary<string, List<double>>> balance = new();
+            Dictionary<string, int> articles = new();
+
+            var result = from price in db.Prices.Include(x => x.Article).ToList()
+                         join article in db.UserBoughtArticleFromSlots.Include(x => x.User).Include(x => x.ArticleInStorageSlot).ThenInclude(x => x.Article).ToList() on price.Article.Id equals article.ArticleInStorageSlot.Article.Id
+                         where article.User != null && article.User.UserName == username
+                         select new { article, price };
+
+            var topups = from topup in db.TopUps.Include(x => x.User).ToList()
+                        where topup.User != null
+                              && topup.User.UserName == username
+                        group topup by topup.Date.Month.ToString() into g
+                        select g;
+
+            Dictionary<string, List<double>> topupWithdraws = new();
+
+            foreach (var item in topups)
+            {
+                var topupDoubles = item.ToList().Select(x => x.CashAmount).ToList();
+                topupWithdraws.Add(item.Key, topupDoubles);
+            }
+
+            balance.Add("Aufladungen", topupWithdraws);
+
+
+            foreach (var item in result)
+            {
+                // Fill Article Stats Dictionary
+                var articleName = item.article.ArticleInStorageSlot.Article.Name;
+                if (articles.TryGetValue(articleName, out int amount))
+                {
+                    articles[articleName] = amount + item.article.Quantity;
+                }
+                else
+                {
+                    articles[articleName] = item.article.Quantity;
+                }
+
+                // Fill Balance Stats Dictionary
+
+            }
+
+            userStats.ArticleStats = articles;
+            userStats.BalanceStats = balance;
+
+            return userStats;
+        }
     }
 }

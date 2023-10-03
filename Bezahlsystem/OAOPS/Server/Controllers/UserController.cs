@@ -36,5 +36,13 @@ namespace OAOPS.Server.Controllers
             List<UserDto> users = await userService.GetUsersFiltered(username, page, pageSize);
             return Ok(users);
         }
+
+        [HttpGet, Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetUserStats(string username)
+        {
+            if (username == null) return BadRequest();
+            UserStatsDto stats = await userService.GetUserStats(username);
+            return Ok(stats);
+        }
     }
 }

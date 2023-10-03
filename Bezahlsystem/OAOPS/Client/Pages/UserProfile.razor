@@ -6,48 +6,63 @@
 @inject AuthenticationStateProvider authStateProvider
 @inject IDataService DataService
 
-<MudGrid Justify="Justify.Center">
-    <MudItem xs="5">
-        <MudText Typo="Typo.h4">@user.Identity?.Name</MudText>
-    </MudItem>
-    <MudItem xs="5">
-        <MudText Typo="Typo.h4">Kontostand: @balance</MudText>
-    </MudItem>
-    <MudItem xs="5">
-        <MudPaper>
-            <MudBlazor.Charts.Pie>
-                <!-- Add chart for Article distribution -->
-            </MudBlazor.Charts.Pie>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="5">
-        <MudPaper>
-            <MudBlazor.Charts.Line>
+@if (UserStats == null)
+{
+    <OAOPS.Client.Components.Shared.LoadingComponent></OAOPS.Client.Components.Shared.LoadingComponent>
+}
+else
+{
+    <MudGrid Justify="Justify.Center" Class="mt-5">
+        <MudItem xs="5">
+            <MudText Typo="Typo.h4">@user.Identity?.Name's Profil </MudText>
+        </MudItem>
+        <MudItem xs="5">
+            <MudText Typo="Typo.h4">Kontostand: @balance</MudText>
+        </MudItem>
+        <MudItem xs="5">
+            <MudPaper>
+                @if (ArticleData.Length == 0)
+                {
+                    <MudText Typo="Typo.h4">Keine Daten verfügbar.</MudText>
+                }else
+                {
+                    <!-- Add chart for Article distribution -->
+                    <MudChart @ref="mudChart" ChartType="ChartType.Pie" @bind-SelectedIndex="Index" InputData="@ArticleData" InputLabels="@ArticleLabels" Width="300px" Height="300px"/>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="5">
+            <MudPaper>
                 <!-- Add chart for Payment distribution -->
-            </MudBlazor.Charts.Line>
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="5">
-        <MudPaper>
-            <!-- ImageButton for Payments -->
-        </MudPaper>
-    </MudItem>
-    <MudItem xs="5">
-        <MudPaper>
-            <!-- ImageButton for Top Ups-->
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+                <MudChart ChartType="ChartType.Line" ChartSeries="@PaymentData" XAxisLabels="@PaymentLabels" ></MudChart>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="5">
+            <MudPaper>
+                <!-- ImageButton for Payments -->
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="5">
+            <MudPaper>
+                <!-- ImageButton for Top Ups-->
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
 
 @code{
-
+    private int Index = -1;
     ClaimsPrincipal user;
     bool isAdmin;
     bool isAuthenticated;
     string balance;
 
+    public MudChart mudChart = new();
+
     override protected async Task OnInitializedAsync()
     {
+        mudChart = new();
+        
         var authState = await authStateProvider.GetAuthenticationStateAsync();
         user = authState.User;
 
@@ -63,6 +78,8 @@
 
         var retBal = await DataService.GetBalance(userName);
         balance = retBal.ToString("C2");
+
+        await GetUserStats();
 
         await InvokeAsync(StateHasChanged);
     }

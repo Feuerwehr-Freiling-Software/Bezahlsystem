@@ -15,10 +15,31 @@ namespace OAOPS.Client.Pages
 
         }
 
+        public UserStatsDto? UserStats { get; set; } = null;
+        public double[] ArticleData { get; set; } = Array.Empty<double>();
+        public string[] ArticleLabels { get; set; } = Array.Empty<string>();
+
+        public List<ChartSeries> PaymentData = new ();
+        public string[] PaymentLabels = { "Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez" };
+
         async Task GetUserStats()
         {
-            UserStatsDto res = await DataService.GetUserStats();
+            var tmpUser = user.Identity?.Name;
+            if (tmpUser == null) return;
+            var res = await DataService.GetUserStats(tmpUser);
 
+            if (res.BalanceStats.Count == 0 || res.ArticleStats.Count == 0) return; 
+
+            UserStats = res;
+
+            foreach (var item in res.ArticleStats)
+            {
+                ArticleData = ArticleData.Append(item.Value).ToArray();
+                ArticleLabels = ArticleLabels.Append(item.Key).ToArray();
+            }
+
+            mudChart.InputData = ArticleData;
+            mudChart.InputLabels = ArticleLabels;
         }
     }
 }

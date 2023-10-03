@@ -321,6 +321,19 @@ namespace OAOPS.Client.Services
             throw new NotImplementedException();
         }
 
+        public async Task<UserStatsDto> GetUserStats(string username)
+        {
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetUserStats + "?username=" + username);
+            if (!res.IsSuccessStatusCode)
+            {
+                return new();
+            }
+            else
+            {
+                return await res.Content.ReadFromJsonAsync<UserStatsDto>() ?? new UserStatsDto();
+            }
+        }
+
         #endregion
     }
 }
