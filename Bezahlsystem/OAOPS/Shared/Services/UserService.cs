@@ -87,7 +87,7 @@ namespace OAOPS.Shared.Services
         {
             UserStatsDto userStats = new ();
             // Topup or Withdraw - Amount in month
-            Dictionary<string, Dictionary<string, List<double>>> balance = new();
+            Dictionary<string, List<double>> balance = new();
             Dictionary<string, int> articles = new();
 
             var result = from price in db.Prices.Include(x => x.Article).ToList()
@@ -98,19 +98,24 @@ namespace OAOPS.Shared.Services
             var topups = from topup in db.TopUps.Include(x => x.User).ToList()
                         where topup.User != null
                               && topup.User.UserName == username
-                        group topup by topup.Date.Month.ToString() into g
-                        select g;
+                           select topup;
 
             Dictionary<string, List<double>> topupWithdraws = new();
 
-            foreach (var item in topups)
+            List<double> doubles = new List<double>();
+            List<double> payments = new List<double> ();
+            for (int month = 1; month <= 12; month++)
             {
-                var topupDoubles = item.ToList().Select(x => x.CashAmount).ToList();
-                topupWithdraws.Add(item.Key, topupDoubles);
+                var monthlyTopUp = topups.Where(t => t.Date.Month == month && t.Date.Year == DateTime.Now.Year);
+                doubles.Add(monthlyTopUp.Any() ? monthlyTopUp.Sum(x => x.CashAmount) : 0);
+
+                var monthlyPayment = result.Where(x => x.article.TimeBought.Month == month && x.article.TimeBought.Year == DateTime.Now.Year);
+                payments.Add(monthlyPayment.Any() ? monthlyPayment.Sum(x => x.article.Quantity * x.price.Amount) : 0);
             }
 
-            balance.Add("Aufladungen", topupWithdraws);
-
+            balance.Add("Aufladungen", doubles);
+            balance.Add("Abbuchungen", payments);
+            
 
             foreach (var item in result)
             {
@@ -124,10 +129,8 @@ namespace OAOPS.Shared.Services
                 {
                     articles[articleName] = item.article.Quantity;
                 }
-
-                // Fill Balance Stats Dictionary
-
             }
+
 
             userStats.ArticleStats = articles;
             userStats.BalanceStats = balance;

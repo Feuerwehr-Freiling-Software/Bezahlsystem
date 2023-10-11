@@ -12,40 +12,50 @@
 }
 else
 {
-    <MudGrid Justify="Justify.Center" Class="mt-5">
-        <MudItem xs="5">
+    <MudGrid Class="mt-5" Justify="Justify.Center" Style="width: 100%">
+        <MudItem xs="5" sm="5">
             <MudText Typo="Typo.h4">@user.Identity?.Name's Profil </MudText>
         </MudItem>
-        <MudItem xs="5">
+        <MudItem xs="5" sm="5">
             <MudText Typo="Typo.h4">Kontostand: @balance</MudText>
         </MudItem>
-        <MudItem xs="5">
-            <MudPaper>
+        <MudItem xs="7" sm="5">
+            <MudPaper Height="400px">
                 @if (ArticleData.Length == 0)
                 {
                     <MudText Typo="Typo.h4">Keine Daten verfügbar.</MudText>
-                }else
+                }
+                else
                 {
                     <!-- Add chart for Article distribution -->
-                    <MudChart @ref="mudChart" ChartType="ChartType.Pie" @bind-SelectedIndex="Index" InputData="@ArticleData" InputLabels="@ArticleLabels" Width="300px" Height="300px"/>
+                    <MudChart ChartType="ChartType.Pie" @bind-SelectedIndex="Index" InputData="@ArticleData" InputLabels="@ArticleLabels" Width="50%" />
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="7" sm="5">
+            <MudPaper Height="400px">
+                <!-- Add chart for Payment distribution -->
+                @if (PaymentData.Count == 0)
+                {
+                    <MudText Typo="Typo.h4">Keine Daten verfügbar.</MudText>
+                }
+                else
+                {
+                    <MudChart ChartOptions="@_PaymentChartOptions" ChartType="ChartType.Line" ChartSeries="@PaymentData" Width="100%" XAxisLabels="@PaymentLabels"></MudChart>
                 }
             </MudPaper>
         </MudItem>
         <MudItem xs="5">
-            <MudPaper>
-                <!-- Add chart for Payment distribution -->
-                <MudChart ChartType="ChartType.Line" ChartSeries="@PaymentData" XAxisLabels="@PaymentLabels" ></MudChart>
-            </MudPaper>
+            <!-- ImageButton for Payments -->
+            <div class="centered">
+                <MudButton Class="custom-button" Color="Color.Primary" Href="/user/payments">Zu den Bezahlungen</MudButton>
+            </div>
         </MudItem>
         <MudItem xs="5">
-            <MudPaper>
-                <!-- ImageButton for Payments -->
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="5">
-            <MudPaper>
-                <!-- ImageButton for Top Ups-->
-            </MudPaper>
+            <!-- ImageButton for Top Ups-->
+            <div class="centered">
+                <MudButton Class="custom-button" Color="Color.Primary" Href="/user/topups">Zu den Aufladungen</MudButton>
+            </div>
         </MudItem>
     </MudGrid>
 }

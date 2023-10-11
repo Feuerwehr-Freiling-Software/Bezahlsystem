@@ -10,17 +10,19 @@ namespace OAOPS.Client.Pages
 {
     public partial class UserProfile
     {
-        public UserProfile()
-        {
-
-        }
-
         public UserStatsDto? UserStats { get; set; } = null;
         public double[] ArticleData { get; set; } = Array.Empty<double>();
         public string[] ArticleLabels { get; set; } = Array.Empty<string>();
 
         public List<ChartSeries> PaymentData = new ();
         public string[] PaymentLabels = { "Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez" };
+
+        private readonly ChartOptions _PaymentChartOptions = new();
+
+        protected override void OnInitialized()
+        {
+            _PaymentChartOptions.YAxisTicks = 5;
+        }
 
         async Task GetUserStats()
         {
@@ -38,8 +40,10 @@ namespace OAOPS.Client.Pages
                 ArticleLabels = ArticleLabels.Append(item.Key).ToArray();
             }
 
-            mudChart.InputData = ArticleData;
-            mudChart.InputLabels = ArticleLabels;
+            foreach (var item in res.BalanceStats)
+            {
+                PaymentData.Add(new ChartSeries() { Name = item.Key, Data = item.Value.ToArray() });
+            }
         }
     }
 }
