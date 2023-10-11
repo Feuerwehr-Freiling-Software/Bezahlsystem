@@ -1,0 +1,96 @@
+﻿@page "/user/profile"
+@using System.Security.Claims;
+@using OAOPS.Client.Services;
+@attribute [Authorize]
+
+@inject AuthenticationStateProvider authStateProvider
+@inject IDataService DataService
+
+@if (UserStats == null)
+{
+    <OAOPS.Client.Components.Shared.LoadingComponent></OAOPS.Client.Components.Shared.LoadingComponent>
+}
+else
+{
+    <MudGrid Class="mt-5" Justify="Justify.Center" Style="width: 100%">
+        <MudItem xs="5" sm="5">
+            <MudText Typo="Typo.h4">@user.Identity?.Name's Profil </MudText>
+        </MudItem>
+        <MudItem xs="5" sm="5">
+            <MudText Typo="Typo.h4">Kontostand: @balance</MudText>
+        </MudItem>
+        <MudItem xs="7" sm="5">
+            <MudPaper Height="400px">
+                @if (ArticleData.Length == 0)
+                {
+                    <MudText Typo="Typo.h4">Keine Daten verfügbar.</MudText>
+                }
+                else
+                {
+                    <!-- Add chart for Article distribution -->
+                    <MudChart ChartType="ChartType.Pie" @bind-SelectedIndex="Index" InputData="@ArticleData" InputLabels="@ArticleLabels" Width="50%" />
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="7" sm="5">
+            <MudPaper Height="400px">
+                <!-- Add chart for Payment distribution -->
+                @if (PaymentData.Count == 0)
+                {
+                    <MudText Typo="Typo.h4">Keine Daten verfügbar.</MudText>
+                }
+                else
+                {
+                    <MudChart ChartOptions="@_PaymentChartOptions" ChartType="ChartType.Line" ChartSeries="@PaymentData" Width="100%" XAxisLabels="@PaymentLabels"></MudChart>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="5">
+            <!-- ImageButton for Payments -->
+            <div class="centered">
+                <MudButton Class="custom-button" Color="Color.Primary" Href="/user/payments">Zu den Bezahlungen</MudButton>
+            </div>
+        </MudItem>
+        <MudItem xs="5">
+            <!-- ImageButton for Top Ups-->
+            <div class="centered">
+                <MudButton Class="custom-button" Color="Color.Primary" Href="/user/topups">Zu den Aufladungen</MudButton>
+            </div>
+        </MudItem>
+    </MudGrid>
+}
+
+@code{
+    private int Index = -1;
+    ClaimsPrincipal user;
+    bool isAdmin;
+    bool isAuthenticated;
+    string balance;
+
+    public MudChart mudChart = new();
+
+    override protected async Task OnInitializedAsync()
+    {
+        mudChart = new();
+        
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        isAdmin = user.IsInRole("Admin");
+
+        var userName = user.Identity?.Name;
+
+        if (userName == null)
+        {
+            balance = 0.ToString("C2");
+            return;
+        }
+
+        var retBal = await DataService.GetBalance(userName);
+        balance = retBal.ToString("C2");
+
+        await GetUserStats();
+
+        await InvokeAsync(StateHasChanged);
+    }
+}

@@ -12,5 +12,6 @@ namespace OAOPS.Shared.Interfaces
         public Task<List<UserDto>> GetAllUsers();
         public Task<double> GetUserBalance(string username);
         public Task<List<UserDto>> GetUsersFiltered(string? username = null, int? page = null, int? pageSize = null);
+        public Task<UserStatsDto> GetUserStats(string username);
     }
 }

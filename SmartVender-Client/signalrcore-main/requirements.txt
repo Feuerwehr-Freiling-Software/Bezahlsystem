@@ -1,6 +1,0 @@
-msgpack==1.0.2
-requests>=2.22.0
-websocket-client==1.0.0
-dataclasses
-rpi.gpio
-mfrc522
