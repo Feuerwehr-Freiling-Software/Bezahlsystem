@@ -1,0 +1,38 @@
+﻿@page "/user/payments"
+<PageTitle>Bezahlungen</PageTitle>
+<MudGrid Justify="Justify.Center">
+    <MudItem xs="8" sm="8">
+        <!-- Titel -->
+        <h1>Deine Bezahlungen</h1>
+        <!-- Zurück Button -->
+        <MudButton Href="/user/profile">Zurück</MudButton>
+        <!-- Dropdown mit Filteroptionen -->
+    </MudItem>
+    <MudItem xs="8" sm="8">
+        <MudExpansionPanels>
+            <MudExpansionPanel Text="Filter">
+                <MudGrid Justify="Justify.FlexStart">
+                    <MudItem xs="8" sm="6">
+                        <MudDatePicker id="fromDateInput" @ref="_picker" Date="@fromDate" Label="Ab:" Clearable="true"></MudDatePicker>
+                    </MudItem>
+                    <MudItem xs="8" sm="6">
+                        <MudDatePicker id="toDateInput" Date="@toDate" Clearable="true" Label="Bis:"></MudDatePicker>
+                    </MudItem>
+                    <MudItem xs="8" sm="6">
+                        <MudSelect T="">
+
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </MudItem>
+<!-- Tabelle mit allen Bezahlungen -->
+</MudGrid>
+
+@code{
+    MudDatePicker _picker;
+
+    private DateTime fromDate = new DateTime(2023,1,1);
+    private DateTime? toDate = null;
+}

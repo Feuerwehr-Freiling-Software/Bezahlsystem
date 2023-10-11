@@ -44,5 +44,11 @@ namespace OAOPS.Server.Controllers
         {
             return await categoryService.GetAllCategories();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllCategoriesShort()
+        {
+            return await categoryService.GetAllCategoriesShort();
+        }
     }
 }

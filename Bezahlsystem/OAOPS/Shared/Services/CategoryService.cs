@@ -187,5 +187,11 @@ namespace OAOPS.Shared.Services
             var cat = Db.ArticleCategories.FirstOrDefault(x => x.Name == category);
             return cat;
         }
+
+        public async Task<List<ShortCategoryDto>> GetAllCategoriesShort()
+        {
+            var cat = Db.ArticleCategories.Select(x => new ShortCategoryDto() { Id = x.Id, Name = x.Name }).ToList();
+            return cat;
+        }
     }
 }
