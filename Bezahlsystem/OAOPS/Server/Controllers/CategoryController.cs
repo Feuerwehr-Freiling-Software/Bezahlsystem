@@ -48,7 +48,7 @@ namespace OAOPS.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCategoriesShort()
         {
-            return await categoryService.GetAllCategoriesShort();
+            return Ok(await categoryService.GetAllCategoriesShort());
         }
     }
 }

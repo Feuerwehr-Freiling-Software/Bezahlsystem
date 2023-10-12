@@ -1,6 +1,6 @@
 ﻿@page "/user/payments"
 <PageTitle>Bezahlungen</PageTitle>
-<MudGrid Justify="Justify.Center">
+<MudGrid Justify="Justify.Center" Style="width: 100%">
     <MudItem xs="8" sm="8">
         <!-- Titel -->
         <h1>Deine Bezahlungen</h1>
@@ -13,15 +13,24 @@
             <MudExpansionPanel Text="Filter">
                 <MudGrid Justify="Justify.FlexStart">
                     <MudItem xs="8" sm="6">
-                        <MudDatePicker id="fromDateInput" @ref="_picker" Date="@fromDate" Label="Ab:" Clearable="true"></MudDatePicker>
+                        <MudDatePicker id="fromDateInput" @onchange="@(() => FromDateChanged())" @ref="_picker" Date="@fromDate" Label="Ab:" Clearable="true"></MudDatePicker>
                     </MudItem>
                     <MudItem xs="8" sm="6">
-                        <MudDatePicker id="toDateInput" Date="@toDate" Clearable="true" Label="Bis:"></MudDatePicker>
+                        <MudDatePicker @onchange="@(() => ToDateChanged())" Validation="@(() => fromDate > toDate ? false : true)" id="toDateInput" Date="@toDate" Clearable="true" Label="Bis:"></MudDatePicker>
                     </MudItem>
                     <MudItem xs="8" sm="6">
-                        <MudSelect T="">
-
+                        <MudSelect @onchange="@(() => CategoryChanged())" Clearable="true" Label="Nach Kategorie Filtern"  T="ShortCategoryDto" @bind-Value="SelectedCategory">
+                            @foreach (var item in ShortCategories)
+                            {
+                                <MudSelectItem Value="item"></MudSelectItem>
+                            }
                         </MudSelect>
+                    </MudItem>
+                    <MudItem xs="8" sm="6">
+                        <MudNumericField @onchange="@(() => MinAmountChanged())" Step="0.2" @bind-Value="minAmount" Min="0" Label="Min. Betrag" Clearable="true"></MudNumericField>
+                    </MudItem>
+                    <MudItem xs="8" sm="6">
+                        <MudNumericField @onchange="@(() => MaxAmountChanged())" Step="0.2" @bind-Value="maxAmount" Min="0" Label="Max Betrag" Clearable="true"></MudNumericField>
                     </MudItem>
                 </MudGrid>
             </MudExpansionPanel>
@@ -33,6 +42,31 @@
 @code{
     MudDatePicker _picker;
 
-    private DateTime fromDate = new DateTime(2023,1,1);
+    private DateTime fromDate = new DateTime(2023, 1, 1);
+    public DateTime FromDate
+    {
+        get { return fromDate; }
+        set { fromDate = value; FromDateChanged(); }
+    }
+
     private DateTime? toDate = null;
+    public DateTime? ToDate
+    {
+        get { return toDate; }
+        set { toDate = value; ToDateChanged(); }
+    } 
+
+    private double minAmount;
+    public double MinAmount
+    {
+        get { return minAmount; }
+        set { minAmount = value; MinAmountChanged(); }
+    }
+
+    private double maxAmount;
+    public double MaxAmount
+    {
+        get { return maxAmount; }
+        set { maxAmount = value; MaxAmountChanged(); }
+    }
 }

@@ -44,5 +44,12 @@ namespace OAOPS.Server.Controllers
             UserStatsDto stats = await userService.GetUserStats(username);
             return Ok(stats);
         }
+
+        [HttpGet, Authorize]
+        public async Task<IActionResult> GetAllPaymentsFiltered(DateTime? fromDate = null, DateTime? toDate = null, string? category = null, double? minAmount = null, double? maxAmount = null)
+        {
+            var res = await userService.GetAllPaymentsFiltered(fromDate, toDate, category, minAmount, maxAmount);
+            return Ok(res);
+        }
     }
 }
