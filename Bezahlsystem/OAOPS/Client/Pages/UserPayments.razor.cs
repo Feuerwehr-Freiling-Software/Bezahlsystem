@@ -59,7 +59,8 @@ namespace OAOPS.Client.Pages
         // Get All Payments Filtered
         public async Task GetAllPaymentsFiltered()
         {
-            Payments = await DataService.GetAllPaymentsFiltered(fromDate, toDate, SelectedCategory, minAmount, maxAmount);       
+            Payments = await DataService.GetAllPaymentsFiltered(fromDate, toDate, SelectedCategory, minAmount, maxAmount);
+            StateHasChanged();
         }
     }
 }

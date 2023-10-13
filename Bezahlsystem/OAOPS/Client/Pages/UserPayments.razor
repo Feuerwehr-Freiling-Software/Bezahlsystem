@@ -36,6 +36,12 @@
             </MudExpansionPanel>
         </MudExpansionPanels>
     </MudItem>
+    <MudItem xs="8" sm="8">
+        @foreach (var item in Payments)
+        {
+            <OAOPS.Client.Components.Shared.PaymentCardComponent Payment="item"></OAOPS.Client.Components.Shared.PaymentCardComponent>
+        }
+    </MudItem>
 <!-- Tabelle mit allen Bezahlungen -->
 </MudGrid>
 

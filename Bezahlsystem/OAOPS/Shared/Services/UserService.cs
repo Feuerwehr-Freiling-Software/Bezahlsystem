@@ -174,6 +174,31 @@ namespace OAOPS.Shared.Services
                 logger.LogError(ex, "Error in GetAllPaymentsFiltered");
             }
 
+            if (fromDate != null)
+            {
+                res = res.Where(x => x.PaymentDate >= fromDate).ToList();
+            }
+
+            if (toDate != null)
+            {
+                res = res.Where(x => x.PaymentDate <= toDate).ToList();
+            }
+
+            if (category != null)
+            {
+                res = res.Where(x => x.Article.Category == category).ToList();
+            }
+
+            if (minAmount != null)
+            {
+                res = res.Where(x => x.Sum >= minAmount).ToList();
+            }
+
+            if (maxAmount != null)
+            {
+                res = res.Where(x => x.Sum <= maxAmount).ToList();
+            }
+
             return res.ToList();
         }
     }

@@ -342,7 +342,7 @@ namespace OAOPS.Client.Services
 
         public async Task<List<PaymentDto>> GetAllPaymentsFiltered(DateTime? fromDate = null, DateTime? toDate = null, ShortCategoryDto? category = null, double? minAmount = null, double? maxAmount = null)
         {
-            QueryBuilder query = new QueryBuilder();
+            QueryBuilder query = new ();
             if (fromDate != null)
                 query.Add(nameof(fromDate), fromDate?.ToString("yyyy-MM-dd"));
             
