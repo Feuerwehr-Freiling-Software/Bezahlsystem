@@ -1,0 +1,19 @@
+<MudCard Outlined="true" Class="mb-5">
+    <MudCardHeader>
+        <MudText>Bezahlung am @Topup.Date.ToString("dd.MM.yyyy hh:mm")</MudText>
+        <MudButton Class="right" OnClick="OpenDetails">Details</MudButton>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText>Am @Topup.Date.ToString("dd.MM.yyyy hh:mm") wurden @Topup.CashAmount € von @Topup.ExecutorName aufgeladen</MudText>
+    </MudCardContent>
+</MudCard>
+
+@code{
+    [Parameter]
+    public TopUpDto Topup { get; set; }
+
+    void OpenDetails()
+    {
+        // TODO: Details öffnen
+    }
+}

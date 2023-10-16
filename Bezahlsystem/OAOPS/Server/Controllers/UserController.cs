@@ -51,5 +51,12 @@ namespace OAOPS.Server.Controllers
             var res = await userService.GetAllPaymentsFiltered(fromDate, toDate, category, minAmount, maxAmount);
             return Ok(res);
         }
+
+        [HttpGet, Authorize]
+        public async Task<IActionResult> GetAllTopupsFiltered(string username, DateTime? fromDate = null, DateTime? toDate = null, string? executor = null, double? amount = null)
+        {
+            List<TopUpDto> res = await userService.GetAllTopupsFiltered(username, fromDate, toDate, executor, amount);
+            return Ok(res);
+        }
     }
 }

@@ -1,0 +1,97 @@
+﻿@page "/user/topups"
+@using OAOPS.Client.Services;
+@using System.Security.Claims;
+
+@attribute [Authorize]
+
+@inject HttpClient Http
+@inject IDataService DataService
+@inject AuthenticationStateProvider authStateProvider
+
+<MudGrid Justify="Justify.Center" Style="width: 100%">
+    <MudItem xs="8" sm="8">
+        <!-- Titel -->
+        <h1>Deine Aufladungen</h1>
+        <!-- Zurück Button -->
+        <MudButton Href="/user/profile">Zurück</MudButton>
+        <!-- Dropdown mit Filteroptionen -->
+    </MudItem>
+    <MudItem xs="8" sm="8">
+        <MudExpansionPanels>
+            <MudExpansionPanel Text="Filter">
+                <MudGrid Justify="Justify.FlexStart">
+                    <MudItem xs="8" sm="6">
+                        <MudDatePicker id="fromDateInput" @onchange="@(() => FromDateChanged())" Date="@fromDate" Label="Ab:" Clearable="true"></MudDatePicker>
+                    </MudItem>
+                    <MudItem xs="8" sm="6">
+                        <MudDatePicker @onchange="@(() => ToDateChanged())" Validation="@(() => fromDate > toDate ? false : true)" id="toDateInput" Date="@toDate" Clearable="true" Label="Bis:"></MudDatePicker>
+                    </MudItem>
+                    <MudItem xs="8" sm="6">
+                        <!-- TODO: Change to Autocomplete -->
+                        <MudTextField @bind-Value="executor" @onchange="@(() => ExecutorChanged())" Label="Ausführender" Clearable="true"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="8" sm="6">
+                        <MudNumericField @onchange="@(() => AmountChanged())" Step="0.2" @bind-Value="amount" Min="0" Label="Min. Betrag" Clearable="true"></MudNumericField>
+                    </MudItem>
+                </MudGrid>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    </MudItem>
+    <MudItem xs="8" sm="8">
+        @if (Topups.Count > 0)
+        {
+            @foreach (var item in Topups)
+            {
+                <TopUpCardComponent Topup="item"></TopUpCardComponent>
+            }
+        }else
+        {
+            <MudText Typo="Typo.h6">Keine Aufladungen verfügbar.</MudText>
+        }
+    </MudItem>
+    <!-- Tabelle mit allen Bezahlungen -->
+</MudGrid>
+
+@code{
+    private List<TopUpDto> Topups { get; set; } = new();
+    ClaimsPrincipal user;
+
+    // Form Properties
+    private string Amount { get; set; }
+    private DateTime? fromDate;
+    private DateTime? toDate;
+    private string executor;
+    private double amount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        await LoadTopups();
+    }
+
+    async Task LoadTopups()
+    {
+        Topups = await DataService.GetAllTopUpsFiltered(user.Identity?.Name ?? string.Empty, fromDate, toDate, executor, amount);   
+    }
+
+    private async Task FromDateChanged()
+    {
+        await LoadTopups();
+    }
+
+    private async Task ToDateChanged()
+    {
+        await LoadTopups();
+    }
+
+    private async Task ExecutorChanged()
+    {
+        await LoadTopups();
+    }
+
+    private async Task AmountChanged()
+    {
+        await LoadTopups();
+    }
+}

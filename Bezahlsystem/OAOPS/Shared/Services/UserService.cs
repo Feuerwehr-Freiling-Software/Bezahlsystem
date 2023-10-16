@@ -201,5 +201,40 @@ namespace OAOPS.Shared.Services
 
             return res.ToList();
         }
+
+        public async Task<List<TopUpDto>> GetAllTopupsFiltered(string username, DateTime? fromDate, DateTime? toDate, string? executor, double? amount)
+        {
+            var topups = db.TopUps.Include(x => x.User).Where(x => x.User.UserName == username).ToList();
+
+            if (fromDate != null)
+            {
+                topups = topups.Where(x => x.Date >= fromDate).ToList();
+            }
+
+            if (toDate != null)
+            {
+                topups = topups.Where(x => x.Date <= toDate).ToList();
+            }
+
+            if (executor != null)
+            {
+                topups = topups.Where(x => x.Executor.UserName == executor).ToList();
+            }
+
+            if (amount != null)
+            {
+                topups = topups.Where(x => x.CashAmount == amount).ToList();
+            }
+
+            var res = topups.Select(x => new TopUpDto
+            {
+                CashAmount = x.CashAmount,
+                Date = x.Date,
+                ExecutorName = x.Executor.FirstName + " " + x.Executor.LastName,
+                Id = x.Id
+            }).ToList();
+
+            return res;
+        }
     }
 }

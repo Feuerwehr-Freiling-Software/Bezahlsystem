@@ -365,6 +365,30 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<List<PaymentDto>>() ?? new();
         }
 
+        public async Task<List<TopUpDto>> GetAllTopUpsFiltered(string username, DateTime? fromDate = null, DateTime? toDate = null, string? executor = null, double? amount = null)
+        {
+            QueryBuilder query = new()
+            {
+                { nameof(username), username }
+            };
+            if (fromDate != null)
+                query.Add(nameof(fromDate), fromDate?.ToString("yyyy-MM-dd"));
+
+            if (toDate != null)
+                query.Add(nameof(toDate), toDate?.ToString("yyyy-MM-dd"));
+
+            if (executor != null)
+                query.Add(nameof(executor), executor);
+
+            if (amount != null && amount != 0)
+                query.Add(nameof(amount), amount?.ToString());
+
+            var queryString = query.ToString();
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetAllTopupsFiltered + queryString);
+            if (!res.IsSuccessStatusCode) return new();
+            return await res.Content.ReadFromJsonAsync<List<TopUpDto>>() ?? new();
+        }
+
         #endregion
     }
 }
