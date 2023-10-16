@@ -6,12 +6,17 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(15, GPIO.OUT)
 
+# load all Pins from the server and add them
+
 async def echo(websocket):
     async for message in websocket:
-        # When a message is received, emit a signal to PIN 15
-        GPIO.output(15, GPIO.HIGH)
-        await asyncio.sleep(1)
-        GPIO.output(15, GPIO.LOW)
+        # message = "SLOT_AMOUNT"
+        slot = message.split('_')[0]
+        amount = message.split('_')[1]
+        for i in amount:
+            GPIO.output(slot, GPIO.HIGH)
+            await asyncio.sleep(1)
+            GPIO.output(slot, GPIO.HIGH)
 
 async def main():
     async with websockets.serve(echo, "localhost", 8765):
