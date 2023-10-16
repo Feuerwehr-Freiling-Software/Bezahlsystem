@@ -1,4 +1,5 @@
-﻿using OAOPS.Shared.DTO;
+﻿using OAOPS.Client.DTO;
+using OAOPS.Shared.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace OAOPS.Shared.Interfaces
 {
     public interface IUserService
     {
+        public Task<List<PaymentDto>> GetAllPaymentsFiltered(DateTime? fromDate = null, DateTime? toDate = null, string? category = null, double? minAmount = null, double? maxAmount = null);
         public Task<List<UserDto>> GetAllUsers();
         public Task<double> GetUserBalance(string username);
         public Task<List<UserDto>> GetUsersFiltered(string? username = null, int? page = null, int? pageSize = null);

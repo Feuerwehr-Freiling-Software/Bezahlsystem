@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using OAOPS.Client.DTO;
 using OAOPS.Shared.DTO;
 using System;
 using System.Collections.Generic;
@@ -14,11 +16,13 @@ namespace OAOPS.Shared.Services
     {
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ILogger<UserService> logger;
 
-        public UserService(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        public UserService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ILogger<UserService> logger)
         {
             this.db = db;
             this.userManager = userManager;
+            this.logger = logger;
         }
 
         public async Task<List<UserDto>> GetAllUsers()
@@ -136,6 +140,66 @@ namespace OAOPS.Shared.Services
             userStats.BalanceStats = balance;
 
             return userStats;
+        }
+
+        public async Task<List<PaymentDto>> GetAllPaymentsFiltered(DateTime? fromDate = null, DateTime? toDate = null, string? category = null, double? minAmount = null, double? maxAmount = null)
+        {
+            List<PaymentDto> res = new();
+            try
+            {
+                res = (from payment in db.UserBoughtArticleFromSlots.Include(x => x.User).Include(x => x.ArticleInStorageSlot).ThenInclude(x => x.Article).ThenInclude(x => x.ArticleCategory).ToList()
+                       join price in db.Prices.Include(x => x.Article).ToList().DefaultIfEmpty() on payment.ArticleInStorageSlot.Article.Id equals price.Article.Id
+                       select new PaymentDto
+                       {
+                           Article = new()
+                           {
+                               Amount = payment.ArticleInStorageSlot.QuantityActual,
+                               Category = payment.ArticleInStorageSlot.Article.ArticleCategory.Name,
+                               Name = payment.ArticleInStorageSlot.Article.Name,
+                               MinAmount = payment.ArticleInStorageSlot.MinAmount,
+                               PriceAmount = price.Amount,
+                               QuantityActual = 0,
+                               Base64data = "",
+                               QuantityAtStart = 0,
+                               StorageName = "",
+                               StorageSlot = ""
+                           },
+                           PaymentDate = payment.TimeBought,
+                           Sum = payment.Quantity * price.Amount,
+                           Username = payment.User.FirstName + " " + payment.User.LastName
+                       }).ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error in GetAllPaymentsFiltered");
+            }
+
+            if (fromDate != null)
+            {
+                res = res.Where(x => x.PaymentDate >= fromDate).ToList();
+            }
+
+            if (toDate != null)
+            {
+                res = res.Where(x => x.PaymentDate <= toDate).ToList();
+            }
+
+            if (category != null)
+            {
+                res = res.Where(x => x.Article.Category == category).ToList();
+            }
+
+            if (minAmount != null)
+            {
+                res = res.Where(x => x.Sum >= minAmount).ToList();
+            }
+
+            if (maxAmount != null)
+            {
+                res = res.Where(x => x.Sum <= maxAmount).ToList();
+            }
+
+            return res.ToList();
         }
     }
 }

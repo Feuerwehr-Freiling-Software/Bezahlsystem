@@ -334,6 +334,37 @@ namespace OAOPS.Client.Services
             }
         }
 
+        public async Task<List<ShortCategoryDto>> GetAllCategoriesShort()
+        {
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetAllCategoriesShort);
+            return await res.Content.ReadFromJsonAsync<List<ShortCategoryDto>>() ?? new ();
+        }
+
+        public async Task<List<PaymentDto>> GetAllPaymentsFiltered(DateTime? fromDate = null, DateTime? toDate = null, ShortCategoryDto? category = null, double? minAmount = null, double? maxAmount = null)
+        {
+            QueryBuilder query = new ();
+            if (fromDate != null)
+                query.Add(nameof(fromDate), fromDate?.ToString("yyyy-MM-dd"));
+            
+            if (toDate != null)
+                query.Add(nameof(toDate), toDate?.ToString("yyyy-MM-dd"));
+
+            if (category != null && category.Name != null)
+                query.Add(nameof(category), category?.Name);
+
+            if (minAmount != null && minAmount != 0)
+                query.Add(nameof(minAmount), minAmount?.ToString());
+
+            if (maxAmount != null && maxAmount != 0)
+                query.Add(nameof(maxAmount), maxAmount?.ToString());
+
+            var queryString = query.ToQueryString();
+
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetAllPaymentsFiltered + queryString);
+            if (!res.IsSuccessStatusCode) return new();
+            return await res.Content.ReadFromJsonAsync<List<PaymentDto>>() ?? new();
+        }
+
         #endregion
     }
 }

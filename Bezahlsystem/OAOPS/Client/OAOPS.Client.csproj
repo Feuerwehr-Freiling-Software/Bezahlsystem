@@ -38,4 +38,8 @@
     <None Include="Pages\BamstisArea\ManageErrors.razor" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Validators\" />
+  </ItemGroup>
+
 </Project>

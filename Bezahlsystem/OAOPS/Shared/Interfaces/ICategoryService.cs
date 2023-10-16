@@ -19,5 +19,6 @@ namespace OAOPS.Shared.Interfaces
         Task<ErrorDto> DeleteCategory(int categoryId);
         Task<List<ArticleCategoryDto>> GetAllCategories();
         Task<ArticleCategory?> GetCategoryByName(string category);
+        Task<List<ShortCategoryDto>> GetAllCategoriesShort();
     }
 }

@@ -57,6 +57,8 @@ namespace OAOPS.Client.Services
         public Task<ErrorDto> AddStorageSlot(StorageSlotDto newSlot);
         public Task<ErrorDto> DeleteStorageSlot(int slotId);
         public Task<UserStatsDto> GetUserStats(string username);
+        public Task<List<ShortCategoryDto>> GetAllCategoriesShort();
+        public Task<List<PaymentDto>> GetAllPaymentsFiltered(DateTime? fromDate = null, DateTime? toDate = null, ShortCategoryDto? category = null, double? minAmount = null, double? maxAmount = null);
 
         #endregion
     }

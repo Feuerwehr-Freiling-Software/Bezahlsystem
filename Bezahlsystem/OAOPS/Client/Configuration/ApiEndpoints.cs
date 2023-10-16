@@ -56,6 +56,8 @@
         public string DeleteStorageSlot { get; set; } = string.Empty;
         public string UpdateSuggestion { get; set; } = string.Empty;
         public string GetUserStats { get; set; } = string.Empty;
+        public string GetAllCategoriesShort { get; set; } = string.Empty;
+        public string GetAllPaymentsFiltered { get; set; } = string.Empty;
 
         #endregion
     }

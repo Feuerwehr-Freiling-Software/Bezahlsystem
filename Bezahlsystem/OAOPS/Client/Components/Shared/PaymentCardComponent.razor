@@ -1,0 +1,19 @@
+﻿<MudCard Outlined="true" Class="mb-5">
+    <MudCardHeader>
+        <MudText>Bezahlung am @Payment.PaymentDate.ToString("dd.MM.yyyy hh:mm")</MudText>
+        <MudButton Class="right" OnClick="OpenDetails">Details</MudButton>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText>@Payment.Sum €</MudText>
+    </MudCardContent>
+</MudCard>
+
+@code{
+    [Parameter]
+    public PaymentDto Payment { get; set; }
+
+    void OpenDetails()
+    {
+        // Todo: Open Dialog with additional information
+    }
+}
