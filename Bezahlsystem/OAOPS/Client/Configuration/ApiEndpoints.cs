@@ -1,4 +1,6 @@
-﻿namespace OAOPS.Client.Configuration
+﻿using Microsoft.AspNetCore.Http;
+
+namespace OAOPS.Client.Configuration
 {
     public class ApiEndpoints
     {
@@ -58,6 +60,7 @@
         public string GetUserStats { get; set; } = string.Empty;
         public string GetAllCategoriesShort { get; set; } = string.Empty;
         public string GetAllPaymentsFiltered { get; set; } = string.Empty;
+        public string GetAllTopupsFiltered { get; set; } = string.Empty;
 
         #endregion
     }
