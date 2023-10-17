@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Duende.IdentityServer.Models;
 using OAOPS.Client.Services;
+using OAOPS.Server.Hubs;
 
 // Centralized Logging Framework
 // https://datalust.co/seq
@@ -30,6 +31,8 @@ try
                     options.UseSqlServer(connectionString));
 
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+    builder.Services.AddSignalR();
 
     builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
         .AddRoles<IdentityRole>()
@@ -141,6 +144,7 @@ try
     app.MapDefaultControllerRoute();
     app.MapFallbackToFile("index.html");
 
+    app.MapHub<VendingHub>("/VendingHub");
 
     app.Run();
 

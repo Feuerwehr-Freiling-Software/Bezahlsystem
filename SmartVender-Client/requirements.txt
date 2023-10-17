@@ -1,0 +1,4 @@
+# RPI RPi.GPIO
+signalrcore
+python-json-logger
+requests

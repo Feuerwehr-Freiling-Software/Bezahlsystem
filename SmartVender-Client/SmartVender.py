@@ -1,25 +1,56 @@
-import asyncio
-import websockets
-import RPi.GPIO as GPIO
+import re
+import time
+from signalr import Connection
 
-# Set up the GPIO pin
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(15, GPIO.OUT)
+systemUrl = "http://localhost:7127/VendingHub"
+vendingMachineName = "Automat Werkstatt"
 
-# load all Pins from the server and add them
+slots = [2, 3, 4, 17, 27, 22]  # Replace with actual GPIO pins for the slots
+slotPinMap = [{"slot": 1, "pin": 16},
+              {"slot": 2, "pin": 17},
+              {"slot": 3, "pin": 18},
+              {"slot": 4, "pin": 19},
+              {"slot": 5, "pin": 20},
+              {"slot": 6, "pin": 21}]
 
-async def echo(websocket):
-    async for message in websocket:
-        # message = "SLOT_AMOUNT"
-        slot = message.split('_')[0]
-        amount = message.split('_')[1]
+
+def on_vending_received(message):
+    pattern = re.compile(r"[0-9]+_[0-9]+", re.IGNORECASE)
+    if pattern.match(message):
+        # Extract slot and amount values from the message
+        vending_slot = message.split('_')[0]  # Replace with actual extraction logic
+        amount = message.split('_')[1]  # Replace with actual extraction logic
+
         for i in amount:
-            GPIO.output(slot, GPIO.HIGH)
-            await asyncio.sleep(1)
-            GPIO.output(slot, GPIO.HIGH)
+            # wait 1 second, Trigger GPIO output based on slot and wait 1 second
+            slot = slotPinMap[vending_slot]
+            print("Spit out Article from slot " + slot)
+            time.sleep(4)
+            # GPIO.output(slot, GPIO.HIGH)
+            # time.sleep(4)
+            # GPIO.output(slot, GPIO.LOW)
 
-async def main():
-    async with websockets.serve(echo, "localhost", 8765):
-        await asyncio.Future()  # run forever
 
-asyncio.run(main())
+def on_message(message):
+    print(message)
+
+
+def on_error(error):
+    print(error)
+
+
+def on_close():
+    print("### closed ###")
+
+
+def on_open():
+    print("### connected ###")
+    connection.send(vendingMachineName)
+
+
+if __name__ == "__main__":
+    connection = Connection(systemUrl)
+    hub = connection.register_hub('VendingHub')
+    hub.client.on('vendingReceived', on_vending_received)
+    connection.start()
+    connection.wait()
