@@ -59,6 +59,17 @@ namespace OAOPS.Shared.Services
             else return 33;
         }
 
+        public async Task<bool> ConnectVendingMachine(string vendingMachineName, string connectionId)
+        {
+            var fMachine = await Db.Storages.FirstOrDefaultAsync(x => x.StorageName == vendingMachineName);
+            if (fMachine == null) return false;
+
+            fMachine.ConnectionId = connectionId;
+            var res = await Db.SaveChangesAsync();
+            if (res <= 0) return false;
+            return true;
+        }
+
         public int DeleteStorage(int id)
         {
             var fStorage = Db.Storages.FirstOrDefault(x => x.Id == id);

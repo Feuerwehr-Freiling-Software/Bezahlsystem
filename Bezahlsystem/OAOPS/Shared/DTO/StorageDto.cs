@@ -27,5 +27,6 @@ namespace OAOPS.Shared.DTO
         public int Id { get; set; }
         public string StorageName { get; set; }
         public string ImageData { get; set; }
+        public bool IsVendingMachine { get; set; }
     }
 }

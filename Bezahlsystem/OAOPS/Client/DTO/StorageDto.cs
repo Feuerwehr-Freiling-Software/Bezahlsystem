@@ -21,6 +21,7 @@ namespace OAOPS.Client.DTO
 
         public string StorageName { get; set; }
         public string ImageData { get; set; } = string.Empty;
+        public bool IsVendingMachine { get; set; }
 
         public override string ToString()
         {
