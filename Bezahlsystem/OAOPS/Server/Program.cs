@@ -89,6 +89,7 @@ try
             }
         });
         opt.OperationFilter<AuthorizeCheckOperationFilter>();
+        opt.AddSignalRSwaggerGen();
     });
 
 
@@ -144,7 +145,7 @@ try
     app.MapDefaultControllerRoute();
     app.MapFallbackToFile("index.html");
 
-    app.MapHub<VendingHub>("/VendingHub");
+    app.MapHub<VendingHub>("/hubs/VendingHub");
 
     app.Run();
 

@@ -1,35 +1,59 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SignalRSwaggerGen.Attributes;
 
 namespace OAOPS.Server.Hubs
 {
+    [SignalRHub]
     public class VendingHub : Hub
     {
-
         public IStorageService StorageService { get; set; }
 
+        public VendingHub(IStorageService storageService, ILogger<VendingHub> logger)
+        {
+            StorageService = storageService;
+            Logger = logger;
+        }
+
+        public ILogger<VendingHub> Logger { get; set; }
+
+        [SignalRMethod]
         public override Task OnConnectedAsync()
         {
+            Logger.LogInformation("###Client Connected###");
             Console.WriteLine("###Client connected###");
             return base.OnConnectedAsync();
         }
 
+        [SignalRMethod]
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             Console.WriteLine("###Client disconnected###");
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async Task<bool> Connect(string vendingMachineName)
+        [SignalRMethod]
+        public async Task Connect(string vendingMachineName)
         {
+            Logger.LogInformation("###Client sent connection with name: " + vendingMachineName + " ###");
             await Console.Out.WriteLineAsync("###Client sent connection with name: " + vendingMachineName + " ###");
             bool connected = await StorageService.ConnectVendingMachine(vendingMachineName, this.Context.ConnectionId);
-            return connected;
+            await Groups.AddToGroupAsync(Context.ConnectionId, Context.ConnectionId);
+            await Clients.Group(Context.ConnectionId).SendAsync("ConnectResult", connected);
         }
 
-        public async Task<bool> NewArticleOrdered(int slot)
+        [SignalRMethod]
+        public async Task<bool> NewArticleOrdered(int slot, string? username = null)
         {
-            //bool success = await StorageService.NewArticleOrdered(slot);
-            return true;
+            bool success = false;
+            //bool success = await StorageService.NewArticleOrdered(slot, this.Context.ConnectionId);
+            return success;
+        }
+
+        [SignalRMethod]
+        public async Task Test(string test)
+        {
+            Logger.LogInformation("Testmethod Called");
+            await Clients.All.SendAsync("Test", "Test complete");
         }
     }
 }

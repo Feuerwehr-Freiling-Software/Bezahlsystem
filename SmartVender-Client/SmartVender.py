@@ -1,10 +1,17 @@
+import logging
 import re
 import time
-from signalr import Connection
+from signalrcore.hub_connection_builder import HubConnectionBuilder
+import urllib3
+from requests import Session
 
-systemUrl = "http://localhost:7127/VendingHub"
-vendingMachineName = "Automat Werkstatt"
+urllib3.disable_warnings()
 
+# Variables that change on another system
+systemUrl = "https://localhost:7127/hubs/VendingHub"  # URL of the Server
+vendingMachineName = "Automat Werkstatt"  # Name of the Vending-Machine
+
+# Slot Mapping for mapping Vending-machine slot to GPIO Pins
 slots = [2, 3, 4, 17, 27, 22]  # Replace with actual GPIO pins for the slots
 slotPinMap = [{"slot": 1, "pin": 16},
               {"slot": 2, "pin": 17},
@@ -14,7 +21,7 @@ slotPinMap = [{"slot": 1, "pin": 16},
               {"slot": 6, "pin": 21}]
 
 
-def on_vending_received(message):
+def on_order_received(message):
     pattern = re.compile(r"[0-9]+_[0-9]+", re.IGNORECASE)
     if pattern.match(message):
         # Extract slot and amount values from the message
@@ -44,13 +51,40 @@ def on_close():
 
 
 def on_open():
+    time.sleep(2)
     print("### connected ###")
-    connection.send(vendingMachineName)
+    connection.send('Connect', [vendingMachineName], lambda m: print(m))
+    print("--- System Running and Connected to the Server ---")
 
 
-if __name__ == "__main__":
-    connection = Connection(systemUrl)
-    hub = connection.register_hub('VendingHub')
-    hub.client.on('vendingReceived', on_vending_received)
+def on_connect_result(result):
+    print(result)
+
+
+def on_test(message):
+    print("###test test test###")
+    print(message)
+
+
+with Session() as session:
+    session.verify = False
+
+    connection = HubConnectionBuilder() \
+        .with_url(systemUrl, {'verify_ssl': False}) \
+        .with_automatic_reconnect({
+            "type": "raw",
+            "keep_alive_interval": 10,
+            "reconnect_interval": 5,
+            "max_attempts": 5
+        }) \
+        .build()
+    connection.on("OrderReceived", on_order_received)
+    connection.on("Test", on_test)
+    connection.on("ConnectResult", on_connect_result)
+
+    connection.on_open(on_open)
+    connection.on_close(on_close)
     connection.start()
-    connection.wait()
+
+    while True:
+        time.sleep(1)
