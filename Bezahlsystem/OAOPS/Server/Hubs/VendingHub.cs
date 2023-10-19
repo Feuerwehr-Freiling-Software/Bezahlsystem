@@ -46,6 +46,11 @@ namespace OAOPS.Server.Hubs
         {
             bool success = false;
             //bool success = await StorageService.NewArticleOrdered(slot, this.Context.ConnectionId);
+            if (username != null)
+            {
+                // Generate new Payment   
+            }
+
             return success;
         }
 

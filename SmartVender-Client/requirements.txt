@@ -1,4 +1,7 @@
-# RPI RPi.GPIO
+RPi.GPIO
 signalrcore
 python-json-logger
 requests
+# RFID
+spidev
+mfrc522
