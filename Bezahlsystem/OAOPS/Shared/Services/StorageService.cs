@@ -142,6 +142,12 @@ namespace OAOPS.Shared.Services
             return res;
         }
 
+        public Task<bool> NewArticleOrdered(int slot, string connectionId)
+        {
+            // TODO: implement
+            throw new NotImplementedException();
+        }
+
         public int UpdateStorageSlot(StorageSlotDto storageSlot)
         {
             var fSlot = Db.Slots.FirstOrDefault(x => x.Id == storageSlot.SlotId);

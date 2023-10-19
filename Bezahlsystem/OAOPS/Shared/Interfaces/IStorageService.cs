@@ -19,6 +19,6 @@ namespace OAOPS.Shared.Interfaces
         int AddStorageSlot(StorageSlotDto storageSlot);
         public int DeleteStorageSlot(int storageSlotId);
         public Task<bool> ConnectVendingMachine(string vendingMachineName, string connectionId);
-        Task<bool> NewArticleOrdered(int slot, string connectionId);
+        public Task<bool> NewArticleOrdered(int slot, string connectionId);
     }
 }
