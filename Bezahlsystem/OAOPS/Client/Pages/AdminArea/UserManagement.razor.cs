@@ -64,6 +64,7 @@ namespace OAOPS.Client.Pages.AdminArea
         protected async Task<GridData<UserDto>> LoadData(GridState<UserDto> state)
         {
             List<UserDto> users = await DataService.GetUsersFiltered(username: UsernameFilter, page: state.Page, pageSize: state.PageSize) ?? new();
+            users.ForEach(user => { user.Balance = Math.Round(user.Balance, 2); });
             return new GridData<UserDto>()
             {
                 Items = users,
@@ -94,7 +95,18 @@ namespace OAOPS.Client.Pages.AdminArea
                 return;
             }
 
-            var res = await DialogService.ShowAsync<UpdateUserComponent>();
+            var parameter = new DialogParameters() {
+            {
+                    "User",
+                    user
+            } };
+            
+            var opt = new DialogOptions()
+            {
+                MaxWidth = MaxWidth.Large
+            };
+
+            var res = await DialogService.ShowAsync<UpdateUserComponent>("Benutzer Bearbeiten", options: opt, parameters: parameter);
             if (res == null) return;
             
         }
