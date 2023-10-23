@@ -297,7 +297,6 @@ namespace OAOPS.Client.Services
 
         public async Task<ErrorDto> DeleteStorageSlot(int slotId)
         {
-            // TODO: Implement
             var res = await _http.DeleteAsync(configuration.ApiEndpoints.DeleteStorageSlot + "?storageSlotId=" + slotId);
             if (!res.IsSuccessStatusCode)
             {

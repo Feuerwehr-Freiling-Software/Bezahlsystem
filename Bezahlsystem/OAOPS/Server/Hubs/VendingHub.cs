@@ -45,7 +45,7 @@ namespace OAOPS.Server.Hubs
         public async Task<bool> NewArticleOrdered(int slot, string? username = null)
         {
             bool success = false;
-            success = await StorageService.NewArticleOrdered(slot, this.Context.ConnectionId);
+            success = await StorageService.NewArticleOrdered(slot, this.Context.ConnectionId, username);
             if (username != null)
             {
                 // Generate new Payment   

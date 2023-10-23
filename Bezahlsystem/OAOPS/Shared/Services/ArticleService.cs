@@ -156,7 +156,6 @@ namespace OAOPS.Shared.Services
 
         public async Task<ErrorDto> Pay(List<ArticleDto> articles, string userId)
         {
-            // TODO: Payment logic
             var user = _db.Users.FirstOrDefault(x => x.Id == userId);
             if (user == null) return new ErrorDto();
             List<UserBoughtArticleFromSlot> payments = new();
@@ -182,7 +181,6 @@ namespace OAOPS.Shared.Services
 
                 storageArticle.QuantityActual -= item.Amount;
                                 
-                // TODO: Calculate total price and subtract it from User Balance
                 var price = _db.Prices.FirstOrDefault(x => x.ArticleId == storageArticle.ArticleId && x.Until == default);
                 if (price == null) break;
                 
@@ -192,7 +190,6 @@ namespace OAOPS.Shared.Services
                 _db.ArticleInStorageSlots.Update(storageArticle);
                 await _db.UserBoughtArticleFromSlots.AddRangeAsync(payments);
                 user.Balance -= totalPrice;
-
                 payments.Add(payment);
             }
 
