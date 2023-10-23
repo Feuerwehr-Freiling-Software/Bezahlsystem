@@ -17,12 +17,14 @@ namespace OAOPS.Shared.Services
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<UserService> logger;
+        public RoleManager<IdentityRole> RoleManager { get; set; }
 
-        public UserService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ILogger<UserService> logger)
+        public UserService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ILogger<UserService> logger, RoleManager<IdentityRole> roleManager)
         {
             this.db = db;
             this.userManager = userManager;
             this.logger = logger;
+            RoleManager = roleManager;
         }
 
         public async Task<List<UserDto>> GetAllUsers()
@@ -235,6 +237,63 @@ namespace OAOPS.Shared.Services
             }).ToList();
 
             return res;
+        }
+
+        public async Task<List<RoleDto>> GetRoles()
+        {
+            var roles = db.Roles.Select(x => new RoleDto() { Name = x.Name }).ToList();
+            return roles;
+        }
+
+        public async Task<ErrorDto?> UpdateUser(UserDto user, string executorId)
+        {
+            var fUser = db.Users.FirstOrDefault(x => x.UserName == user.Username);
+            if (fUser == null)
+            {
+                // TODO: Check for correct code
+                return new ErrorDto() { IsSuccessCode = false, Code = 51,  ErrorText = "User not found" };
+            }
+
+            // check for balance
+            if (fUser.Balance > user.Balance)
+            {
+                // Create Payment
+                // Haha DB mog ds nd
+                // workaround mit - TopUp ???
+                // TODO: Rework
+            }
+            else
+            {
+                // Create Topup           
+                var topup = new TopUp()
+                {
+                    CashAmount = Math.Round((user.Balance - fUser.Balance), 2),
+                    Date = DateTime.Now,
+                    ExecutorId = executorId,
+                    UserId = fUser.Id
+                };
+                db.TopUps.Add(topup);
+            }
+
+            fUser.FirstName = user.FirstName;
+            fUser.LastName = user.LastName;
+            fUser.Balance = user.Balance;
+            fUser.Comment = user.Comment;
+            fUser.IsConfirmedUser = user.IsConfirmedUser;
+
+            // Role check and add if neccessary
+            var isInRole = await userManager.IsInRoleAsync(fUser, user.Role);
+            var userRole = await userManager.GetRolesAsync(fUser);
+            if (!isInRole)
+            {
+                await userManager.RemoveFromRoleAsync(fUser, userRole.FirstOrDefault());
+                await userManager.AddToRoleAsync(fUser, user.Role);
+            }
+
+            db.Users.Update(fUser);
+            await db.SaveChangesAsync();
+
+            return new ErrorDto() { Code = 50, ErrorText = "Successful User Operation", IsSuccessCode = true };
         }
     }
 }

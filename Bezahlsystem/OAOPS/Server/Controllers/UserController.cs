@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace OAOPS.Server.Controllers
 {
@@ -56,6 +57,22 @@ namespace OAOPS.Server.Controllers
         public async Task<IActionResult> GetAllTopupsFiltered(string username, DateTime? fromDate = null, DateTime? toDate = null, string? executor = null, double? amount = null)
         {
             List<TopUpDto> res = await userService.GetAllTopupsFiltered(username, fromDate, toDate, executor, amount);
+            return Ok(res);
+        }
+
+        [HttpGet, Authorize]
+        public async Task<IActionResult> GetRoles()
+        {
+            List<RoleDto> roles = await userService.GetRoles();
+            return Ok(roles);
+        }
+
+        [HttpPut, Authorize]
+        public async Task<IActionResult> UpdateUser(UserDto user)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+            ErrorDto? res = await userService.UpdateUser(user, userId);
+            if (res == null) return BadRequest();
             return Ok(res);
         }
     }

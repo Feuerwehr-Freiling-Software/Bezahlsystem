@@ -389,6 +389,13 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<List<TopUpDto>>() ?? new();
         }
 
+        public async Task<List<RoleDto>> GetRoles()
+        {
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetRoles);
+            if (!res.IsSuccessStatusCode) return new();
+            return await res.Content.ReadFromJsonAsync<List<RoleDto>>() ?? new();
+        }
+
         #endregion
     }
 }
