@@ -91,6 +91,8 @@ try
 
     // add custom Services
     builder.Services.AddScoped<ILoggerService, LoggerService>();
+    builder.Services.AddScoped<IEmailSender, EmailSender>();
+    builder.Services.AddScoped<IEmailService, EmailService>();
     builder.Services.AddScoped<IErrorCodeService, ErrorCodeService>();
     builder.Services.AddScoped<ISuggestionService, SuggestionService>();
     builder.Services.AddScoped<IPriceService, PriceService>();
@@ -148,6 +150,7 @@ try
 catch (Exception ex)
 {
     Serilog.Log.Fatal(ex, "Unhandled exception");
+    throw;
 }
 finally 
 {

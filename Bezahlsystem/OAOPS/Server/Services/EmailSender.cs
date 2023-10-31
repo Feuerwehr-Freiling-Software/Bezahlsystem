@@ -2,48 +2,60 @@
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using MailKit.Net.Smtp;
+using MimeKit;
+using System.Net.Mail;
 
 namespace OAOPS.Server.Services
 {
     public class EmailSender : IEmailSender
     {
         private readonly ILogger<EmailSender> _logger;
-        public AuthMessageSenderOptions Options{ get; set; }
 
-        public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor,
-                       ILogger<EmailSender> logger)
+        public EmailSender(ILogger<EmailSender> logger)
         {
-            Options = optionsAccessor.Value;
             _logger = logger;
         }
 
         public async Task SendEmailAsync(string toEmail, string subject, string message)
         {
-            if (string.IsNullOrEmpty(Options.SendGridKey))
-            {
-                throw new Exception("Null SendGridKey");
-            }
-            await Execute(Options.SendGridKey, subject, message, toEmail);
+            await Execute(subject, message, toEmail);
         }
 
-        private async Task Execute(string apiKey, string subject, string message, string toEmail)
+        private async Task Execute(string subject, string message, string toEmail)
         {
-            var client = new SendGridClient(apiKey);
-            var msg = new SendGridMessage()
+            var emailMessage = new MimeMessage();
+            
+            emailMessage.From.Add(new MailboxAddress("Bezahlsystem Info", "noreply@paymentsystem.com"));
+            emailMessage.To.Add(new MailboxAddress(toEmail, toEmail));
+            emailMessage.Subject = subject;
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
-                From = new EmailAddress("noreply@paymentsystem.com", "Bezahlsystem Info"),
-                Subject = subject,
-                PlainTextContent = message,
-                HtmlContent = message
+                Text = message
             };
 
-            msg.AddTo(new EmailAddress(toEmail));
+            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            {
+                try
+                {
+                    client.Connect("smtp.gmail.com", 465, true);
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
+                    client.Authenticate("test", "test");
+                    client.Send(emailMessage);
+                }
+                catch
+                {
+                    //log an error message or throw an exception or both.
+                    throw;
+                }
+                finally
+                {
+                    client.Disconnect(true);
+                    client.Dispose();
+                }
+            }
 
-            msg.SetClickTracking(false, false);
-            var response = await client.SendEmailAsync(msg);
-            _logger.LogInformation(response.IsSuccessStatusCode 
-                                ? $"Email to {toEmail} queued successfully!"
-                               : $"Failure Email to {toEmail}");
+            _logger.LogInformation($"Email to {toEmail} queued successfully!");
         }
     }
 }

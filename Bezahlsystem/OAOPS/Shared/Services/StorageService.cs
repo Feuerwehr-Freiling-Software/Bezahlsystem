@@ -13,11 +13,13 @@ namespace OAOPS.Shared.Services
     public class StorageService : IStorageService
     {
         private readonly IErrorCodeService codeService;
+        // private readonly IEmailService emailService;
 
-        public StorageService(ApplicationDbContext db, IErrorCodeService codeService)
+        public StorageService(ApplicationDbContext db, IErrorCodeService codeService /*,IEmailService emailService*/)
         {
             Db = db;
             this.codeService = codeService;
+            //this.emailService = emailService;
         }
 
         public ApplicationDbContext Db { get; }
@@ -129,6 +131,37 @@ namespace OAOPS.Shared.Services
         {
             var res = Db.Storages.Select(x => new StorageDto() { StorageName = x.StorageName, Id = x.Id}).FirstOrDefault(s => s.StorageName == name);
             return res;
+        }
+
+        public async Task<bool> NewArticleOrdered(int slot, string connectionId, string? username = null)
+        {
+            var fMachine = Db.Storages.FirstOrDefault(x => x.ConnectionId == connectionId);
+            if (fMachine == null) return false;
+
+            var fSlot = Db.Slots.FirstOrDefault(x => x.Storage.Id == fMachine.Id && x.Id == slot);
+            if (fSlot == null) return false;
+
+            var fArticle = Db.ArticleInStorageSlots.Include(x => x.Slot).ThenInclude(x => x.Storage).Include(x => x.Article).FirstOrDefault(x => x.Slot.StorageId == fMachine.Id);
+            if (fArticle == null) return false;
+
+            if (fArticle.QuantityActual > 0)
+            {                
+                fArticle.QuantityActual -= 1;
+            }
+
+            Db.ArticleInStorageSlots.Update(fArticle);
+            await Db.SaveChangesAsync();
+
+            if(fArticle.QuantityActual < fArticle.MinAmount)
+            {
+                await emailService.SendArticleAlmostEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.QuantityActual, fArticle.Article.Name);
+            }
+            else if (fArticle.QuantityActual == 0)
+            {
+                await emailService.SendArticleEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.Article.Name);
+            }
+
+            return true;
         }
 
         public int UpdateStorageSlot(StorageSlotDto storageSlot)

@@ -37,8 +37,9 @@
                     </Column>
                     <Column HeaderClass="datagrid-header" CellClass="d-flex justify-end" T="UserDto" Title="Aktion" Sortable="false">
                         <CellTemplate>
-                            <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeactivateUser(context.Item))" />
+                            <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Material.Filled.AttachMoney" OnClick="@(() => AddTopup(context.Item))"/>
                             <MudIconButton Size="@Size.Small" Color=Color.Primary Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateUser(context.Item))" />
+                            <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeactivateUser(context.Item))" />
                         </CellTemplate>
                     </Column>
                 </Columns>
