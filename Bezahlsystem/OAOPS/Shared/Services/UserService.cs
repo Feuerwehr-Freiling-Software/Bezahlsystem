@@ -19,6 +19,11 @@ namespace OAOPS.Shared.Services
         private readonly ILogger<UserService> logger;
         public RoleManager<IdentityRole> RoleManager { get; set; }
 
+        public UserService()
+        {
+            
+        }
+
         public UserService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ILogger<UserService> logger, RoleManager<IdentityRole> roleManager)
         {
             this.db = db;

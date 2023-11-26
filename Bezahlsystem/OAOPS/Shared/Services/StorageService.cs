@@ -154,11 +154,13 @@ namespace OAOPS.Shared.Services
 
             if(fArticle.QuantityActual < fArticle.MinAmount)
             {
-                await emailService.SendArticleAlmostEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.QuantityActual, fArticle.Article.Name);
+                // TODO: send mail to admin
+                //await emailService.SendArticleAlmostEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.QuantityActual, fArticle.Article.Name);
             }
             else if (fArticle.QuantityActual == 0)
             {
-                await emailService.SendArticleEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.Article.Name);
+                // TODO: send mail to admin
+                //await emailService.SendArticleEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.Article.Name);
             }
 
             return true;

@@ -7,6 +7,7 @@ using OAOPS.Shared.Models;
 
 namespace OAOPS.Shared.Data
 {
+
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
         public ApplicationDbContext(
@@ -14,7 +15,7 @@ namespace OAOPS.Shared.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
-        
+
         public DbSet<Suggestion> Suggestions { get; set; }
         public DbSet<OpenCheckout> OpenCheckouts { get; set; }
         public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; }
@@ -47,7 +48,7 @@ namespace OAOPS.Shared.Data
             {
                 var children = ArticleCategories
                     .Include(x => x.Children)
-                    .Where(x => x.ParentId == parent.Id);
+                    .Where(x => x.ParentId == parent.Id).ToList();
 
                 foreach (var item in children)
                 {
