@@ -1,6 +1,3 @@
-using Bunit;
-using Microsoft.Extensions.Logging;
-using OAOPS.Client.Pages;
 using Xunit;
 using Moq;
 using OAOPS.Shared.Services;
@@ -17,10 +14,12 @@ using System;
 using System.Text;
 using OAOPS.Shared.Models;
 using OAOPS.Shared.Data;
+using Microsoft.AspNetCore.Routing;
+using OAOPS.Shared.Interfaces;
 
-namespace TestProject
+namespace OAOPS.Tests
 {
-    public class UnitTest1 : TestContext
+    public class UserServiceTests
     {
         private readonly Mock<ApplicationDbContext> _mockDbContext;
         private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
@@ -28,7 +27,7 @@ namespace TestProject
         private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
         private readonly Mock<DbSet<ApplicationUser>> _mockUserSet;
 
-        public UnitTest1()
+        public UserServiceTests()
         {
             _mockDbContext = new Mock<ApplicationDbContext>();
             _mockUserManager = new Mock<UserManager<ApplicationUser>>();
@@ -63,29 +62,49 @@ namespace TestProject
         }
 
         [Fact]
-        public void CounterShouldIncrementWhenClicked()
+        public async Task GetUserBalance_ReturnsExpectedBalance_WhenUserExists()
         {
-            var cut = RenderComponent<Counter>();
-            
-            cut.Find("button").Click();
+            var userService = new UserService(_mockDbContext.Object, _mockUserManager.Object, _mockLogger.Object, _mockRoleManager.Object);
 
-            cut.Find("p").MarkupMatches("<p role=\"status\">Current count: 1</p>");
+            // Arrange
+            var username = "testUser";
+            var expectedBalance = 100.0;
+            var users = new ApplicationUser[]
+            {
+                new ApplicationUser { NormalizedUserName = username.ToUpper(), Balance = expectedBalance }
+            }.AsQueryable();
 
-            cut.Find("button").Click();
+            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.Provider).Returns(users.Provider);
+            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.Expression).Returns(users.Expression);
+            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.ElementType).Returns(users.ElementType);
+            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.GetEnumerator()).Returns(users.GetEnumerator());
 
-            cut.Find("p").MarkupMatches("<p role=\"status\">Current count: 2</p>");
+            // Act
+            var result = await userService.GetUserBalance(username);
+
+            // Assert
+            Assert.Equal(expectedBalance, result);
         }
 
         [Fact]
-        public void CounterShouldIncrementByValueWhenClicked()
+        public async Task GetUserBalance_ReturnsZero_WhenUserDoesNotExist()
         {
-            int value = 2;
-            var cut = RenderComponent<Counter>(parameters => parameters.Add(p => p.Value, value));
+            var userService = new UserService(_mockDbContext.Object, _mockUserManager.Object, _mockLogger.Object, _mockRoleManager.Object);
 
-            cut.Find("button").Click();
+            // Arrange
+            var username = "nonExistentUser";
+            var users = new ApplicationUser[0].AsQueryable();
 
-            cut.Find("p").MarkupMatches($"<p role=\"status\">Current count: {value}</p>");
+            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.Provider).Returns(users.Provider);
+            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.Expression).Returns(users.Expression);
+            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.ElementType).Returns(users.ElementType);
+            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.GetEnumerator()).Returns(users.GetEnumerator());
+
+            // Act
+            var result = await userService.GetUserBalance(username);
+
+            // Assert
+            Assert.Equal(0.0, result);
         }
-
     }
 }
