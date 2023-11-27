@@ -134,7 +134,12 @@ namespace OAOPS.Client.Pages.AdminArea
                 { "Executorname", currentUsername },
             };
 
-            var res = await DialogService.ShowAsync<AddTopUpComponent>();
+            var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.Large
+            };
+
+            var res = await DialogService.ShowAsync<AddTopUpComponent>("Kontoaufladung", parameters, options);
             if (res == null) return;
         }
     }

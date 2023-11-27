@@ -300,11 +300,6 @@ namespace OAOPS.Shared.Services
 
         public async Task<ErrorDto?> AddTopUp(AddTopupDto topUp)
         {
-            // TODO: Implement the logic to add a topup to a user
-            // You can use the provided topUp parameter to access the necessary information
-            // Return an ErrorDto object indicating the success or failure of the operation
-            // You can use the db context and other dependencies already available in the class
-
             // Example implementation:
             var user = await db.Users.FirstOrDefaultAsync(u => u.UserName == topUp.Username);
             if (user == null)
@@ -322,6 +317,9 @@ namespace OAOPS.Shared.Services
                 Date = DateTime.Now,
                 ExecutorId = executor.Id
             };
+
+            user.Balance += topUp.CashAmount;
+            db.Users.Update(user);
 
             await db.TopUps.AddAsync(topup);
             await db.SaveChangesAsync();

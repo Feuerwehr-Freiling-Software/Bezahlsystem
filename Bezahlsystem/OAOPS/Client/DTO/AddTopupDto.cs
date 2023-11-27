@@ -4,6 +4,6 @@
     {
         public double CashAmount { get; set; }
         public string ExectuorName { get; set; }
-        internal string Username { get; set; }
+        public string Username { get; set; }
     }
 }
