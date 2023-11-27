@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using OAOPS.Client.Components.AddComponents;
 using OAOPS.Client.Components.UpdateComponents;
 using OAOPS.Client.Services;
 using System;
@@ -109,6 +110,17 @@ namespace OAOPS.Client.Pages.AdminArea
             var res = await DialogService.ShowAsync<UpdateUserComponent>("Benutzer Bearbeiten", options: opt, parameters: parameter);
             if (res == null) return;
             
+        }
+
+        private async Task AddTopup(UserDto user)
+        {
+            if (user == null)
+            {
+                return;
+            }
+            var res = await DialogService.ShowAsync<AddTopUpComponent>();
+            if (res == null) return;
+
         }
     }
 }

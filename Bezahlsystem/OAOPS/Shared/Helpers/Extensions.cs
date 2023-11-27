@@ -28,7 +28,7 @@ namespace OAOPS.Shared.Helpers
             {
                 foreach (var child in category.Children)
                 {
-                    dto.Children.Add(MapArticleCategoryToDto(child));
+                    dto.Children?.Add(MapArticleCategoryToDto(child)?? new());
                 }
             }
 

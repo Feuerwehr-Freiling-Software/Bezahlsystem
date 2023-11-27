@@ -19,6 +19,11 @@ namespace OAOPS.Shared.Services
         private readonly ILogger<UserService> logger;
         public RoleManager<IdentityRole> RoleManager { get; set; }
 
+        public UserService()
+        {
+            
+        }
+
         public UserService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ILogger<UserService> logger, RoleManager<IdentityRole> roleManager)
         {
             this.db = db;
@@ -29,7 +34,7 @@ namespace OAOPS.Shared.Services
 
         public async Task<List<UserDto>> GetAllUsers()
         {
-            // use AutoMapper to map the ApplicationUser from the Db to a List<UserDto>
+            // TODO: use AutoMapper to map the ApplicationUser from the Db to a List<UserDto>
             var users = from user in db.Users
                         select new UserDto
                         {
@@ -108,8 +113,8 @@ namespace OAOPS.Shared.Services
 
             Dictionary<string, List<double>> topupWithdraws = new();
 
-            List<double> doubles = new List<double>();
-            List<double> payments = new List<double> ();
+            List<double> doubles = new();
+            List<double> payments = new();
             for (int month = 1; month <= 12; month++)
             {
                 var monthlyTopUp = topups.Where(t => t.Date.Month == month && t.Date.Year == DateTime.Now.Year);

@@ -1,22 +1,18 @@
-﻿using Duende.IdentityServer.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using OAOPS.Shared.DTO;
-using OAOPS.Shared.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace OAOPS.Shared.Data
 {
-
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class TestingDbContext : DbContext
     {
-        public ApplicationDbContext(
-            DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+        public TestingDbContext(DbContextOptions<TestingDbContext> options) : base(options)
         {
         }
-
-        public DbSet<Suggestion> Suggestions { get; set; }
+            public DbSet<Suggestion> Suggestions { get; set; }
         public DbSet<OpenCheckout> OpenCheckouts { get; set; }
         public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; }
         public DbSet<User_has_Notification> User_Has_Notifications { get; set; }

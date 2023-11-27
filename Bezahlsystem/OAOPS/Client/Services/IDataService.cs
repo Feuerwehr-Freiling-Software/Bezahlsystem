@@ -62,6 +62,7 @@ namespace OAOPS.Client.Services
         public Task<List<TopUpDto>> GetAllTopUpsFiltered(string username, DateTime? fromDate = null, DateTime? toDate = null, string? executor = null, double? amount = null);
         public Task<List<RoleDto>> GetRoles();
         public Task<ErrorDto> UpdateUser(UserDto user);
+        public Task<ErrorDto> AddTopUp(double topUpAmount, string username);
 
         #endregion
     }
