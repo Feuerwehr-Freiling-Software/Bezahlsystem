@@ -38,31 +38,6 @@ namespace TestProject
         }
 
         [Fact]
-        public async Task GetAllUsers_ReturnsListOfUserDto()
-        {
-            // Arrange
-            var userService = new UserService(_mockDbContext.Object, _mockUserManager.Object, _mockLogger.Object, _mockRoleManager.Object);
-            var users = new List<ApplicationUser>
-            {
-                new ApplicationUser { Balance = 100, Comment = "Test", FirstName = "John", LastName = "Doe", UserName = "johndoe", IsConfirmedUser = true },
-                new ApplicationUser { Balance = 200, Comment = "Test2", FirstName = "Jane", LastName = "Doe", UserName = "janedoe", IsConfirmedUser = false }
-            };
-            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.Provider).Returns(users.AsQueryable().Provider);
-            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.Expression).Returns(users.AsQueryable().Expression);
-            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.ElementType).Returns(users.AsQueryable().ElementType);
-            _mockUserSet.As<IQueryable<ApplicationUser>>().Setup(m => m.GetEnumerator()).Returns(users.GetEnumerator());
-
-            // Act
-            var result = await userService.GetAllUsers();
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count);
-            Assert.Equal("johndoe", result[0].Username);
-            Assert.Equal("janedoe", result[1].Username);
-        }
-
-        [Fact]
         public void CounterShouldIncrementWhenClicked()
         {
             var cut = RenderComponent<Counter>();

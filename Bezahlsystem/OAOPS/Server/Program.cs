@@ -30,13 +30,22 @@ try
     //builder.Services.AddDbContext<ApplicationDbContext>(options =>
     //                options.UseSqlServer(connectionString));
 
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+
+
+    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development" || Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
     {
-        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        {
             options.UseSqlServer(connectionString);
-        else
-            options.UseInMemoryDatabase("InMemoryDbForTesting");
-    });
+        });
+    }
+    else
+    {
+        builder.Services.AddDbContext<TestingDbContext>(options =>
+        {
+            options.UseInMemoryDatabase("TestingDbContext");
+        });
+    }
 
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
