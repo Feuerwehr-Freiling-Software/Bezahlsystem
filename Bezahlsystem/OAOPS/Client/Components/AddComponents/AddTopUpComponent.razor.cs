@@ -15,10 +15,13 @@ namespace OAOPS.Client.Components.AddComponents
         public MudDialogInstance? MudDialog { get; set; }
 
         [Inject]
-        public IDataService? DataService { get; set; }
+        public IDataService DataService { get; set; }
 
         [Parameter]
         public UserDto? User { get; set; }
+
+        [Parameter]
+        public string ExecutorName { get; set; }
 
         private double topUpAmount = 0;
 
@@ -29,7 +32,7 @@ namespace OAOPS.Client.Components.AddComponents
 
         async Task AddTopUp()
         {
-            ErrorDto res = await DataService.AddTopUp(topUpAmount, User.Username);
+            ErrorDto res = await DataService.AddTopUp(topUpAmount, User.Username, executorName: ExecutorName);
             MudDialog?.Close(DialogResult.Ok(true));
         }
     }

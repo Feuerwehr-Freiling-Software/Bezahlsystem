@@ -398,9 +398,11 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<List<RoleDto>>() ?? new();
         }
 
-        public Task<ErrorDto> AddTopUp(double topUpAmount, string username)
-        {
-            throw new NotImplementedException();
+        public async Task<ErrorDto> AddTopUp(double topUpAmount, string username, string exectuorName)
+        {            
+            var topUp = new AddTopupDto { CashAmount = topUpAmount, Username = username, ExectuorName = exectuorName };
+            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddTopUp, topUp);
+            return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new();
         }
 
         #endregion

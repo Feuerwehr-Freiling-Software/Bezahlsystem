@@ -75,20 +75,20 @@ namespace OAOPS.Shared.Services
                     IsConfirmedUser = user.IsConfirmedUser,
                     LastName = user.LastName,
                     Username = user.UserName,
-                    Role = userManager.GetRolesAsync(GetUserByName(user.UserName) ?? new()).Result.FirstOrDefault() ?? "No Role"
-                });
+                    Role = userManager.GetRolesAsync(db.Users.FirstOrDefault(x => x.UserName == username) ?? new()).Result.FirstOrDefault() ?? "No Role"
+                }).ToList();
 
             if (page != null && pageSize != null) // page is 1 based
             {
-                users = users.Skip((int)page * (int)pageSize);
+                users = users.Skip((int)page * (int)pageSize).ToList();
             }
 
-            if (username != null)
+            if (username != null && string.IsNullOrWhiteSpace(username))
             {
-                users = users.Where(x => x.Username.Contains(username));
+                users = users.Where(x => x.Username.Contains(username)).ToList();
             }
 
-            return await users.ToListAsync();
+            return users;
         }
 
         public async Task<UserStatsDto> GetUserStats(string username)
@@ -296,6 +296,36 @@ namespace OAOPS.Shared.Services
             await db.SaveChangesAsync();
 
             return new ErrorDto() { Code = 50, ErrorText = "Successful User Operation", IsSuccessCode = true };
+        }
+
+        public async Task<ErrorDto?> AddTopUp(AddTopupDto topUp)
+        {
+            // TODO: Implement the logic to add a topup to a user
+            // You can use the provided topUp parameter to access the necessary information
+            // Return an ErrorDto object indicating the success or failure of the operation
+            // You can use the db context and other dependencies already available in the class
+
+            // Example implementation:
+            var user = await db.Users.FirstOrDefaultAsync(u => u.UserName == topUp.Username);
+            if (user == null)
+            {
+                return new ErrorDto { IsSuccessCode = false, Code = 404, ErrorText = "User not found" };
+            }
+
+            // get userid of executor
+            var executor = await db.Users.FirstOrDefaultAsync(x => x.UserName == topUp.ExectuorName);
+
+            var topup = new TopUp
+            {
+                UserId = user.Id,
+                CashAmount = topUp.CashAmount,
+                Date = DateTime.Now,
+                ExecutorId = executor.Id
+            };
+
+            await db.TopUps.AddAsync(topup);
+            await db.SaveChangesAsync();
+            return new ErrorDto { IsSuccessCode = true, Code = 200, ErrorText = "Topup added successfully" };
         }
     }
 }

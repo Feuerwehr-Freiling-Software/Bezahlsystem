@@ -75,5 +75,13 @@ namespace OAOPS.Server.Controllers
             if (res == null) return BadRequest();
             return Ok(res);
         }
+
+        [HttpPost, Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddTopUp(AddTopupDto topUp)
+        {
+            ErrorDto? res = await userService.AddTopUp(topUp);
+            if (res == null) return BadRequest();
+            return Ok(res);
+        }
     }
 }
