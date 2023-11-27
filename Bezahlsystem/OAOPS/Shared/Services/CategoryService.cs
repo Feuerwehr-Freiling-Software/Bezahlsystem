@@ -24,9 +24,9 @@ namespace OAOPS.Shared.Services
 
         public async Task<List<ArticleCategoryDto>> GetCategories()
         {
-            var res = from cat in Db.ArticleCategories
+            var res = from cat in await Db.ArticleCategories
                         .Include(c => c.Parent)
-                        .Include(c => c.Children).ToList()
+                        .Include(c => c.Children).ToListAsync()
                       where cat.ParentId == null
                       select cat;
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Rendering;
 using OAOPS.Client.Components.AddComponents;
 using OAOPS.Client.Components.UpdateComponents;
@@ -15,6 +16,9 @@ namespace OAOPS.Client.Pages.AdminArea
     public partial class UserManagement
     {
         [Inject]
+        public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+        [Inject]
         public IDataService DataService { get; set; }
 
         [Inject]
@@ -25,6 +29,8 @@ namespace OAOPS.Client.Pages.AdminArea
         public UserDto SelectedUser { get; set; } = new();
 
         public List<FilterDefinition<UserDto>> FilterDefinitions { get; set; }
+
+        public string currentUsername;
 
         private string _usernameFilter = string.Empty;
         public string UsernameFilter
@@ -37,7 +43,7 @@ namespace OAOPS.Client.Pages.AdminArea
             }
         }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             FilterDefinitions = new List<FilterDefinition<UserDto>>
             {
@@ -46,6 +52,9 @@ namespace OAOPS.Client.Pages.AdminArea
                     FilterFunction = UsernameFilterFunction
                 }
             };
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            currentUsername = authState.User.Identity.Name;
         }
 
         protected bool UsernameFilterFunction(UserDto userDto)
@@ -118,9 +127,20 @@ namespace OAOPS.Client.Pages.AdminArea
             {
                 return;
             }
-            var res = await DialogService.ShowAsync<AddTopUpComponent>();
-            if (res == null) return;
 
+            var parameters = new DialogParameters
+            {
+                { "User", user },
+                { "Executorname", currentUsername },
+            };
+
+            var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.Large
+            };
+
+            var res = await DialogService.ShowAsync<AddTopUpComponent>("Kontoaufladung", parameters, options);
+            if (res == null) return;
         }
     }
 }

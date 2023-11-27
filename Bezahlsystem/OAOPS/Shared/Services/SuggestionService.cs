@@ -39,7 +39,6 @@ namespace OAOPS.Shared.Services
         public List<SuggestionDTO> GetSuggestions(bool? onlyNew = null, Importance? importance = null)
         {
             Importance? imp;
-            string id = "";
             if (onlyNew != null)
             {
                 imp = Importance.NotSet;

@@ -274,5 +274,101 @@ namespace OAOPS.Tests
             Assert.Equal(expectedUsers.Count, result.Count);
             Assert.True(expectedUsers.All(u => result.Any(r => r.Username == u.Username)));
         }
+
+        [Fact]
+        public async Task GetUserStats_ReturnsUserStats()
+        {
+            // Arrange
+            var username = "testuser";
+            UserStatsDto expectedStats = new()
+            {
+                BalanceStats = new Dictionary<string, List<double>>()
+                {
+                    { "Aufladungen", new List<double>() },
+                    { "Abbuchungen", new List<double>() }
+                },
+                ArticleStats = new Dictionary<string, int>(),
+            };
+
+            _mockUserService.Setup(m => m.GetUserStats(username)).ReturnsAsync(expectedStats);
+
+            // Act
+            var result = await _mockUserService.Object.GetUserStats(username);
+
+            // Assert
+            Assert.IsType<UserStatsDto>(result);
+            Assert.Equal(expectedStats.BalanceStats, result.BalanceStats);
+            Assert.Equal(expectedStats.ArticleStats, result.ArticleStats);
+        }
+
+        [Fact]
+        public async Task UpdateUser_UserExists_ReturnsSuccess()
+        {
+            var expectedResult = new ErrorDto()
+            {
+                Code = 50,
+                ErrorText = "Successful User Operation",
+                IsSuccessCode = true
+            };
+
+            // Arrange
+            var user = new UserDto
+            {
+                Username = "testuser",
+                FirstName = "John",
+                LastName = "Doe",
+                Balance = 100.0,
+                Comment = "Test comment",
+                IsConfirmedUser = true,
+                Role = "TestRole"
+            };
+            var executorId = "executorId";
+
+            _mockUserService.Setup(m => m.UpdateUser(user, executorId)).ReturnsAsync(expectedResult);
+
+            // Act
+            var result = await _mockUserService.Object.UpdateUser(user, executorId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccessCode);
+            Assert.Equal(50, result.Code);
+            Assert.Equal("Successful User Operation", result.ErrorText);
+        }
+
+        [Fact]
+        public async Task UpdateUser_UserNotFound_ReturnsError()
+        {
+            var expectedResult = new ErrorDto()
+            {
+                Code = 51,
+                ErrorText = "User not found",
+                IsSuccessCode = false
+            };
+
+            // Arrange
+            var user = new UserDto
+            {
+                Username = "nonexistentuser",
+                FirstName = "John",
+                LastName = "Doe",
+                Balance = 100.0,
+                Comment = "Test comment",
+                IsConfirmedUser = true,
+                Role = "TestRole"
+            };
+            var executorId = "executorId";
+
+            _mockUserService.Setup(m => m.UpdateUser(user, executorId)).ReturnsAsync(expectedResult);
+
+            // Act
+            var result = await _mockUserService.Object.UpdateUser(user, executorId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.False(result.IsSuccessCode);
+            Assert.Equal(51, result.Code);
+            Assert.Equal("User not found", result.ErrorText);
+        }
     }
 }

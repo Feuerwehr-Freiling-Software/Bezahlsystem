@@ -16,26 +16,30 @@ namespace OAOPS.Shared.Data
         {
         }
 
-        public DbSet<Suggestion> Suggestions { get; set; }
-        public DbSet<OpenCheckout> OpenCheckouts { get; set; }
-        public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; }
-        public DbSet<User_has_Notification> User_Has_Notifications { get; set; }
-        public DbSet<TopUp> TopUps { get; set; }
-        public DbSet<UserBoughtArticleFromSlot> UserBoughtArticleFromSlots { get; set; }
-        public DbSet<ArticleInStorageSlot> ArticleInStorageSlots { get; set; }
-        public DbSet<Slot> Slots { get; set; }
-        public DbSet<Storage> Storages { get; set; }
-        public DbSet<Article> Articles { get; set; }
-        public DbSet<ArticleCategory> ArticleCategories { get; set; }
-        public DbSet<Price> Prices { get; set; }
-        public DbSet<Log> Logs { get; set; }
-        public DbSet<ErrorCode> ErrorCodes { get; set; }
+        public DbSet<Suggestion> Suggestions { get; set; } = null!;
+        public DbSet<OpenCheckout> OpenCheckouts { get; set; } = null!;
+        public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; } = null!;
+        public DbSet<User_has_Notification> User_Has_Notifications { get; set; } = null!;
+        public DbSet<TopUp> TopUps { get; set; } = null!;
+        public DbSet<UserBoughtArticleFromSlot> UserBoughtArticleFromSlots { get; set; } = null!;
+        public DbSet<ArticleInStorageSlot> ArticleInStorageSlots { get; set; } = null!;
+        public DbSet<Slot> Slots { get; set; } = null!;
+        public DbSet<Storage> Storages { get; set; } = null!;
+        public DbSet<Article> Articles { get; set; } = null!;
+        public DbSet<ArticleCategory> ArticleCategories { get; set; } = null!;
+        public DbSet<Price> Prices { get; set; } = null!;
+        public DbSet<Log> Logs { get; set; } = null!;
+        public DbSet<ErrorCode> ErrorCodes { get; set; } = null!;
 
         public void DeleteCategory(ArticleCategory category)
         {
+            if (ArticleCategories == null) return;
+
             var target = ArticleCategories
                         .Include(x => x.Children)
                         .FirstOrDefault(x => x.Id == category.Id);
+
+            if (target == null) return;
 
             RecursiveDelete(target);
 
@@ -44,6 +48,8 @@ namespace OAOPS.Shared.Data
 
         private void RecursiveDelete(ArticleCategory parent)
         {
+            if(ArticleCategories == null) return;
+
             if (parent.Children != null)
             {
                 var children = ArticleCategories

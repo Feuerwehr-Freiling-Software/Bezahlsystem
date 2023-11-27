@@ -5,7 +5,6 @@ using Xunit;
 using Moq;
 using OAOPS.Shared.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OAOPS.Client.DTO;
