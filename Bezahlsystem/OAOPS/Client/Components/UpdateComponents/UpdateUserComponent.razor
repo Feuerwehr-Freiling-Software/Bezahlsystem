@@ -1,3 +1,21 @@
-﻿<div>
-
-</div>
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" />
+            @(User.FirstName + " " + User.LastName) Bearbeiten
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="@User.Username" Label="Benutzername" Disabled="true"/>
+        <MudTextField @bind-Value="@User.FirstName" Label="Vorname" />
+        <MudTextField @bind-Value="@User.LastName" Label="Nachname" />
+        <MudNumericField @bind-Value="@User.Balance" Label="Kontostand" Step="0.1"/>
+        <MudTextField @bind-Value="@User.Comment" Label="Kommentar" />
+        <MudAutocomplete T="string" Variant="Variant.Outlined" Label="Rolle" @bind-Value="@User.Role" SearchFunc="(x) => AutocompleteRoleSearch(x)"/>
+        <MudCheckBox @bind-Checked="@User.IsConfirmedUser" Label="Aktiv"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="UpdateUser">Update User</MudButton>
+    </DialogActions>
+</MudDialog>

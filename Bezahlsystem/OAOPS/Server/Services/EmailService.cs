@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace OAOPS.Shared.Services
 {
-    public class EmailService : IEmailService
+    public class EmailService /*: IEmailService*/
     {
-        public EmailSender EmailSender { get; set; }
+        public IEmailSender EmailSender { get; set; }
         public ApplicationDbContext Db { get; }
 
-        public EmailService(EmailSender emailSender, ApplicationDbContext db)
+        public EmailService(IEmailSender emailSender, ApplicationDbContext db)
         {
             EmailSender = emailSender;
             Db = db;

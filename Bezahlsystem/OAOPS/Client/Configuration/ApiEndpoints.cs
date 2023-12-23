@@ -61,6 +61,8 @@ namespace OAOPS.Client.Configuration
         public string GetAllCategoriesShort { get; set; } = string.Empty;
         public string GetAllPaymentsFiltered { get; set; } = string.Empty;
         public string GetAllTopupsFiltered { get; set; } = string.Empty;
+        public string GetRoles { get; set; } = string.Empty;
+        public string AddTopUp { get; set; } = string.Empty;
 
         #endregion
     }

@@ -13,13 +13,13 @@ namespace OAOPS.Shared.Services
     public class StorageService : IStorageService
     {
         private readonly IErrorCodeService codeService;
-        private readonly IEmailService emailService;
+        // private readonly IEmailService emailService;
 
-        public StorageService(ApplicationDbContext db, IErrorCodeService codeService, IEmailService emailService)
+        public StorageService(ApplicationDbContext db, IErrorCodeService codeService /*,IEmailService emailService*/)
         {
             Db = db;
             this.codeService = codeService;
-            this.emailService = emailService;
+            //this.emailService = emailService;
         }
 
         public ApplicationDbContext Db { get; }
@@ -165,11 +165,13 @@ namespace OAOPS.Shared.Services
 
             if(fArticle.QuantityActual < fArticle.MinAmount)
             {
-                await emailService.SendArticleAlmostEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.QuantityActual, fArticle.Article.Name);
+                // TODO: send mail to admin
+                //await emailService.SendArticleAlmostEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.QuantityActual, fArticle.Article.Name);
             }
             else if (fArticle.QuantityActual == 0)
             {
-                await emailService.SendArticleEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.Article.Name);
+                // TODO: send mail to admin
+                //await emailService.SendArticleEmptyMail(fMachine.StorageName, fSlot.Name, fArticle.Article.Name);
             }
 
             return true;

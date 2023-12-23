@@ -101,7 +101,7 @@ namespace OAOPS.Client.Components.UpdateComponents
             }
         }
 
-        private async Task<IEnumerable<StorageDto>> AutocompleteStorageSearch(string input)
+        private async Task<IEnumerable<StorageDto>> AutocompleteStorageSearch(string? input = null)
         {
             if (input == null)
             {

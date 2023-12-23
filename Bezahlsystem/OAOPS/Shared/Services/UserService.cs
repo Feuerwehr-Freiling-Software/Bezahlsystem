@@ -17,41 +17,45 @@ namespace OAOPS.Shared.Services
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<UserService> logger;
+        public RoleManager<IdentityRole> RoleManager { get; set; }
 
-        public UserService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ILogger<UserService> logger)
+
+        public UserService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ILogger<UserService> logger, RoleManager<IdentityRole> roleManager)
         {
             this.db = db;
             this.userManager = userManager;
             this.logger = logger;
+            RoleManager = roleManager;
         }
 
         public async Task<List<UserDto>> GetAllUsers()
         {
-            // use AutoMapper to map the ApplicationUser from the Db to a List<UserDto>
-            var users = from user in db.Users
-                        select new UserDto
-                        {
-                            Balance = user.Balance,
-                            Comment = user.Comment,
-                            FirstName = user.FirstName,
-                            IsConfirmedUser = user.IsConfirmedUser,
-                            LastName = user.LastName,
-                            Username = user.UserName,
-                            Role = userManager.GetRolesAsync(GetUserByName(user.UserName)).Result.FirstOrDefault() ?? "No Role"
-                        };
+            // TODO: use AutoMapper to map the ApplicationUser from the Db to a List<UserDto>
+            var users = await db.Users
+                .Select(user => new UserDto
+                {
+                    Balance = user.Balance,
+                    Comment = user.Comment,
+                    FirstName = user.FirstName,
+                    IsConfirmedUser = user.IsConfirmedUser,
+                    LastName = user.LastName,
+                    Username = user.UserName,
+                    Role = userManager.GetRolesAsync(GetUserByName(user.UserName)).Result.FirstOrDefault() ?? "No Role"
+                })
+                .ToListAsync();
 
-            return users.ToList();
+            return users;
         }
 
         public ApplicationUser GetUserByName(string username)
         {
             var user = db.Users.FirstOrDefault(x => x.UserName == username);
-            return user;
+            return user ?? new();
         }
 
         public async Task<double> GetUserBalance(string username)
         {
-            var user = db.Users.FirstOrDefault(x => x.NormalizedUserName == username.ToUpper());
+            var user = await db.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username.ToUpper());
             if (user == null)
             {
                 return 0.0;
@@ -62,34 +66,34 @@ namespace OAOPS.Shared.Services
 
         public async Task<List<UserDto>> GetUsersFiltered(string? username = null, int? page = null, int? pageSize = null)
         {
-            var users = from user in db.Users.ToList()
-                        select new UserDto
-                        {
-                            Balance = user.Balance,
-                            Comment = user.Comment,
-                            FirstName = user.FirstName,
-                            IsConfirmedUser = user.IsConfirmedUser,
-                            LastName = user.LastName,
-                            Username = user.UserName,
-                            Role = userManager.GetRolesAsync(GetUserByName(user.UserName)).Result.FirstOrDefault() ?? "No Role"
-                        };
-            
+            var users = db.Users
+                .Select(user => new UserDto
+                {
+                    Balance = user.Balance,
+                    Comment = user.Comment,
+                    FirstName = user.FirstName,
+                    IsConfirmedUser = user.IsConfirmedUser,
+                    LastName = user.LastName,
+                    Username = user.UserName,
+                    Role = userManager.GetRolesAsync(db.Users.FirstOrDefault(x => x.UserName == username) ?? new()).Result.FirstOrDefault() ?? "No Role"
+                }).ToList();
+
             if (page != null && pageSize != null) // page is 1 based
             {
                 users = users.Skip((int)page * (int)pageSize).ToList();
             }
 
-            if (username != null)
+            if (username != null && string.IsNullOrWhiteSpace(username))
             {
                 users = users.Where(x => x.Username.Contains(username)).ToList();
             }
 
-            return users.ToList();
+            return users;
         }
 
         public async Task<UserStatsDto> GetUserStats(string username)
         {
-            UserStatsDto userStats = new ();
+            UserStatsDto userStats = new();
             // Topup or Withdraw - Amount in month
             Dictionary<string, List<double>> balance = new();
             Dictionary<string, int> articles = new();
@@ -99,15 +103,15 @@ namespace OAOPS.Shared.Services
                          where article.User != null && article.User.UserName == username
                          select new { article, price };
 
-            var topups = from topup in db.TopUps.Include(x => x.User).ToList()
-                        where topup.User != null
-                              && topup.User.UserName == username
-                           select topup;
+            var topups = from topup in await db.TopUps.Include(x => x.User).ToListAsync()
+                         where topup.User != null
+                               && topup.User.UserName == username
+                         select topup;
 
             Dictionary<string, List<double>> topupWithdraws = new();
 
-            List<double> doubles = new List<double>();
-            List<double> payments = new List<double> ();
+            List<double> doubles = new();
+            List<double> payments = new();
             for (int month = 1; month <= 12; month++)
             {
                 var monthlyTopUp = topups.Where(t => t.Date.Month == month && t.Date.Year == DateTime.Now.Year);
@@ -119,7 +123,7 @@ namespace OAOPS.Shared.Services
 
             balance.Add("Aufladungen", doubles);
             balance.Add("Abbuchungen", payments);
-            
+
 
             foreach (var item in result)
             {
@@ -199,7 +203,7 @@ namespace OAOPS.Shared.Services
                 res = res.Where(x => x.Sum <= maxAmount).ToList();
             }
 
-            return res.ToList();
+            return await Task.Run(res.ToList);
         }
 
         public async Task<List<TopUpDto>> GetAllTopupsFiltered(string username, DateTime? fromDate, DateTime? toDate, string? executor, double? amount)
@@ -232,9 +236,94 @@ namespace OAOPS.Shared.Services
                 Date = x.Date,
                 ExecutorName = x.Executor.FirstName + " " + x.Executor.LastName,
                 Id = x.Id
-            }).ToList();
+            });
 
-            return res;
+            return await Task.Run(res.ToList);
+        }
+
+        public async Task<List<RoleDto>> GetRoles()
+        {
+            var roles = await db.Roles.Select(x => new RoleDto() { Name = x.Name }).ToListAsync();
+            return roles;
+        }
+
+        public async Task<ErrorDto?> UpdateUser(UserDto user, string executorId)
+        {
+            var fUser = db.Users.FirstOrDefault(x => x.UserName == user.Username);
+            if (fUser == null)
+            {
+                // TODO: Check for correct code
+                return new ErrorDto() { IsSuccessCode = false, Code = 51, ErrorText = "User not found" };
+            }
+
+            // check for balance
+            if (fUser.Balance > user.Balance)
+            {
+                // Create Payment
+                // Haha DB mog ds nd
+                // workaround mit - TopUp ???
+                // TODO: Rework
+            }
+            else
+            {
+                // Create Topup           
+                var topup = new TopUp()
+                {
+                    CashAmount = Math.Round((user.Balance - fUser.Balance), 2),
+                    Date = DateTime.Now,
+                    ExecutorId = executorId,
+                    UserId = fUser.Id
+                };
+                await db.TopUps.AddAsync(topup);
+            }
+
+            fUser.FirstName = user.FirstName;
+            fUser.LastName = user.LastName;
+            fUser.Balance = user.Balance;
+            fUser.Comment = user.Comment;
+            fUser.IsConfirmedUser = user.IsConfirmedUser;
+
+            // Role check and add if neccessary
+            var isInRole = await userManager.IsInRoleAsync(fUser, user.Role);
+            var userRole = await userManager.GetRolesAsync(fUser);
+            if (!isInRole)
+            {
+                await userManager.RemoveFromRoleAsync(fUser, userRole.FirstOrDefault());
+                await userManager.AddToRoleAsync(fUser, user.Role);
+            }
+
+            db.Users.Update(fUser);
+            await db.SaveChangesAsync();
+
+            return new ErrorDto() { Code = 50, ErrorText = "Successful User Operation", IsSuccessCode = true };
+        }
+
+        public async Task<ErrorDto?> AddTopUp(AddTopupDto topUp)
+        {
+            // Example implementation:
+            var user = await db.Users.FirstOrDefaultAsync(u => u.UserName == topUp.Username);
+            if (user == null)
+            {
+                return new ErrorDto { IsSuccessCode = false, Code = 404, ErrorText = "User not found" };
+            }
+
+            // get userid of executor
+            var executor = await db.Users.FirstOrDefaultAsync(x => x.UserName == topUp.ExectuorName);
+
+            var topup = new TopUp
+            {
+                UserId = user.Id,
+                CashAmount = topUp.CashAmount,
+                Date = DateTime.Now,
+                ExecutorId = executor.Id
+            };
+
+            user.Balance += topUp.CashAmount;
+            db.Users.Update(user);
+
+            await db.TopUps.AddAsync(topup);
+            await db.SaveChangesAsync();
+            return new ErrorDto { IsSuccessCode = true, Code = 200, ErrorText = "Topup added successfully" };
         }
     }
 }

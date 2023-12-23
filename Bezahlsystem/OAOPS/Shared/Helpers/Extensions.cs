@@ -24,11 +24,11 @@ namespace OAOPS.Shared.Helpers
                 dto.Parent = MapArticleCategoryToDto(category.Parent);
             }
 
-           if (category.Children != null)
+            if (category.Children != null)
             {
                 foreach (var child in category.Children)
                 {
-                    dto.Children.Add(MapArticleCategoryToDto(child));
+                    dto.Children?.Add(MapArticleCategoryToDto(child) ?? new ArticleCategoryDto());
                 }
             }
 
@@ -64,12 +64,12 @@ namespace OAOPS.Shared.Helpers
             {
                 cat.Parent = MapArticleCategoryDtoToCategory(dto.Parent);
             }
-            
+
             if (dto.Children != null)
             {
                 foreach (var child in dto.Children)
                 {
-                    cat?.Children?.Add(MapArticleCategoryDtoToCategory(child));
+                    cat.Children?.Add(MapArticleCategoryDtoToCategory(child) ?? new ArticleCategory());
                 }
             }
 

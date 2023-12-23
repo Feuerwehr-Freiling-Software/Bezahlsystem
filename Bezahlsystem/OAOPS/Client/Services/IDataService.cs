@@ -60,6 +60,9 @@ namespace OAOPS.Client.Services
         public Task<List<ShortCategoryDto>> GetAllCategoriesShort();
         public Task<List<PaymentDto>> GetAllPaymentsFiltered(DateTime? fromDate = null, DateTime? toDate = null, ShortCategoryDto? category = null, double? minAmount = null, double? maxAmount = null);
         public Task<List<TopUpDto>> GetAllTopUpsFiltered(string username, DateTime? fromDate = null, DateTime? toDate = null, string? executor = null, double? amount = null);
+        public Task<List<RoleDto>> GetRoles();
+        public Task<ErrorDto> UpdateUser(UserDto user);
+        public Task<ErrorDto> AddTopUp(double topUpAmount, string username, string executorName);
 
         #endregion
     }

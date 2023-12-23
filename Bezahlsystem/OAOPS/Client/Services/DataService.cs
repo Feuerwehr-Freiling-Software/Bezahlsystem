@@ -219,8 +219,10 @@ namespace OAOPS.Client.Services
 
         public async Task<double> GetBalance(string username)
         {
-            QueryBuilder builder = new QueryBuilder();
-            builder.Add(nameof(username), username);
+            QueryBuilder builder = new()
+            {
+                { nameof(username), username }
+            };
             var userQuery = builder.ToQueryString().ToString();
             var res = await _http.GetAsync(configuration.ApiEndpoints.GetBalance + userQuery);
 
@@ -255,7 +257,7 @@ namespace OAOPS.Client.Services
 
         public async Task<List<UserDto>?> GetUsersFiltered(string? username = null, int? page = null, int? pageSize = null)
         {
-            QueryBuilder builder = new QueryBuilder();
+            QueryBuilder builder = new ();
             if (username != null) builder.Add(nameof(username), username);
             if (page != null) builder.Add(nameof(page), page.Value.ToString());
             if (pageSize != null) builder.Add(nameof(pageSize), pageSize.Value.ToString());
@@ -386,6 +388,20 @@ namespace OAOPS.Client.Services
             var res = await _http.GetAsync(configuration.ApiEndpoints.GetAllTopupsFiltered + queryString);
             if (!res.IsSuccessStatusCode) return new();
             return await res.Content.ReadFromJsonAsync<List<TopUpDto>>() ?? new();
+        }
+
+        public async Task<List<RoleDto>> GetRoles()
+        {
+            var res = await _http.GetAsync(configuration.ApiEndpoints.GetRoles);
+            if (!res.IsSuccessStatusCode) return new();
+            return await res.Content.ReadFromJsonAsync<List<RoleDto>>() ?? new();
+        }
+
+        public async Task<ErrorDto> AddTopUp(double topUpAmount, string username, string exectuorName)
+        {            
+            var topUp = new AddTopupDto { CashAmount = topUpAmount, Username = username, ExectuorName = exectuorName };
+            var res = await _http.PostAsJsonAsync(configuration.ApiEndpoints.AddTopUp, topUp);
+            return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new();
         }
 
         #endregion

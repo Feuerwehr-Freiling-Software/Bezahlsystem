@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Rendering;
+using OAOPS.Client.Components.AddComponents;
 using OAOPS.Client.Components.UpdateComponents;
 using OAOPS.Client.Services;
 using System;
@@ -14,6 +16,9 @@ namespace OAOPS.Client.Pages.AdminArea
     public partial class UserManagement
     {
         [Inject]
+        public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+        [Inject]
         public IDataService DataService { get; set; }
 
         [Inject]
@@ -24,6 +29,8 @@ namespace OAOPS.Client.Pages.AdminArea
         public UserDto SelectedUser { get; set; } = new();
 
         public List<FilterDefinition<UserDto>> FilterDefinitions { get; set; }
+
+        public string currentUsername;
 
         private string _usernameFilter = string.Empty;
         public string UsernameFilter
@@ -36,7 +43,7 @@ namespace OAOPS.Client.Pages.AdminArea
             }
         }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             FilterDefinitions = new List<FilterDefinition<UserDto>>
             {
@@ -45,6 +52,9 @@ namespace OAOPS.Client.Pages.AdminArea
                     FilterFunction = UsernameFilterFunction
                 }
             };
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            currentUsername = authState.User.Identity.Name;
         }
 
         protected bool UsernameFilterFunction(UserDto userDto)
@@ -64,6 +74,7 @@ namespace OAOPS.Client.Pages.AdminArea
         protected async Task<GridData<UserDto>> LoadData(GridState<UserDto> state)
         {
             List<UserDto> users = await DataService.GetUsersFiltered(username: UsernameFilter, page: state.Page, pageSize: state.PageSize) ?? new();
+            users.ForEach(user => { user.Balance = Math.Round(user.Balance, 2); });
             return new GridData<UserDto>()
             {
                 Items = users,
@@ -94,9 +105,42 @@ namespace OAOPS.Client.Pages.AdminArea
                 return;
             }
 
-            var res = await DialogService.ShowAsync<UpdateUserComponent>();
+            var parameter = new DialogParameters() {
+            {
+                    "User",
+                    user
+            } };
+            
+            var opt = new DialogOptions()
+            {
+                MaxWidth = MaxWidth.Large
+            };
+
+            var res = await DialogService.ShowAsync<UpdateUserComponent>("Benutzer Bearbeiten", options: opt, parameters: parameter);
             if (res == null) return;
             
+        }
+
+        private async Task AddTopup(UserDto user)
+        {
+            if (user == null)
+            {
+                return;
+            }
+
+            var parameters = new DialogParameters
+            {
+                { "User", user },
+                { "Executorname", currentUsername },
+            };
+
+            var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.Large
+            };
+
+            var res = await DialogService.ShowAsync<AddTopUpComponent>("Kontoaufladung", parameters, options);
+            if (res == null) return;
         }
     }
 }
