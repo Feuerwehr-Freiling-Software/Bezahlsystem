@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Validators\**" />
+    <Content Remove="Validators\**" />
+    <EmbeddedResource Remove="Validators\**" />
+    <None Remove="Validators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Pages\BamstisArea\ManageErrors.razor" />
   </ItemGroup>
 
@@ -36,10 +43,6 @@
 
   <ItemGroup>
     <None Include="Pages\BamstisArea\ManageErrors.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Validators\" />
   </ItemGroup>
 
 </Project>
