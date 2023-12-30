@@ -7,6 +7,55 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudSelect @bind-Value="theme" style="width=10%">
+            <MudSelectItem Value='"defaultTheme"'>Default</MudSelectItem>
+            <MudSelectItem Value='"darkTheme"'>Dark</MudSelectItem>
+            <MudSelectItem Value='"lightTheme"'>Light</MudSelectItem>
+            <!-- Add more themes as needed -->
+        </MudSelect>
+
+        @code {
+            private MudThemeProvider _mudThemeProvider;
+            private string theme = "defaultTheme";
+
+            private void ChangeTheme(ChangeEventArgs e)
+            {
+                switch (e.Value.ToString())
+                {
+                    case "default":
+                        _mudThemeProvider.Theme.Palette = new Palette()
+                        {
+                            Black = "#272c34",
+                            Background = "#fff",
+                            BackgroundGrey = "#f5f5f5",
+                            Surface = "#fff",
+                            DrawerBackground = "#fff",
+                            DrawerText = "rgba(0, 0, 0, 0.7)",
+                            DrawerIcon = "rgba(0, 0, 0, 0.7)",
+                            AppbarBackground = "#fff",
+                            AppbarText = "rgba(0, 0, 0, 0.7)",
+                            TextPrimary = "rgba(0, 0, 0, 0.87)",
+                            TextSecondary = "rgba(0, 0, 0, 0.54)",
+                            ActionDefault = "rgba(0, 0, 0, 0.54)",
+                            ActionDisabled = "rgba(0, 0, 0, 0.26)",
+                            ActionDisabledBackground = "rgba(0, 0, 0, 0.12)",
+                            Divider = "rgba(0, 0, 0, 0.12)",
+                            Primary = "#3f51b5",
+                            Secondary = "#f50057",
+                            Error = "#f44336",
+                            Info = "#2196f3",
+                            Success = "#4caf50",
+                            Warning = "#ff9800",
+                            Dark = "#272c34",
+                            TextDisabled = "rgba(0, 0, 0, 0.38)"                            
+                        };
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
         <MudDrawerHeader>
