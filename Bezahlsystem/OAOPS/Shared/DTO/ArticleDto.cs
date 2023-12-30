@@ -2,6 +2,7 @@
 {
     public class ArticleDto
     {
+        public int Id { get; set; } = 0;
         public string StorageName { get; set; } = string.Empty;
         public string StorageSlot { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

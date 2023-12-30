@@ -1,0 +1,35 @@
+﻿<div style="max-height:500px; overflow-y: scroll">
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                Artikel bearbeiten
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudNumericField Disabled="true" T="int" @bind-Value="Article.Id" Label="Kategorie Name" />
+            <MudTextField Required="true" T="string" @bind-Value="Article.Name" Label="Kategorie Name" />
+            <MudNumericField Required="true" T="double" @bind-Value="Article.PriceAmount" Label="Preis" Min="0.0" Step="0.1" />
+            <MudAutocomplete Variant="Variant.Outlined" Label="Kategorie" @bind-Value="SelectedCategory" SearchFunc="(x) => AutocompleteCategorySearch(x)" Clearable="true" OnClearButtonClick="OnClearCategoryClick" />
+            <MudAutocomplete Variant="Variant.Outlined" Label="Storage" @bind-Value="SelectedStorage" SearchFunc="(x) => AutocompleteStorageSearch(x)" Clearable="true" OnClearButtonClick="OnClearStorageClick" />
+            <MudAutocomplete Variant="Variant.Outlined" Label="Slot" @bind-Value="SelectedSlot" SearchFunc="(x) => AutocompleteSlotSearch(x)" Clearable="true" OnClearButtonClick="OnClearSlotClick" />
+            <InputFile OnChange="OnInputFileChange"></InputFile>
+
+            @if (!string.IsNullOrEmpty(SelectedSlot.SlotName))
+            {
+                <MudNumericField T="int" @bind-Value="@Article.MinAmount" Label="Minimale Anzahl für Benachrichtigung" Min="0" />
+                <MudNumericField T="int" @bind-Value="@Article.QuantityAtStart" Label="Anzahl beim Zeitpunkt des Eintragens" Min="0" />
+            }
+
+            @if (Article.Base64data != "")
+            {
+                <img src="data:png;base64,@Article.Base64data" />
+            }
+
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Error" OnClick="AddArticle">Artikel Hinzufügen</MudButton>
+        </DialogActions>
+    </MudDialog>
+</div>

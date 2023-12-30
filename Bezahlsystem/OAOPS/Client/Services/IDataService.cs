@@ -25,6 +25,8 @@ namespace OAOPS.Client.Services
         public Task<ErrorDto?> Pay(List<ArticleDto> articles);
         public Task<List<ArticleDto>?> GetArticles();
         public Task<List<ArticleDto>?> GetArticlesFiltered(string? articleName = null, int? page = null, int? pageSize = null);
+        public Task<ErrorDto> UpdateArticle(ArticleDto article);
+        public Task<ErrorDto?> DeleteArticle(int id);
 
         #endregion
 

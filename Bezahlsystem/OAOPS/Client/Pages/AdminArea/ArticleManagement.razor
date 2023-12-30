@@ -1,8 +1,12 @@
 ﻿@page "/manage/Articles"
 @using OAOPS.Client.Components.AddComponents;
+@using OAOPS.Client.Components.Shared
+@using OAOPS.Client.Components.UpdateComponents
 @using OAOPS.Client.Services;
 @using System.Text;
 @attribute [Authorize(Roles = "Admin")]
+
+@inject ISnackbar Snackbar
 
 <PageTitle>Artikel Management</PageTitle>
 
@@ -116,17 +120,58 @@
         var dialog = await DialogService.ShowAsync<AddArticleComponent>("Artikel Hinzufügen", opt);
         var res = await dialog.Result;
 
+        ArticleNameFilter = ArticleNameFilter;
+
         await InvokeAsync(StateHasChanged);
     }
 
     protected async Task UpdateArticle(ArticleDto article)
     {
+        var opt = new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium
+        };
 
+        var parameters = new DialogParameters()
+        {
+            {"Article", article}
+        };
+
+        var dialog = await DialogService.ShowAsync<UpdateArticleComponent>("Artikel Hinzufügen", parameters, opt);
+        var res = await dialog.Result;
+
+        ArticleNameFilter = ArticleNameFilter;
+
+        await InvokeAsync(StateHasChanged);
     }
 
     protected async Task DeleteArticle(ArticleDto article)
     {
-        
+        var param = new DialogParameters()
+        {
+            {"Name", article.Name}
+        };
+
+        var dialog = await DialogService.ShowAsync<DeleteConfirmationDialog>("Artikel Löschen",parameters: param);
+        var res = await dialog.Result;
+
+        if (!res.Cancelled)
+        {
+            var response = await DataService.DeleteArticle(article.Id);
+            if (response.IsSuccessCode)
+            {
+                Snackbar.Add("Artikel wurde erfolgreich gelöscht", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Artikel konnte nicht gelöscht werden", Severity.Error);
+            }
+
+            ArticleNameFilter = ArticleNameFilter;
+
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     protected async Task<GridData<ArticleDto>> LoadData(GridState<ArticleDto> gridState)

@@ -33,6 +33,44 @@ namespace OAOPS.Shared.Services
             return await GetAllArticlesFiltered();
         }
 
+        public async Task<ErrorDto> UpdateArticle(ArticleDto article)
+        {
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ErrorCode, ErrorDto>();
+            });
+
+            var SlotInStorageHasArticle = _db.ArticleInStorageSlots.FirstOrDefault(x => x.ArticleId == article.Id);
+
+            if (SlotInStorageHasArticle == null)
+            {
+                // check if article.Storagename || article.StorageSlot equals null and return corresponding errors
+                return new ErrorDto();
+            }
+
+            var fArticle = _db.Articles.FirstOrDefault(x => x.Id == article.Id);
+            if (fArticle == null) return new ErrorDto();
+
+            fArticle.Name = article.Name;
+            fArticle.Base64data = article.Base64data;
+
+            SlotInStorageHasArticle.MinAmount = article.MinAmount;
+            SlotInStorageHasArticle.QuantityAtStart = article.QuantityAtStart;
+            SlotInStorageHasArticle.QuantityActual = article.QuantityAtStart;
+            
+            _db.ArticleInStorageSlots.Update(SlotInStorageHasArticle);
+            _db.Articles.Update(fArticle);
+            var res2 = await _db.SaveChangesAsync();
+
+            switch (res2)
+            {
+                case < 1:
+                    return new Mapper(mapperConfig).Map<ErrorDto>(codeService.GetError(61));
+                case >= 1:
+                    return new Mapper(mapperConfig).Map<ErrorDto>(codeService.GetError(60));
+            }
+        }
+
         public async Task<List<int>> AddArticle(ArticleDto article)
         {
             // add new Entities to db
@@ -139,6 +177,7 @@ namespace OAOPS.Shared.Services
             var tmp = from res in query
                       select new ArticleDto
                       {
+                          Id = res.ArticleId,
                           MinAmount = res.MinAmount,
                           Amount = 1,
                           PriceAmount = _db.Prices.FirstOrDefault(x => x.ArticleId == res.ArticleId).Amount,
@@ -201,6 +240,27 @@ namespace OAOPS.Shared.Services
             switch (res)
             {
                 case < 1:
+                    return new Mapper(mapperConfig).Map<ErrorDto>(codeService.GetError(61));
+                case >= 1:
+                    return new Mapper(mapperConfig).Map<ErrorDto>(codeService.GetError(60));
+            }
+        }
+
+        public async Task<ErrorDto> DeleteArticle(int id)
+        {
+            var article = _db.Articles.FirstOrDefault(x => x.Id == id);
+            if (article == null) return new ErrorDto();
+
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ErrorCode, ErrorDto>();
+            });
+
+            _db.Articles.Remove(article);
+            var res = await _db.SaveChangesAsync();
+            switch (res)
+            {
+                   case < 1:
                     return new Mapper(mapperConfig).Map<ErrorDto>(codeService.GetError(61));
                 case >= 1:
                     return new Mapper(mapperConfig).Map<ErrorDto>(codeService.GetError(60));

@@ -54,5 +54,19 @@ namespace OAOPS.Server.Controllers
             List<ArticleDto> res = await _articleService.GetAllArticlesFiltered(articleName, page, pageSize);
             return Ok(res);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateArticle(ArticleDto article)
+        {
+            var res = await _articleService.UpdateArticle(article);
+            return Ok(res);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteArticle(int id)
+        {
+            var res = await _articleService.DeleteArticle(id);
+            return Ok(res);
+        }
     }
 }
