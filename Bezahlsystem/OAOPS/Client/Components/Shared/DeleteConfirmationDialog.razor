@@ -6,7 +6,7 @@
         <span>Bist du sicher, dass du @Name löschen möchtest?</span>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="@(async () => await DeleteAsync())">Delete</MudButton>
-        <MudButton OnClick="@(async () => await CancelAsync())">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="@(async () => await DeleteAsync())">Delete</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@(async () => await CancelAsync())">Cancel</MudButton>
     </DialogActions>
 </MudDialog>

@@ -405,6 +405,18 @@ namespace OAOPS.Client.Services
             return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new();
         }
 
+        public async Task<ErrorDto> UpdateArticle(ArticleDto article)
+        {
+            var res = await _http.PutAsJsonAsync(configuration.ApiEndpoints.UpdateArticle, article);
+            return await res.Content.ReadFromJsonAsync<ErrorDto>() ?? new();
+        }
+
+        public async Task<ErrorDto?> DeleteArticle(int id)
+        {
+            var res = await _http.DeleteAsync(configuration.ApiEndpoints.DeleteArticle + "?id=" + id);
+            return await res.Content.ReadFromJsonAsync<ErrorDto>();
+        }
+
         #endregion
     }
 }

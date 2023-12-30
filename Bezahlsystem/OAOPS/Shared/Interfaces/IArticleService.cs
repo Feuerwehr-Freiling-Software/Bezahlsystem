@@ -14,5 +14,7 @@ namespace OAOPS.Shared.Interfaces
         public Task<List<int>> AddArticle(ArticleDto article);
         public Task<List<ArticleDto>> GetAllArticlesFiltered(string? articleName, int? page, int? pageSize);
         public Task<ErrorDto> Pay(List<ArticleDto> articles, string userId);
+        public Task<ErrorDto> UpdateArticle(ArticleDto article);
+        public Task<ErrorDto> DeleteArticle(int id);
     }
 }

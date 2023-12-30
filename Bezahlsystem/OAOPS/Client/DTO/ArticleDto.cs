@@ -2,6 +2,7 @@
 {
     public class ArticleDto
     {
+        public int Id { get; set; } = 0;
         private double priceAmount = 0;
 
         public string Name { get; set; } = string.Empty;
