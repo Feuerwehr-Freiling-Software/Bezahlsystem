@@ -43,9 +43,10 @@
 
         </NotAuthorized>
     </AuthorizeView>
+        <MudNavLink Icon="@Icons.Material.Filled.BugReport" IconColor="Color.Primary" Href="https://www.github.com/Feuerwehr-Freiling-Software/Bezahlsystem/issues/new">Meldung eines Fehlers</MudNavLink>
 </MudNavMenu>
 
-@code{
+    @code{
     ClaimsPrincipal user;
     bool isAdmin;
     bool isAuthenticated;
